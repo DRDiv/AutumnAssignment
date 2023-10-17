@@ -11,11 +11,12 @@ class User(models.Model):
     data=models.JSONField(default=dict)
     penalties=models.IntegerField(default=0)
     ammenityProvider=models.BooleanField(default=False)
+    userSession=models.CharField(max_length=100,blank=True)
 
 class Event(models.Model):
     eventId=models.CharField(max_length=100,primary_key=True,default='0')
     eventName=models.CharField(max_length=100)
-    eventPicture=models.ImageField(upload_to='images/events/',null=True)
+    eventPicture=models.ImageField(upload_to='images/events/',null=True,blank=True)
     eventDate=models.DateTimeField(default=timezone.now)
     userProvider=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     minTeamSize=models.IntegerField(validators=[MinValueValidator(1)] ,default=1)
@@ -25,8 +26,9 @@ class Event(models.Model):
 class Amenity(models.Model):
     amenityId=models.CharField(max_length=100,primary_key=True,default='0')
     amenityName=models.CharField(max_length=100)
-    amenityPicture=models.ImageField(upload_to='images/amenity/',null=True)
+    amenityPicture=models.ImageField(upload_to='images/amenity/',blank=True)
     amenityDate=models.DateTimeField(default=timezone.now)
+    ammenityDateEnd=models.DateTimeField(default=timezone.now)
     recurrance=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
     userProvider=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
@@ -50,12 +52,12 @@ class Request(models.Model):
 
 class Booking(models.Model):
     bookingId=models.CharField(max_length=100,primary_key=True,default='0')
-    event=models.ForeignKey(Event, on_delete=models.CASCADE)
-    amenity=models.ForeignKey(Amenity, on_delete=models.CASCADE)
+    event=models.ForeignKey(Event, on_delete=models.CASCADE,blank=True,default=None,null=True)
+    amenity=models.ForeignKey(Amenity, on_delete=models.CASCADE,blank=True,default=None,null=True)
     timeRequest=models.DateTimeField(default=timezone.now)
     capacity=models.IntegerField(validators=[MinValueValidator(1)] ,default=1)
-    teamId=models.ForeignKey(Team, on_delete=models.CASCADE,default=None)
-    individuals=models.ForeignKey(User,on_delete=models.CASCADE,default=None)
+    teamId=models.ForeignKey(Team, on_delete=models.CASCADE,default=None,blank=True,null=True)
+    individuals=models.ForeignKey(User,on_delete=models.CASCADE,default=None,blank=True,null=True)
     verified=models.BooleanField(default=False)
 
 

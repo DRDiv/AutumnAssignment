@@ -49,11 +49,23 @@ class MakeAdmin(generics.UpdateAPIView):
     def get(self, request, *args, **kwargs):
         team = self.get_object()
         userid = kwargs.get('userId')
-        user = get_object_or_404(User, userId=userid)  # Assuming you have a User model
+        user = get_object_or_404(User, userId=userid)
 
-        # Add the user to the team
+       
 
         team.isAdmin[user.userId]=True
 
         serializer = self.get_serializer(team)
         return Response(serializer.data)
+    
+class TeamUser(generics.ListAPIView):
+    serializer_class = TeamSerializer  
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        try:
+            user_teams = Team.objects.filter(users__userId=user_id)
+        except Team.DoesNotExist:
+            user_teams = Team.objects.none()
+        return user_teams
+        

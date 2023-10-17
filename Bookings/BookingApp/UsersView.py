@@ -2,13 +2,14 @@
 import json
 import os
 from urllib.parse import urlencode
+import uuid
 from django.http import JsonResponse
 from dotenv import load_dotenv
 
 import requests
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
-from rest_framework import generics
+from rest_framework import generics,status
 from rest_framework.response import Response
 from decouple import Config
 from .models import *
@@ -20,17 +21,6 @@ ip=os.getenv('ip')
 class CustomOAuthAuthorizeView(View):
     def get(self, request):
       
-        # oauth_params = {
-        #     'client_id': '1XDTUULqBMBdeIy4GyMEBuAwl8CWTjvzeTpr29Hy',
-        #     'redirect_uri': ip+'userlogin/',
-        #     'state': 'nice',
-        # }
-
-        
-        # oauth_authorize_url = 'https://channeli.in/oauth/authorise/?' + urlencode(oauth_params)
-
-      
-        # return redirect(oauth_authorize_url)
         response=request.GET.get('reponse')
         return response
 class UserListView(generics.ListCreateAPIView):
@@ -42,22 +32,14 @@ class UserLogin(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     def get(self, request):
             state=request.GET.get('state')
-            if (state!='done'):
-                oauth_params = {
-                    'client_id': '1XDTUULqBMBdeIy4GyMEBuAwl8CWTjvzeTpr29Hy',
-                    'redirect_uri': ip+'userlogin/',
-                    'state': 'done',
-                }
-
-                
-                oauth_authorize_url = 'https://channeli.in/oauth/authorise/?' + urlencode(oauth_params)
-
             
-                return redirect(oauth_authorize_url)
+            if (state=='finished'):
+                return JsonResponse({'data':'nothing'})
+            
             
             redirect_uri = ip+'userlogin/'
             authorization_code = request.GET.get('code')
-            # print(authorization_code)
+           
 
             load_dotenv()
             client_id = '1XDTUULqBMBdeIy4GyMEBuAwl8CWTjvzeTpr29Hy'
@@ -85,7 +67,7 @@ class UserLogin(generics.ListCreateAPIView):
                     'Authorization': f'Bearer {access_token}',
                 }
                 response = requests.get(user_data_url, headers=headers)
-
+                userSessionToken=str(uuid.uuid4())
                 if response.status_code == 200:
                     user_data = response.json()
                     poster={
@@ -94,19 +76,22 @@ class UserLogin(generics.ListCreateAPIView):
                         'data':json.dumps(user_data),
                         'penalties':0,
                         'ammenityProvider':False,
+                        'userSession': userSessionToken
                     }
                     poster=json.dumps(poster)
                     headers = {
         'Content-Type': 'application/json',
     }
-                    record=requests.get(ip+f'user/{user_data["userId"]}')
-                
-                    if (record.status_code != 200):
+                    
 
                     
-                        response = requests.post(ip+'user/?', data=poster,headers=headers)
-                    requests.post(ip+'login/?',data=json.dumps({'userId': user_data['userId']}))
-                    return JsonResponse({'userId': user_data['userId']})
+                    response = requests.post(ip+'user/?', data=poster,headers=headers)
+                    last_redirect_param={
+                        'state':'finished',
+                        'userId': user_data['userId'],
+                        'sessionToken':userSessionToken }
+                    print(response)
+                    return redirect(ip+'userlogin/?'+urlencode(last_redirect_param))
                      
                 else:
                     return redirect(ip+'user/')
@@ -116,6 +101,18 @@ class UserLogin(generics.ListCreateAPIView):
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    def create(self, request, *args, **kwargs):
+        user_id = request.data.get('userId')
+        try:
+            User.objects.get(userId=user_id)
+           
+        except User.DoesNotExist:
+            
+            serializer = UserSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
 class AddPenalty(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -134,3 +131,13 @@ class UserByName(generics.RetrieveAPIView):
         username = self.kwargs.get('username')
         user = get_object_or_404(self.get_queryset(), userName=username)
         return Response({'userId': user.userId})
+class UserSessionView(generics.RetrieveAPIView):
+    queryset = User.objects.all()  # Replace 'User' with your actual User model
+
+    def retrieve(self, request, *args, **kwargs):
+        userSession = self.kwargs.get('userSession')
+        
+        user = get_object_or_404(self.get_queryset(), userSession=userSession)
+                
+        return Response({'userId': user.userId})
+        
