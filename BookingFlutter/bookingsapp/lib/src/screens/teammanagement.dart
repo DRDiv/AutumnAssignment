@@ -5,6 +5,7 @@ import 'package:bookingsapp/models/event.dart';
 import 'package:bookingsapp/models/team.dart';
 import 'package:bookingsapp/models/user.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
+import 'package:bookingsapp/src/screens/usersearch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +15,10 @@ class TeamMembers extends StatefulWidget {
   List<User> members;
   Map<String, dynamic> isAdmin;
   User userlogged;
-  TeamMembers(this.members, this.isAdmin, this.userlogged);
+  String teamId;
+  Function rebuild;
+  TeamMembers(
+      this.members, this.isAdmin, this.userlogged, this.teamId, this.rebuild);
 
   @override
   State<TeamMembers> createState() => TeamMembersState();
@@ -45,7 +49,10 @@ class TeamMembersState extends State<TeamMembers> {
                         fit: BoxFit.cover,
                       ))),
             title: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  final router = GoRouter.of(context);
+                  router.push("/userProfile/${user.userId}");
+                },
                 child: Text(
                   (user.userName +
                       ((user.userId == widget.userlogged.userId)
@@ -54,7 +61,24 @@ class TeamMembersState extends State<TeamMembers> {
                 )),
             trailing: (widget.isAdmin[widget.userlogged.userId] &&
                     !widget.isAdmin[user.userId])
-                ? IconButton(onPressed: () {}, icon: Icon(Icons.add))
+                ? IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: ElevatedButton(
+                                  onPressed: () async {
+                                    await DatabaseQueries.addAdmin(
+                                        widget.teamId, user.userId);
+                                    widget.rebuild();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Confirm')),
+                            );
+                          });
+                    },
+                    icon: Icon(Icons.add))
                 : Text(''),
           );
         });
@@ -101,6 +125,7 @@ class _EventsBookedState extends State<EventsBooked> {
 class TabWidget extends StatefulWidget {
   User userlogged;
   String teamId;
+
   TabWidget(this.userlogged, this.teamId);
 
   @override
@@ -129,6 +154,14 @@ class _TabWidgetState extends State<TabWidget> {
     });
   }
 
+  void rebuild() {
+    setState(() {
+      isLoading = true;
+      team = Team.defaultTeam();
+    });
+    loadTeamData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -152,7 +185,8 @@ class _TabWidgetState extends State<TabWidget> {
             ? Center(child: CircularProgressIndicator())
             : TabBarView(
                 children: [
-                  TeamMembers(team.users, team.isAdmin, widget.userlogged),
+                  TeamMembers(team.users, team.isAdmin, widget.userlogged,
+                      team.teamId, rebuild),
                   EventsBooked(team.events)
                 ],
               ),
@@ -183,6 +217,24 @@ class _TabWidgetState extends State<TabWidget> {
                 )
               ],
             )),
+        floatingActionButton:
+            !isLoading && team.isAdmin[widget.userlogged.userId]
+                ? FloatingActionButton(
+                    onPressed: () async {
+                      final result = await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return UserSearch(
+                                context, team.users, team.teamId, initState);
+                          });
+                      if (result == "confirmed") {
+                        rebuild();
+                      }
+                    },
+                    child: Icon(Icons.add),
+                    backgroundColor: ColorCustomScheme.appBarColor,
+                  )
+                : null,
       ),
     ));
   }

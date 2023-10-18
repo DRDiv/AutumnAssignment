@@ -50,7 +50,9 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
               await storage.write(
                   key: "sessionToken",
                   value: url.queryParameters['sessionToken']);
-
+              await DatabaseQueries.updateSessionToken(
+                  ref.read(userLogged).userId,
+                  url.queryParameters['sessionToken']!);
               context.go("/home");
             }
           },

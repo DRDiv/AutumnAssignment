@@ -22,6 +22,22 @@ class DatabaseQueries {
     return response;
   }
 
+  static Future<Response> getUserRegext(String like) async {
+    String pathUser = "$ipAdd/user/regex/$like/";
+    var dio = Dio();
+    var response = await dio.get(pathUser);
+
+    return response;
+  }
+
+  static Future<Response> updateSessionToken(
+      String userId, String token) async {
+    String path = "$ipAdd/user/session/$userId/$token/";
+    var dio = Dio();
+    var response = await dio.put(path);
+    return response;
+  }
+
   static Future<Response> getUserTeams(String userId) async {
     String pathUser = "$ipAdd/team/user/$userId/";
     var dio = Dio();
@@ -38,6 +54,22 @@ class DatabaseQueries {
     return response;
   }
 
+  static Future<Response> addUserTeam(String teamId, String userId) async {
+    String pathTeam = "$ipAdd/team/$teamId/adduser/$userId/";
+    var dio = Dio();
+    var response = await dio.get(pathTeam);
+
+    return response;
+  }
+
+  static Future<Response> addAdmin(String teamId, String userId) async {
+    String pathTeam = "$ipAdd/team/$teamId/makeadmin/$userId/";
+    var dio = Dio();
+    var response = await dio.get(pathTeam);
+
+    return response;
+  }
+
   static Future<Response> getAmmenityDetails(String ammenityId) async {
     String pathAmenity = "$ipAdd/amenity/$ammenityId/";
     var dio = Dio();
@@ -48,6 +80,14 @@ class DatabaseQueries {
 
   static Future<Response> getEventDetails(String eventId) async {
     String pathEvent = "$ipAdd/event/$eventId/";
+    var dio = Dio();
+    var response = await dio.get(pathEvent);
+
+    return response;
+  }
+
+  static Future<Response> getEventRegex(String like) async {
+    String pathEvent = "$ipAdd/event/regex/$like/";
     var dio = Dio();
     var response = await dio.get(pathEvent);
 

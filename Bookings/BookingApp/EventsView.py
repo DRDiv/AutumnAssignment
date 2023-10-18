@@ -37,3 +37,14 @@ class EventUpdateView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+class EventRegex(generics.ListCreateAPIView):
+    lookup_field = 'eventName'
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        substring = self.kwargs.get('eventName')
+        if substring is not None:
+            queryset = Event.objects.filter(eventName__icontains=substring)
+        else:
+            queryset = Event.objects.all()
+        return queryset

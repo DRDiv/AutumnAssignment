@@ -10,6 +10,7 @@ import 'package:bookingsapp/src/screens/webview.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -312,6 +313,18 @@ class TabWidget extends StatelessWidget {
                         Icons.people,
                         color: ColorCustomScheme.backgroundColor,
                       )),
+                ),
+                Expanded(
+                  child: IconButton(
+                      onPressed: () async {
+                        final storage = new FlutterSecureStorage();
+                        await storage.deleteAll();
+                        context.go("/login");
+                      },
+                      icon: Icon(
+                        Icons.logout,
+                        color: ColorCustomScheme.backgroundColor,
+                      )),
                 )
               ],
             )),
@@ -332,26 +345,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Map dataTeam = {};
   bool isLoading = true;
 
-  Future<void> getBookingsTeam() async {
-    User userlogged = ref.read(userLogged);
-    String ipAdd = ref.read(ip);
-    var dio = Dio();
-    // try {
-    //   var response = await dio.get('$ipAdd/booking/team/$userIdValue/');
-    //   if (response.statusCode == 200) {
-    //     dataTeam = response.data;
-    //   }
-    // } catch (e) {
-    //   dataTeam = {};
-    // }
-    dataTeam = {};
-  }
-
   @override
   void initState() {
     super.initState();
-
-    getBookingsTeam();
   }
 
   @override

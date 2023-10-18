@@ -14,9 +14,12 @@ urlpatterns = [
     path('user/by-username/<str:username>/', UserByName.as_view(), name='user-by-name'),
     path('user/<str:pk>/', UserDetailView.as_view(), name='user-detail'),
     path('user/session/<str:userSession>/', UserSessionView.as_view(), name='user-detail'),
+    path('user/session/<str:pk>/<str:userSession>/', UserUpdateSessionView.as_view(), name='user-detail'),
     path('login/', CustomOAuthAuthorizeView.as_view(), name='custom_authorize'),
     path('user/<str:pk>/addpenalty', AddPenalty.as_view(), name='add-penalty'),
+    path('user/regex/<str:userName>/', UserRegex.as_view(), name='user-regex'),
 
+    
     path('team/', TeamListView.as_view(), name='team-list'),
     path('team/<str:pk>/', TeamDetailView.as_view(), name='team-detail'),
     path('team/user/<str:user_id>/', TeamUser.as_view(), name='team-user'),
@@ -31,7 +34,8 @@ urlpatterns = [
     path('event/', EventListView.as_view(), name='event-list'),
     path('event/<str:pk>/', EventDetailView.as_view(), name='event-detail'),
     path('event/by-eventname/<str:eventname>/', EventByName.as_view(), name='event-by-name'),
-    path('events/update/<int:pk>/', EventUpdateView.as_view(), name='event-update'),
+    path('event/update/<int:pk>/', EventUpdateView.as_view(), name='event-update'),
+    path('event/regex/<str:eventName>/', EventRegex.as_view(), name='event-regex'),
 
     path('amenity/', AmenityListView.as_view(), name='amenity-list'),
     path('amenity/<str:pk>/', AmenityDetailView.as_view(), name='amenity-detail'),

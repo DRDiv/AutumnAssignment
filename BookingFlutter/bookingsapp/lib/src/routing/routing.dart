@@ -3,6 +3,7 @@ import 'package:bookingsapp/src/screens/login.dart';
 import 'package:bookingsapp/src/screens/teams.dart';
 import 'package:bookingsapp/src/screens/teammanagement.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
+import 'package:bookingsapp/src/screens/userprofile.dart';
 import 'package:bookingsapp/src/screens/webview.dart';
 
 import 'package:flutter/material.dart';
@@ -45,5 +46,11 @@ GoRouter router = GoRouter(initialLocation: "/transition", routes: [
       return MaterialPage(
           child: TeamManagementView(state.pathParameters['teamId']!));
     },
-  )
+  ),
+  GoRoute(
+    path: "/userProfile/:userId",
+    pageBuilder: (context, state) {
+      return MaterialPage(child: UserProfile(state.pathParameters['userId']!));
+    },
+  ),
 ]);

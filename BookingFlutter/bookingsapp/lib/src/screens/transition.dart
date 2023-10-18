@@ -25,7 +25,7 @@ class _TransitionScreenState extends ConsumerState<TransitionScreen> {
     final storage = new FlutterSecureStorage();
 
     String token = await storage.read(key: "sessionToken") ?? " ";
-
+    print(token);
     try {
       var currentUser = await DatabaseQueries.getCurrentUser(token);
 

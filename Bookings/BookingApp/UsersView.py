@@ -140,4 +140,31 @@ class UserSessionView(generics.RetrieveAPIView):
         user = get_object_or_404(self.get_queryset(), userSession=userSession)
                 
         return Response({'userId': user.userId})
+
+class UserRegex(generics.ListCreateAPIView):
+    lookup_field = 'userName'
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        substring = self.kwargs.get('userName')
+        if substring is not None:
+            queryset = User.objects.filter(userName__icontains=substring)
+        else:
+            queryset = User.objects.all()
+        return queryset
         
+class UserUpdateSessionView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+        session = self.kwargs.get('userSession')  
+
+        if session:
+            instance.userSession = session
+            instance.save()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'detail': 'Invalid session provided.'}, status=status.HTTP_400_BAD_REQUEST)

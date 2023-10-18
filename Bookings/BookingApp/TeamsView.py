@@ -34,12 +34,12 @@ class AddUserToTeamView(generics.UpdateAPIView):
     def get(self, request, *args, **kwargs):
         team = self.get_object()
         userid = kwargs.get('userId')
-        user = get_object_or_404(User, userId=userid)  # Assuming you have a User model
+        user = get_object_or_404(User, userId=userid)  
 
-        # Add the user to the team
+      
         team.users.add(user)
         team.isAdmin[user.userId]=False
-
+        team.save()
         serializer = self.get_serializer(team)
         return Response(serializer.data)
 class MakeAdmin(generics.UpdateAPIView):
@@ -54,7 +54,7 @@ class MakeAdmin(generics.UpdateAPIView):
        
 
         team.isAdmin[user.userId]=True
-
+        team.save()
         serializer = self.get_serializer(team)
         return Response(serializer.data)
     

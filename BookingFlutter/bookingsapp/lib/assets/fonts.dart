@@ -18,10 +18,10 @@ class FontsCustom {
   );
 
   static final TextStyle bodyHeading = TextStyle(
-      fontFamily: 'Roboto',
-      fontSize: 24,
-      fontWeight: FontWeight.w600,
-      decoration: TextDecoration.underline);
+    fontFamily: 'Roboto',
+    fontSize: 28,
+    fontWeight: FontWeight.w600,
+  );
 
   static final TextStyle bodySmallText = TextStyle(
     fontFamily: 'Roboto',
