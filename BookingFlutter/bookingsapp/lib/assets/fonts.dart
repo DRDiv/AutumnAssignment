@@ -22,4 +22,10 @@ class FontsCustom {
       fontSize: 24,
       fontWeight: FontWeight.w600,
       decoration: TextDecoration.underline);
+
+  static final TextStyle bodySmallText = TextStyle(
+    fontFamily: 'Roboto',
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
 }

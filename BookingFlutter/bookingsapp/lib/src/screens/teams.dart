@@ -20,7 +20,7 @@ class WidgetCustom extends StatefulWidget {
 
 class _WidgetCustomState extends State<WidgetCustom> {
   late Future<List<String>> dataIndvFuture;
-
+  List<String> teamIds = [];
   @override
   void initState() {
     super.initState();
@@ -30,18 +30,16 @@ class _WidgetCustomState extends State<WidgetCustom> {
   }
 
   Future<List<String>> getTeams() async {
-    var dio = Dio();
     try {
-      var response = await dio
-          .get('${widget.ipAdd}/team/user/${widget.userlogged.userId}/');
+      var response =
+          await DatabaseQueries.getUserTeams(widget.userlogged.userId);
 
       if (response.statusCode == 200) {
-        List<dynamic> responseData = response.data;
-
         List<String> typedData = [];
 
         for (var responseInd in response.data) {
           typedData.add(responseInd['teamName']);
+          teamIds.add(responseInd['teamId']);
         }
 
         return typedData;
@@ -101,7 +99,9 @@ class _WidgetCustomState extends State<WidgetCustom> {
                                 dataIndv[index],
                                 style: FontsCustom.bodyBigText,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                context.go('/team/${teamIds[index]}');
+                              },
                             )),
                       );
                     });

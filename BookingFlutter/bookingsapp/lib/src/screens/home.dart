@@ -15,10 +15,9 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 class IndividualTab extends StatefulWidget {
-  final String ipAdd;
   final User userlogged;
 
-  IndividualTab(this.userlogged, this.ipAdd);
+  IndividualTab(this.userlogged);
 
   @override
   _IndividualTabState createState() => _IndividualTabState();
@@ -139,9 +138,7 @@ class _IndividualTabState extends State<IndividualTab> {
 class TeamTab extends StatefulWidget {
   final User userlogged;
 
-  final String ipAdd;
-
-  TeamTab(this.userlogged, this.ipAdd);
+  TeamTab(this.userlogged);
 
   @override
   _TeamTabState createState() => _TeamTabState();
@@ -149,7 +146,7 @@ class TeamTab extends StatefulWidget {
 
 class _TeamTabState extends State<TeamTab> {
   late Future<List<dynamic>> dataTeamFuture;
-
+  List<String> teams = [];
   @override
   void initState() {
     super.initState();
@@ -160,15 +157,15 @@ class _TeamTabState extends State<TeamTab> {
 
   Future<List<dynamic>> getBookingsTeam() async {
     try {
-      var bookingUser =
+      var bookingTeam =
           await DatabaseQueries.getBookingsTeam(widget.userlogged.userId);
 
-      if (bookingUser.statusCode == 200) {
-        List<dynamic> responseData = bookingUser.data;
+      if (bookingTeam.statusCode == 200) {
+        List<dynamic> responseData = bookingTeam.data;
 
         List<dynamic> typedData = [];
-
-        for (var responseInd in bookingUser.data) {
+        List<String> teams = [];
+        for (var responseInd in bookingTeam.data) {
           if (responseInd['amenity'] != null) {
             var responseAmenity = await DatabaseQueries.getAmmenityDetails(
                 responseInd['amenity']);
@@ -184,8 +181,13 @@ class _TeamTabState extends State<TeamTab> {
             await event.setData(responseEvent.data);
             typedData.add(event);
           }
+          teams.add(
+              (await DatabaseQueries.getTeamDetails(responseInd['teamId']))
+                  .data['teamName']);
         }
-
+        setState(() {
+          this.teams = teams;
+        });
         return typedData;
       }
     } catch (e) {
@@ -234,7 +236,7 @@ class _TeamTabState extends State<TeamTab> {
               return ListTile(
                 leading: CircleAvatar(
                     backgroundColor: ColorCustomScheme.backgroundColor,
-                    radius: 15.0,
+                    radius: 20.0,
                     child: ((opcode
                                 ? item.eventPicture
                                 : item.amenityPicture) ==
@@ -249,6 +251,7 @@ class _TeamTabState extends State<TeamTab> {
                             fit: BoxFit.cover,
                           ))),
                 title: Text(opcode ? item.eventName : item.amenityName),
+                subtitle: Text(teams[index]),
                 trailing: Text(formattedDateTime),
               );
             },
@@ -261,9 +264,8 @@ class _TeamTabState extends State<TeamTab> {
 
 class TabWidget extends StatelessWidget {
   User userlogged;
-  String ipAdd;
 
-  TabWidget(this.userlogged, this.ipAdd);
+  TabWidget(this.userlogged);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -284,10 +286,7 @@ class TabWidget extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: [
-            IndividualTab(userlogged, ipAdd),
-            TeamTab(userlogged, ipAdd)
-          ],
+          children: [IndividualTab(userlogged), TeamTab(userlogged)],
         ),
         bottomNavigationBar: BottomAppBar(
             color: ColorCustomScheme.appBarColor,
@@ -358,7 +357,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     User userlogged = ref.read(userLogged);
-    String ipAdd = ref.read(ip);
-    return TabWidget(userlogged, ipAdd);
+
+    return TabWidget(userlogged);
   }
 }

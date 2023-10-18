@@ -22,6 +22,22 @@ class DatabaseQueries {
     return response;
   }
 
+  static Future<Response> getUserTeams(String userId) async {
+    String pathUser = "$ipAdd/team/user/$userId/";
+    var dio = Dio();
+    var response = await dio.get(pathUser);
+
+    return response;
+  }
+
+  static Future<Response> getTeamDetails(String teamId) async {
+    String pathTeam = "$ipAdd/team/$teamId/";
+    var dio = Dio();
+    var response = await dio.get(pathTeam);
+
+    return response;
+  }
+
   static Future<Response> getAmmenityDetails(String ammenityId) async {
     String pathAmenity = "$ipAdd/amenity/$ammenityId/";
     var dio = Dio();
