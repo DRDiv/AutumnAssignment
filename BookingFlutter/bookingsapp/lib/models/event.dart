@@ -4,7 +4,7 @@ import 'package:bookingsapp/models/user.dart';
 class Event {
   String eventId = "", eventName = "", eventPicture = "", eventDate = "";
   int maxTeamSize = 0, minTeamSize = 0;
-  String payment = "";
+  double payment = 0;
   User userProvider = User.defaultUser();
   Event(this.eventId, this.eventName, this.eventPicture, this.eventDate,
       this.maxTeamSize, this.payment, this.userProvider);
@@ -16,7 +16,8 @@ class Event {
     eventDate = responseData["eventDate"];
     maxTeamSize = responseData["maxTeamSize"];
     minTeamSize = responseData["minTeamSize"];
-    payment = responseData["payment"];
+
+    payment = double.parse(responseData["payment"]);
     userProvider = User.set(
         (await DatabaseQueries.getUserDetails(responseData['userProvider']))
             .data);

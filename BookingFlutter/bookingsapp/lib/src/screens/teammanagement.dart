@@ -4,6 +4,7 @@ import 'package:bookingsapp/database/database.dart';
 import 'package:bookingsapp/models/event.dart';
 import 'package:bookingsapp/models/team.dart';
 import 'package:bookingsapp/models/user.dart';
+import 'package:bookingsapp/src/screens/eventsearch.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/screens/usersearch.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,8 @@ class TeamMembersState extends State<TeamMembers> {
 
 class EventsBooked extends StatefulWidget {
   List<Event> events;
-  EventsBooked(this.events);
+  Team team;
+  EventsBooked(this.events, this.team);
 
   @override
   State<EventsBooked> createState() => _EventsBookedState();
@@ -132,25 +134,34 @@ class TabWidget extends StatefulWidget {
   State<TabWidget> createState() => _TabWidgetState();
 }
 
-class _TabWidgetState extends State<TabWidget> {
+class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
   Team team = Team.defaultTeam();
   bool isLoading = true;
-
+  late TabController tabController;
+  int currentTabIndex = 0;
   Future<void> setTeam() async {
     var response = await DatabaseQueries.getTeamDetails(widget.teamId);
     await team.setData(response.data);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loadTeamData();
   }
 
   Future<void> loadTeamData() async {
     await setTeam();
     setState(() {
       isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadTeamData();
+    setState(() {
+      tabController = TabController(initialIndex: 0, length: 2, vsync: this);
+      tabController.addListener(() {
+        setState(() {
+          currentTabIndex = tabController.index;
+        });
+      });
     });
   }
 
@@ -176,6 +187,7 @@ class _TabWidgetState extends State<TabWidget> {
           ),
           centerTitle: true,
           bottom: TabBar(
+            controller: tabController,
             tabs: [Tab(text: 'Team Members'), Tab(text: 'Events')],
             indicator:
                 BoxDecoration(color: ColorCustomScheme.appBarColorSelected),
@@ -184,10 +196,11 @@ class _TabWidgetState extends State<TabWidget> {
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : TabBarView(
+                controller: tabController,
                 children: [
                   TeamMembers(team.users, team.isAdmin, widget.userlogged,
                       team.teamId, rebuild),
-                  EventsBooked(team.events)
+                  EventsBooked(team.events, team)
                 ],
               ),
         bottomNavigationBar: BottomAppBar(
@@ -217,24 +230,31 @@ class _TabWidgetState extends State<TabWidget> {
                 )
               ],
             )),
-        floatingActionButton:
-            !isLoading && team.isAdmin[widget.userlogged.userId]
-                ? FloatingActionButton(
-                    onPressed: () async {
-                      final result = await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return UserSearch(
-                                context, team.users, team.teamId, initState);
-                          });
-                      if (result == "confirmed") {
-                        rebuild();
-                      }
-                    },
-                    child: Icon(Icons.add),
-                    backgroundColor: ColorCustomScheme.appBarColor,
-                  )
-                : null,
+        floatingActionButton: !isLoading &&
+                team.isAdmin[widget.userlogged.userId]
+            ? FloatingActionButton(
+                onPressed: () async {
+                  if (tabController.index == 0) {
+                    final result = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return UserSearch(context, team.users, team.teamId);
+                        });
+                    if (result == "confirmed") {
+                      rebuild();
+                    }
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return EventAlertBox(team);
+                        });
+                  }
+                },
+                child: Icon(Icons.add),
+                backgroundColor: ColorCustomScheme.appBarColor,
+              )
+            : null,
       ),
     ));
   }

@@ -10,8 +10,8 @@ class UserSearch extends ConsumerStatefulWidget {
   final context;
   final List<User> users;
   final String teamId;
-  final Function onCloseDialog;
-  const UserSearch(this.context, this.users, this.teamId, this.onCloseDialog);
+
+  const UserSearch(this.context, this.users, this.teamId);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _UserSearchState();
@@ -23,7 +23,7 @@ class _UserSearchState extends ConsumerState<UserSearch> {
   Map<String, bool> add = {};
   Future<List<User>> getUsers(String like) async {
     List<String> userIds = widget.users.map((user) => user.userId).toList();
-    var response = await DatabaseQueries.getUserRegext(like);
+    var response = await DatabaseQueries.getUserRegex(like);
     List<User> users = [];
 
     for (var indv in response.data) {
@@ -41,6 +41,7 @@ class _UserSearchState extends ConsumerState<UserSearch> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      scrollable: true,
       content: SizedBox(
         height: 400,
         width: 200,

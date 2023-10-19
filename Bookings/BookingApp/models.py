@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 
-# Create your models here.
+
 class User(models.Model):
     userId=models.CharField(max_length=100,primary_key=True,default='0')
     userName=models.CharField(max_length=100)
@@ -16,7 +16,7 @@ class User(models.Model):
 class Event(models.Model):
     eventId=models.CharField(max_length=100,primary_key=True,default='0')
     eventName=models.CharField(max_length=100)
-    eventPicture=models.ImageField(upload_to='images/events/',null=True,blank=True)
+    eventPicture=models.ImageField(upload_to='images/',null=True,blank=True)
     eventDate=models.DateTimeField(default=timezone.now)
     userProvider=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     minTeamSize=models.IntegerField(validators=[MinValueValidator(1)] ,default=1)
@@ -26,7 +26,7 @@ class Event(models.Model):
 class Amenity(models.Model):
     amenityId=models.CharField(max_length=100,primary_key=True,default='0')
     amenityName=models.CharField(max_length=100)
-    amenityPicture=models.ImageField(upload_to='images/amenity/',blank=True)
+    amenityPicture=models.ImageField(upload_to='images/',blank=True)
     amenityDate=models.DateTimeField(default=timezone.now)
     ammenityDateEnd=models.DateTimeField(default=timezone.now)
     recurrance=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
@@ -42,12 +42,12 @@ class Team(models.Model):
 
 class Request(models.Model):
     requestId=models.CharField(max_length=100,primary_key=True,default='0')
-    event=models.ForeignKey(Event, on_delete=models.CASCADE)
-    amenity=models.ForeignKey(Amenity, on_delete=models.CASCADE)
+    event=models.ForeignKey(Event, on_delete=models.CASCADE,blank=True,null=True)
+    amenity=models.ForeignKey(Amenity, on_delete=models.CASCADE,blank=True,null=True)
     timeRequest=models.DateTimeField(default=timezone.now)
     capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
-    payment=models.ImageField(upload_to='images/payments/',null=True)
-    teamId=models.ForeignKey(Team, on_delete=models.CASCADE)
+    payment=models.ImageField(upload_to='images/',null=True)
+    teamId=models.ForeignKey(Team, on_delete=models.CASCADE,blank=True)
     individuals=models.ManyToManyField(User,blank=True)
 
 class Booking(models.Model):

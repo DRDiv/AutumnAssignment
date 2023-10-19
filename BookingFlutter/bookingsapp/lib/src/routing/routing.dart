@@ -1,3 +1,4 @@
+import 'package:bookingsapp/src/screens/eventbooking.dart';
 import 'package:bookingsapp/src/screens/home.dart';
 import 'package:bookingsapp/src/screens/login.dart';
 import 'package:bookingsapp/src/screens/teams.dart';
@@ -51,6 +52,14 @@ GoRouter router = GoRouter(initialLocation: "/transition", routes: [
     path: "/userProfile/:userId",
     pageBuilder: (context, state) {
       return MaterialPage(child: UserProfile(state.pathParameters['userId']!));
+    },
+  ),
+  GoRoute(
+    path: "/eventBooking/:eventId/:teamId",
+    pageBuilder: (context, state) {
+      return MaterialPage(
+          child: EventBooking(state.pathParameters['eventId']!,
+              state.pathParameters['teamId']!));
     },
   ),
 ]);

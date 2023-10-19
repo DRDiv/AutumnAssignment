@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,7 +24,7 @@ class DatabaseQueries {
     return response;
   }
 
-  static Future<Response> getUserRegext(String like) async {
+  static Future<Response> getUserRegex(String like) async {
     String pathUser = "$ipAdd/user/regex/$like/";
     var dio = Dio();
     var response = await dio.get(pathUser);
@@ -107,6 +109,28 @@ class DatabaseQueries {
     var dio = Dio();
     var response = await dio.get(pathBooking);
 
+    return response;
+  }
+
+  static Future<dynamic> makeEventRequest(
+      String eventId, String teamId, File? image) async {
+    String path = '$ipAdd/request/';
+    var dio = Dio();
+    FormData formData;
+    if (image == null) {
+      formData = FormData.fromMap({
+        'event_id': eventId,
+        'team_id': teamId,
+      });
+    } else {
+      formData = FormData.fromMap({
+        'event_id': eventId,
+        'team_id': teamId,
+        'payment_image':
+            await MultipartFile.fromFile(image.path, filename: 'image.jpg'),
+      });
+    }
+    var response = await dio.post(path, data: formData);
     return response;
   }
 }

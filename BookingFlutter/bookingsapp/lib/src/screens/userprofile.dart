@@ -52,66 +52,69 @@ class _UserProfileState extends ConsumerState<UserProfile> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.fromLTRB(8, 24.0, 8, 24),
-              child: Center(
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                        backgroundColor: ColorCustomScheme.backgroundColor,
-                        radius: 40.0,
-                        child: (userCurrent.data['person'] == null ||
-                                userCurrent.data['person']['displayPicture'] ==
-                                    null)
-                            ? const Icon(Icons.person,
-                                size: 80, color: Colors.black)
-                            : ClipOval(
-                                child: Image.network(
-                                "https://channeli.in/" +
-                                    userCurrent.data['person']
-                                        ['displayPicture'],
-                                width: 80.0,
-                                height: 80.0,
-                                fit: BoxFit.cover,
-                              ))),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        userCurrent.userName,
-                        style: FontsCustom.bodyHeading,
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 24.0, 8, 24),
+                child: Center(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                          backgroundColor: ColorCustomScheme.backgroundColor,
+                          radius: 40.0,
+                          child: (userCurrent.data['person'] == null ||
+                                  userCurrent.data['person']
+                                          ['displayPicture'] ==
+                                      null)
+                              ? const Icon(Icons.person,
+                                  size: 80, color: Colors.black)
+                              : ClipOval(
+                                  child: Image.network(
+                                  "https://channeli.in/" +
+                                      userCurrent.data['person']
+                                          ['displayPicture'],
+                                  width: 80.0,
+                                  height: 80.0,
+                                  fit: BoxFit.cover,
+                                ))),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          userCurrent.userName,
+                          style: FontsCustom.bodyHeading,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        userCurrent.data['student']['enrolmentNumber'],
-                        style: FontsCustom.bodySmallText,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          userCurrent.data['student']['enrolmentNumber'],
+                          style: FontsCustom.bodySmallText,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        userCurrent.data['student']['branch name'],
-                        style: FontsCustom.bodySmallText,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          userCurrent.data['student']['branch name'],
+                          style: FontsCustom.bodySmallText,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Year: " +
-                            userCurrent.data['student']['currentYear']
-                                .toString(),
-                        style: FontsCustom.bodySmallText,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Year: " +
+                              userCurrent.data['student']['currentYear']
+                                  .toString(),
+                          style: FontsCustom.bodySmallText,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Penalties: " + userCurrent.penalties.toString(),
-                        style: FontsCustom.bodySmallText,
-                      ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Penalties: " + userCurrent.penalties.toString(),
+                          style: FontsCustom.bodySmallText,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
