@@ -1,4 +1,5 @@
 import json
+from urllib import response
 from urllib.parse import urlencode
 
 import requests
@@ -14,6 +15,29 @@ from .serializers import *
 class TeamListView(generics.ListCreateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
+    def post(self, request, *args, **kwargs):
+        print(request.data)
+        teamName = request.data.get('teamName')
+        users = request.data.getlist('users')
+        isAdmin_data = {}
+
+        for check in users:
+            isAdmin_data[check]=(request.data.get(f'isAdmin[{check}]')=='true')
+
+        userobj = []
+
+        for indv in users:
+            userindv = get_object_or_404(User.objects.all(), userId=indv)
+            isAdmin = isAdmin_data.get(indv, False)  # Get the isAdmin value from the extracted data
+            userobj.append(userindv)
+
+        team = Team(
+            teamName=teamName,
+            isAdmin=isAdmin_data,  # Save the isAdmin data as a dictionary
+        )
+        team.save()
+        team.users.set(userobj)
+        return Response()
 
 class TeamDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Team.objects.all()

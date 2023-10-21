@@ -1,35 +1,37 @@
 import 'package:bookingsapp/assets/colors.dart';
 import 'package:bookingsapp/assets/fonts.dart';
 import 'package:bookingsapp/database/database.dart';
-import 'package:bookingsapp/models/event.dart';
-import 'package:bookingsapp/models/team.dart';
+import 'package:bookingsapp/models/ammenity.dart';
+
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class EventAlertBox extends ConsumerStatefulWidget {
-  Team team;
-  EventAlertBox(this.team);
+class AmenityAlertBox extends ConsumerStatefulWidget {
+  AmenityAlertBox();
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _EventAlertBoxState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AmenityAlertBoxState();
 }
 
-class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
+class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
   TextEditingController _text = TextEditingController();
   String like = '';
-  Future<List<Event>> getEvents(String like) async {
-    var response = await DatabaseQueries.getEventRegex(like);
-    List<Event> events = [];
+  Future<List<Amenity>> getAmenity(String like) async {
+    var response = await DatabaseQueries.getAmenityRegex(like);
+    List<Amenity> amenity = [];
 
     for (var indv in response.data) {
-      Event eventInd = Event.defaultEvent();
-      await eventInd.setData(indv);
+      Amenity amenityInd = Amenity.defaultAmenity();
 
-      events.add(eventInd);
+      await amenityInd.setData(indv);
+
+      amenity.add(amenityInd);
     }
-    return events;
+
+    return amenity;
   }
 
   @override
@@ -51,7 +53,7 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                   },
                   controller: _text,
                   decoration: InputDecoration(
-                    hintText: 'Search Event',
+                    hintText: 'Search Amenity',
                     focusedBorder: UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: ColorCustomScheme.appBarColor),
@@ -60,8 +62,8 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                   cursorColor: ColorCustomScheme.appBarColor,
                 ),
               ),
-              FutureBuilder<List<Event>>(
-                future: getEvents(like),
+              FutureBuilder<List<Amenity>>(
+                future: getAmenity(like),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Padding(
@@ -75,7 +77,7 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                       padding: const EdgeInsets.fromLTRB(8, 40, 8, 0),
                       child: Center(
                         child: Text(
-                          "No Events Found",
+                          "No Amenity Found",
                           style: FontsCustom.bodyBigText,
                         ),
                       ),
@@ -89,25 +91,24 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                             onTap: () async {
                               Navigator.of(context).pop();
                               router.push(
-                                  "/eventBooking/${snapshot.data![index].eventId}/${widget.team.teamId}/");
+                                  "/amenityBooking/${snapshot.data![index].amenityId}");
                             },
                             leading: CircleAvatar(
                                 backgroundColor:
                                     ColorCustomScheme.backgroundColor,
                                 radius: 15.0,
-                                child:
-                                    (snapshot.data![index].eventPicture == "")
-                                        ? const Icon(Icons.alarm,
-                                            size: 30, color: Colors.black)
-                                        : ClipOval(
-                                            child: Image.network(
-                                            snapshot.data![index].eventPicture,
-                                            width: 30.0,
-                                            height: 30.0,
-                                            fit: BoxFit.cover,
-                                          ))),
-                            title: Text(snapshot.data![index].eventName),
-                            subtitle: Text(snapshot.data![index].eventDate),
+                                child: (snapshot.data![index].amenityPicture ==
+                                        "")
+                                    ? const Icon(Icons.alarm,
+                                        size: 30, color: Colors.black)
+                                    : ClipOval(
+                                        child: Image.network(
+                                        snapshot.data![index].amenityPicture,
+                                        width: 30.0,
+                                        height: 30.0,
+                                        fit: BoxFit.cover,
+                                      ))),
+                            title: Text(snapshot.data![index].amenityName),
                           );
                         },
                       ),

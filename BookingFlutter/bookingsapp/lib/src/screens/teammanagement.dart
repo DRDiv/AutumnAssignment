@@ -76,6 +76,7 @@ class TeamMembersState extends State<TeamMembers> {
                                     Navigator.of(context).pop();
                                   },
                                   child: Text('Confirm')),
+                              backgroundColor: ColorCustomScheme.appBarColor,
                             );
                           });
                     },

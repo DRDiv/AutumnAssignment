@@ -3,6 +3,7 @@ import 'package:bookingsapp/assets/fonts.dart';
 import 'package:bookingsapp/database/database.dart';
 import 'package:bookingsapp/main.dart';
 import 'package:bookingsapp/models/user.dart';
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,12 @@ class _WidgetCustomState extends State<WidgetCustom> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      dataIndvFuture = getTeams();
+    });
+  }
+
+  void rebuild() {
     setState(() {
       dataIndvFuture = getTeams();
     });
@@ -79,7 +86,7 @@ class _WidgetCustomState extends State<WidgetCustom> {
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return Center(
                   child: Text(
-                    "No Bookings Found",
+                    "No Teams Found",
                     style: FontsCustom.bodyBigText,
                   ),
                 );
@@ -107,6 +114,14 @@ class _WidgetCustomState extends State<WidgetCustom> {
                     });
               }
             }),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await router.push("/teamCreation/");
+          rebuild();
+        },
+        backgroundColor: ColorCustomScheme.appBarColor,
+        child: Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(
           color: ColorCustomScheme.appBarColor,

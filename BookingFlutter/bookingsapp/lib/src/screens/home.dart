@@ -5,6 +5,7 @@ import 'package:bookingsapp/main.dart';
 import 'package:bookingsapp/models/ammenity.dart';
 import 'package:bookingsapp/models/event.dart';
 import 'package:bookingsapp/models/user.dart';
+import 'package:bookingsapp/src/screens/amenitysearch.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/screens/webview.dart';
 import 'package:dio/dio.dart';
@@ -263,72 +264,102 @@ class _TeamTabState extends State<TeamTab> {
   }
 }
 
-class TabWidget extends StatelessWidget {
+class TabWidget extends ConsumerStatefulWidget {
   User userlogged;
 
   TabWidget(this.userlogged);
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _TabWidgetState();
+}
+
+class _TabWidgetState extends ConsumerState<TabWidget>
+    with TickerProviderStateMixin {
+  late TabController tabController;
+  void initState() {
+    super.initState();
+    setState(() {
+      tabController = TabController(length: 2, vsync: this);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: ColorCustomScheme.appBarColor,
-          title: Text(
-            "BOOKING\$",
-            style: FontsCustom.heading,
+          appBar: AppBar(
+            backgroundColor: ColorCustomScheme.appBarColor,
+            title: Text(
+              "BOOKING\$",
+              style: FontsCustom.heading,
+            ),
+            centerTitle: true,
+            bottom: TabBar(
+              controller: tabController,
+              tabs: [Tab(text: 'Individual/Group'), Tab(text: 'Team')],
+              indicator:
+                  BoxDecoration(color: ColorCustomScheme.appBarColorSelected),
+            ),
           ),
-          centerTitle: true,
-          bottom: TabBar(
-            tabs: [Tab(text: 'Individual/Group'), Tab(text: 'Team')],
-            indicator:
-                BoxDecoration(color: ColorCustomScheme.appBarColorSelected),
+          body: TabBarView(
+            controller: tabController,
+            children: [
+              IndividualTab(widget.userlogged),
+              TeamTab(widget.userlogged)
+            ],
           ),
-        ),
-        body: TabBarView(
-          children: [IndividualTab(userlogged), TeamTab(userlogged)],
-        ),
-        bottomNavigationBar: BottomAppBar(
-            color: ColorCustomScheme.appBarColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: IconButton(
-                      onPressed: () {
-                        context.go("/home");
-                      },
-                      icon: Icon(
-                        Icons.home,
-                        color: ColorCustomScheme.backgroundColor,
-                      )),
-                ),
-                Expanded(
-                  child: IconButton(
-                      onPressed: () {
-                        context.go("/team");
-                      },
-                      icon: Icon(
-                        Icons.people,
-                        color: ColorCustomScheme.backgroundColor,
-                      )),
-                ),
-                Expanded(
-                  child: IconButton(
-                      onPressed: () async {
-                        final storage = new FlutterSecureStorage();
-                        await storage.deleteAll();
-                        context.go("/login");
-                      },
-                      icon: Icon(
-                        Icons.logout,
-                        color: ColorCustomScheme.backgroundColor,
-                      )),
-                )
-              ],
-            )),
-      ),
+          bottomNavigationBar: BottomAppBar(
+              color: ColorCustomScheme.appBarColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: IconButton(
+                        onPressed: () {
+                          context.go("/home");
+                        },
+                        icon: Icon(
+                          Icons.home,
+                          color: ColorCustomScheme.backgroundColor,
+                        )),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                        onPressed: () {
+                          context.go("/team");
+                        },
+                        icon: Icon(
+                          Icons.people,
+                          color: ColorCustomScheme.backgroundColor,
+                        )),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                        onPressed: () async {
+                          final storage = new FlutterSecureStorage();
+                          await storage.deleteAll();
+                          context.go("/login");
+                        },
+                        icon: Icon(
+                          Icons.logout,
+                          color: ColorCustomScheme.backgroundColor,
+                        )),
+                  )
+                ],
+              )),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AmenityAlertBox();
+                  });
+            },
+            child: Icon(Icons.add),
+            backgroundColor: ColorCustomScheme.appBarColor,
+          )),
     ));
   }
 }

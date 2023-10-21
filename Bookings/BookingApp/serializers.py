@@ -15,6 +15,10 @@ class AmenitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Amenity
         fields = '__all__'  
+class AmenitySlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AmenitySlot
+        fields = '__all__'  
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request

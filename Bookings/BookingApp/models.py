@@ -1,4 +1,6 @@
 
+import uuid
+import django
 from django.core.validators import *
 from django.db import models
 from django.utils import timezone
@@ -22,33 +24,43 @@ class Event(models.Model):
     minTeamSize=models.IntegerField(validators=[MinValueValidator(1)] ,default=1)
     maxTeamSize=models.IntegerField(default=1)
     payment=models.DecimalField(default=0,decimal_places=2,max_digits=10)
-
 class Amenity(models.Model):
     amenityId=models.CharField(max_length=100,primary_key=True,default='0')
     amenityName=models.CharField(max_length=100)
     amenityPicture=models.ImageField(upload_to='images/',blank=True)
-    amenityDate=models.DateTimeField(default=timezone.now)
-    ammenityDateEnd=models.DateTimeField(default=timezone.now)
-    recurrance=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
     userProvider=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    recurrance=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
+
+class AmenitySlot(models.Model):
+    
+    amenity=models.ForeignKey(Amenity,on_delete=models.CASCADE)
+    amenityDate=models.DateField(default=timezone.now,blank=True,null=True)
+    ammenitySlotStart=models.TimeField(default=timezone.now)
+    ammenitySlotEnd=models.TimeField(default=timezone.now)
+    
+    
     capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
 
 class Team(models.Model):
-    teamId=models.CharField(max_length=100,primary_key=True,default='0')
+    teamId=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     teamName=models.CharField(max_length=100)
     users=models.ManyToManyField(User)
     isAdmin=models.JSONField(default=dict,blank=True)
     bookedEvents=models.ManyToManyField(Event,blank=True)
 
 class Request(models.Model):
-    requestId=models.CharField(max_length=100,primary_key=True,default='0')
+    requestId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event=models.ForeignKey(Event, on_delete=models.CASCADE,blank=True,null=True)
     amenity=models.ForeignKey(Amenity, on_delete=models.CASCADE,blank=True,null=True)
     timeRequest=models.DateTimeField(default=timezone.now)
     capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
     payment=models.ImageField(upload_to='images/',null=True)
-    teamId=models.ForeignKey(Team, on_delete=models.CASCADE,blank=True)
+    teamId=models.ForeignKey(Team, on_delete=models.CASCADE,blank=True,null=True)
     individuals=models.ManyToManyField(User,blank=True)
+    dateSlot=models.DateField(blank=True,null=True)
+    timeStart=models.TimeField(blank=True,null=True)
+    
+    
 
 class Booking(models.Model):
     bookingId=models.CharField(max_length=100,primary_key=True,default='0')

@@ -39,7 +39,9 @@ urlpatterns = [
 
     path('amenity/', AmenityListView.as_view(), name='amenity-list'),
     path('amenity/<str:pk>/', AmenityDetailView.as_view(), name='amenity-detail'),
-    path('ammenity/by-amenityname/<str:amenityname>/', AmenityByName.as_view(), name='amenity-by-name'),
+    path('amenity/by-amenityname/<str:amenityname>/', AmenityByName.as_view(), name='amenity-by-name'),
+    path('amenity/regex/<str:amenityName>/', AmenityRegex.as_view(), name='amenity-regex'),
+    path('amenity/getslot/<str:amenityId>/', AmmenitySlotTiming.as_view(), name='amenity-slot'),
 
     path('booking/', BookingListView.as_view(), name='booking-list'),
     path('booking/<str:pk>/', BookingDetailView.as_view(), name='booking-detail'),

@@ -2,40 +2,50 @@ import 'package:bookingsapp/assets/colors.dart';
 import 'package:bookingsapp/assets/fonts.dart';
 import 'package:bookingsapp/database/database.dart';
 import 'package:bookingsapp/models/user.dart';
+import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class UserSearch extends ConsumerStatefulWidget {
+class GroupMembers extends ConsumerStatefulWidget {
   final context;
-  final List<User> users;
-  final String teamId;
+  final List<String> users;
 
-  const UserSearch(this.context, this.users, this.teamId);
+  const GroupMembers(this.context, this.users);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _UserSearchState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _GroupMembersState();
 }
 
-class _UserSearchState extends ConsumerState<UserSearch> {
+class _GroupMembersState extends ConsumerState<GroupMembers> {
   TextEditingController _text = TextEditingController();
   String like = '';
   Map<String, bool> add = {};
+
   Future<List<User>> getUsers(String like) async {
-    List<String> userIds = widget.users.map((user) => user.userId).toList();
     var response = await DatabaseQueries.getUserRegex(like);
     List<User> users = [];
 
     for (var indv in response.data) {
-      if (!userIds.contains(indv['userId'])) {
+      if (indv['userId'] != ref.read(userLogged).userId) {
         users.add(User.set(indv));
       }
     }
+
     return users;
   }
 
   void rebuildWidget() {
     setState(() {});
+  }
+
+  void initState() {
+    super.initState();
+    setState(() {
+      for (var indv in widget.users) {
+        add[indv] = true;
+      }
+    });
   }
 
   @override
@@ -95,6 +105,8 @@ class _UserSearchState extends ConsumerState<UserSearch> {
                           onTap: () async {
                             add[snapshot.data![index].userId] =
                                 !(add[snapshot.data![index].userId] ?? false);
+                            print(add);
+
                             rebuildWidget();
                           },
                           leading: CircleAvatar(
@@ -133,13 +145,15 @@ class _UserSearchState extends ConsumerState<UserSearch> {
             ),
             ElevatedButton(
                 onPressed: () async {
+                  List<String> userReturn = [];
+                  print(add);
                   for (var userInd in add.keys) {
-                    if (add[userInd]!) {
-                      await DatabaseQueries.addUserTeam(widget.teamId, userInd);
+                    if (add[userInd]! && !userReturn.contains(userInd)) {
+                      userReturn.add(userInd);
                     }
                   }
-
-                  Navigator.of(widget.context).pop("confirmed");
+                  print(userReturn);
+                  Navigator.of(widget.context).pop(userReturn);
                 },
                 child: Text('Confirm')),
           ],

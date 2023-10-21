@@ -80,6 +80,14 @@ class DatabaseQueries {
     return response;
   }
 
+  static Future<Response> getAmmenitySlot(String ammenityId) async {
+    String pathAmenity = "$ipAdd/amenity/getslot/$ammenityId/";
+    var dio = Dio();
+    var response = await dio.get(pathAmenity);
+
+    return response;
+  }
+
   static Future<Response> getEventDetails(String eventId) async {
     String pathEvent = "$ipAdd/event/$eventId/";
     var dio = Dio();
@@ -90,6 +98,14 @@ class DatabaseQueries {
 
   static Future<Response> getEventRegex(String like) async {
     String pathEvent = "$ipAdd/event/regex/$like/";
+    var dio = Dio();
+    var response = await dio.get(pathEvent);
+
+    return response;
+  }
+
+  static Future<Response> getAmenityRegex(String like) async {
+    String pathEvent = "$ipAdd/amenity/regex/$like/";
     var dio = Dio();
     var response = await dio.get(pathEvent);
 
@@ -132,5 +148,44 @@ class DatabaseQueries {
     }
     var response = await dio.post(path, data: formData);
     return response;
+  }
+
+  static Future<dynamic> makeAmmenityRequest(
+    String amenityId,
+    List<String> users,
+    DateTime timeStart,
+    DateTime date,
+  ) async {
+    String path = '$ipAdd/request/';
+    var dio = Dio();
+    FormData formData;
+
+    formData = FormData.fromMap({
+      'amenity_id': amenityId,
+      'users': users,
+      'timeStart': timeStart,
+      'date': date
+    });
+
+    var response = await dio.post(path, data: formData);
+    return response;
+  }
+
+  static Future<void> createTeam(
+      String teamName, List<String> users, String userlogged) async {
+    String path = '$ipAdd/team/';
+    var dio = Dio();
+    FormData formData;
+    Map<String, bool> isAdmin =
+        Map.fromIterable(users, key: (user) => user, value: (_) => false);
+    isAdmin[userlogged] = true;
+
+    formData = FormData.fromMap({
+      'teamName': teamName,
+      'users': users,
+      'isAdmin': isAdmin,
+    });
+
+    var response = await dio.post(path, data: formData);
   }
 }
