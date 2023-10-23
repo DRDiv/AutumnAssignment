@@ -1,6 +1,9 @@
+import 'package:bookingsapp/src/screens/amenityAdmin.dart';
 import 'package:bookingsapp/src/screens/ammenitybooking.dart';
+import 'package:bookingsapp/src/screens/eventAdmin.dart';
 import 'package:bookingsapp/src/screens/eventbooking.dart';
 import 'package:bookingsapp/src/screens/home.dart';
+import 'package:bookingsapp/src/screens/homeadmin.dart';
 import 'package:bookingsapp/src/screens/login.dart';
 import 'package:bookingsapp/src/screens/teamcreation.dart';
 import 'package:bookingsapp/src/screens/teams.dart';
@@ -29,6 +32,24 @@ GoRouter router = GoRouter(initialLocation: "/transition", routes: [
     path: "/home",
     pageBuilder: (context, state) {
       return MaterialPage(child: HomeScreen());
+    },
+  ),
+  GoRoute(
+    path: "/homeAdmin",
+    pageBuilder: (context, state) {
+      return MaterialPage(child: HomeAdmin());
+    },
+  ),
+  GoRoute(
+    path: "/eventAdmin",
+    pageBuilder: (context, state) {
+      return MaterialPage(child: EventAdmin());
+    },
+  ),
+  GoRoute(
+    path: "/amenityAdmin",
+    pageBuilder: (context, state) {
+      return MaterialPage(child: AmenityAdmin());
     },
   ),
   GoRoute(

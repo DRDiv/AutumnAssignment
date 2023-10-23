@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final ip = StateProvider<String>((ref) => "http://10.81.50.27:8000");
@@ -186,6 +187,73 @@ class DatabaseQueries {
       'isAdmin': isAdmin,
     });
 
+    var response = await dio.post(path, data: formData);
+  }
+
+  static Future<void> createEvent(
+      String eventName,
+      String userId,
+      DateTime eventDate,
+      int minTeamSize,
+      int maxTeamSize,
+      double payment,
+      File? image) async {
+    String path = '$ipAdd/event/';
+    FormData formData;
+    var dio = Dio();
+    if (image != null) {
+      formData = FormData.fromMap({
+        "userId": userId,
+        "eventName": eventName,
+        "eventDate": eventDate.toIso8601String(),
+        "minTeamSize": minTeamSize,
+        "maxTeamSize": maxTeamSize,
+        "payment": payment,
+        'eventPicture': await MultipartFile.fromFile(image.path,
+            filename: '${image.hashCode}.jpg'),
+      });
+    } else {
+      formData = FormData.fromMap({
+        "userId": userId,
+        "eventName": eventName,
+        "eventDate": eventDate.toIso8601String(),
+        "minTeamSize": minTeamSize,
+        "maxTeamSize": maxTeamSize,
+        "payment": payment,
+      });
+    }
+    var response = await dio.post(path, data: formData);
+  }
+
+  static Future<void> createAmenity(String amenityName, String userId,
+      String recuracne, List<dynamic> slot, File? image, double capcity) async {
+    String path = '$ipAdd/amenity/';
+    FormData formData;
+    List<dynamic> startTimes = slot.map((slots) => slots.startTime).toList();
+    List<dynamic> endTimes = slot.map((slots) => slots.endTime).toList();
+
+    var dio = Dio();
+    if (image != null) {
+      formData = FormData.fromMap({
+        "userId": userId,
+        "amenityName": amenityName,
+        "recurance": recuracne,
+        'eventPicture': await MultipartFile.fromFile(image.path,
+            filename: '${image.hashCode}.jpg'),
+        "startTimes": startTimes,
+        "endTimes": endTimes,
+        "capacity": capcity.toInt(),
+      });
+    } else {
+      formData = FormData.fromMap({
+        "userId": userId,
+        "amenityName": amenityName,
+        "recurance": recuracne,
+        "startTimes": startTimes,
+        "endTimes": endTimes,
+        "capacity": capcity.toInt(),
+      });
+    }
     var response = await dio.post(path, data: formData);
   }
 }

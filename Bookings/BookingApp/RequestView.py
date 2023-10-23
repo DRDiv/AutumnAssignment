@@ -41,7 +41,8 @@ class RequestListView(generics.ListCreateAPIView):
                 teamId=team,
                 capacity=team.users.count(),
                 timeRequest=timezone.now(),
-                payment=payment_image
+                payment=payment_image,
+                userProvider=event.userProvider.userId
             )
 
             request.save()
@@ -79,6 +80,7 @@ class RequestListView(generics.ListCreateAPIView):
                 
                 dateSlot=dateSlot,
                 timeStart=timeStart,
+                userProvider=amenity.userProvider.userId
 
             )
             

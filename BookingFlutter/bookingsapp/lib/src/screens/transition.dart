@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:bookingsapp/database/database.dart';
+import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/main.dart';
-import 'package:bookingsapp/models/user.dart';
+import 'package:bookingsapp/src/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,6 +37,9 @@ class _TransitionScreenState extends ConsumerState<TransitionScreen> {
         User userlogged = User.set(responseData);
 
         ref.watch(userLogged.notifier).state = userlogged;
+        if (userlogged.ammenityProvider) {
+          return "/homeAdmin";
+        }
         return "/home";
       } else if (currentUser.statusCode == 404) {
         return "/login";

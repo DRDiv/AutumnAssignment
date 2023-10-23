@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bookingsapp/assets/colors.dart';
-import 'package:bookingsapp/assets/fonts.dart';
-import 'package:bookingsapp/database/database.dart';
-import 'package:bookingsapp/models/ammenity.dart';
+import 'package:bookingsapp/src/assets/colors.dart';
+import 'package:bookingsapp/src/assets/fonts.dart';
+import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/models/ammenity.dart';
 
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/groupmembers.dart';

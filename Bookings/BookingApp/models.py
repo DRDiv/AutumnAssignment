@@ -16,7 +16,7 @@ class User(models.Model):
     userSession=models.CharField(max_length=100,blank=True)
 
 class Event(models.Model):
-    eventId=models.CharField(max_length=100,primary_key=True,default='0')
+    eventId=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     eventName=models.CharField(max_length=100)
     eventPicture=models.ImageField(upload_to='images/',null=True,blank=True)
     eventDate=models.DateTimeField(default=timezone.now)
@@ -25,7 +25,7 @@ class Event(models.Model):
     maxTeamSize=models.IntegerField(default=1)
     payment=models.DecimalField(default=0,decimal_places=2,max_digits=10)
 class Amenity(models.Model):
-    amenityId=models.CharField(max_length=100,primary_key=True,default='0')
+    amenityId=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     amenityName=models.CharField(max_length=100)
     amenityPicture=models.ImageField(upload_to='images/',blank=True)
     userProvider=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
@@ -35,8 +35,8 @@ class AmenitySlot(models.Model):
     
     amenity=models.ForeignKey(Amenity,on_delete=models.CASCADE)
     amenityDate=models.DateField(default=timezone.now,blank=True,null=True)
-    ammenitySlotStart=models.TimeField(default=timezone.now)
-    ammenitySlotEnd=models.TimeField(default=timezone.now)
+    amenitySlotStart=models.TimeField(default=timezone.now)
+    amenitySlotEnd=models.TimeField(default=timezone.now)
     
     
     capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
@@ -59,7 +59,7 @@ class Request(models.Model):
     individuals=models.ManyToManyField(User,blank=True)
     dateSlot=models.DateField(blank=True,null=True)
     timeStart=models.TimeField(blank=True,null=True)
-    
+    userProvider=models.CharField(default='')
     
 
 class Booking(models.Model):

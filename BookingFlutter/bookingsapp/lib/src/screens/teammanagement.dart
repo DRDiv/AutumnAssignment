@@ -1,9 +1,10 @@
-import 'package:bookingsapp/assets/colors.dart';
-import 'package:bookingsapp/assets/fonts.dart';
-import 'package:bookingsapp/database/database.dart';
-import 'package:bookingsapp/models/event.dart';
-import 'package:bookingsapp/models/team.dart';
-import 'package:bookingsapp/models/user.dart';
+import 'package:bookingsapp/src/assets/colors.dart';
+import 'package:bookingsapp/src/assets/fonts.dart';
+import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/models/event.dart';
+import 'package:bookingsapp/src/models/team.dart';
+import 'package:bookingsapp/src/models/user.dart';
+
 import 'package:bookingsapp/src/screens/eventsearch.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/screens/usersearch.dart';

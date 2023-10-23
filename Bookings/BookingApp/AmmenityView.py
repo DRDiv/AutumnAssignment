@@ -10,10 +10,43 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 
+from datetime import time
 
+def parse_time(time_str):
+    time_str = time_str.replace('TimeOfDay(', '').replace(')', '')
+    hours, minutes = map(int, time_str.split(':'))
+    return time(hours, minutes)
 class AmenityListView(generics.ListCreateAPIView):
     queryset = Amenity.objects.all()
     serializer_class = AmenitySerializer
+    def post(self, request, *args, **kwargs):
+        print(request.data)
+        userId=request.data.get('userId')
+        amenityName=request.data.get('amenityName')
+      
+        recurance=request.data.get('recurance')
+        amenityPicture=request.data.get('amenityPicture')
+        user=get_object_or_404(User.objects.all(),userId=userId)
+        start_times = [parse_time(start_time_str) for start_time_str in request.data.getlist('startTimes')]
+        end_times = [parse_time(end_time_str) for end_time_str in request.data.getlist('endTimes')]
+        capacity=request.data.get('capacity')
+        amenity=Amenity(
+            amenityName=amenityName,
+            amenityPicture=amenityPicture,
+            userProvider=user,
+            recurrance=recurance
+
+        )
+        amenity.save()
+        for index in range(len(start_times)):
+            amenitySlot=AmenitySlot(
+                amenity=amenity,
+                amenitySlotStart=start_times[index],
+                amenitySlotEnd=end_times[index],
+                capacity=capacity,
+            )
+            amenitySlot.save()
+        return Response()
 
 class AmenityDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Amenity.objects.all()

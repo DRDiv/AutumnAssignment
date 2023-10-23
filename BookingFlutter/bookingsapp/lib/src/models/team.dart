@@ -1,6 +1,6 @@
-import 'package:bookingsapp/database/database.dart';
-import 'package:bookingsapp/models/event.dart';
-import 'package:bookingsapp/models/user.dart';
+import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/models/event.dart';
+import 'package:bookingsapp/src/models/user.dart';
 
 class Team {
   String teamId = "", teamName = "";

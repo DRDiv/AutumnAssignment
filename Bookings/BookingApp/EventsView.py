@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from urllib.parse import urlencode
 
@@ -14,6 +15,29 @@ from .serializers import *
 class EventListView(generics.ListCreateAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    def post(self, request, *args):
+        print(request.data)
+        userId=request.data.get('userId')
+        eventName=request.data.get('eventName')
+        eventDate=request.data.get('eventDate')
+        minTeamSize=request.data.get('minTeamSize')
+        maxTeamSize=request.data.get('maxTeamSize')
+        payment=request.data.get('payment')
+        eventPicture=request.data.get('eventPicture')
+        user=get_object_or_404(User.objects.all(),userId=userId)
+        eventDate = timezone.make_aware(datetime.fromisoformat(eventDate))
+        event=Event(
+            eventName=eventName, 
+            eventPicture=eventPicture, 
+            eventDate=eventDate,
+            minTeamSize=minTeamSize,
+            maxTeamSize=maxTeamSize,
+            payment=payment,
+            userProvider=user
+
+        )
+        event.save()
+        return Response()
 
 class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.all()
@@ -44,7 +68,7 @@ class EventRegex(generics.ListCreateAPIView):
     def get_queryset(self):
         substring = self.kwargs.get('eventName')
         if substring is not None:
-            queryset = Event.objects.filter(eventName__icontains=substring)
+            queryset = Event.objects.filter(eventName__icontains=substring, eventDate__gt=timezone.now())
         else:
             queryset = Event.objects.all()
         return queryset

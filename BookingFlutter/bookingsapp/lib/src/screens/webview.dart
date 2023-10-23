@@ -1,5 +1,5 @@
-import 'package:bookingsapp/database/database.dart';
-import 'package:bookingsapp/models/user.dart';
+import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

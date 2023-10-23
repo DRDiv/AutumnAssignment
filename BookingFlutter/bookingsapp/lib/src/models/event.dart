@@ -1,5 +1,5 @@
-import 'package:bookingsapp/database/database.dart';
-import 'package:bookingsapp/models/user.dart';
+import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/models/user.dart';
 
 class Event {
   String eventId = "", eventName = "", eventPicture = "", eventDate = "";
