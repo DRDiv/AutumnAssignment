@@ -72,3 +72,13 @@ class EventRegex(generics.ListCreateAPIView):
         else:
             queryset = Event.objects.all()
         return queryset
+class EventUserProvider(generics.ListCreateAPIView):
+    lookup_field ='userProvider'
+    serializer_class=EventSerializer
+    def get_queryset(self):
+        userProvider = self.kwargs.get('userProvider')
+        user=get_object_or_404(User.objects.all(),userId=userProvider)
+        
+        queryset = Event.objects.filter(userProvider=user)
+        
+        return queryset

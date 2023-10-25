@@ -183,6 +183,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                               );
                             },
                           );
+                          router.pop();
                         },
                         child: Text("Send Request"))
                   ],

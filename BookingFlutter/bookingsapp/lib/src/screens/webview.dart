@@ -34,6 +34,7 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
           initialOptions: InAppWebViewGroupOptions(
             crossPlatform: InAppWebViewOptions(
               useShouldOverrideUrlLoading: true,
+              clearCache: true,
             ),
           ),
           onLoadStart: (controller, url) async {
@@ -53,7 +54,10 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
               await DatabaseQueries.updateSessionToken(
                   ref.read(userLogged).userId,
                   url.queryParameters['sessionToken']!);
-              context.go("/home");
+              if (ref.read(userLogged).ammenityProvider) {
+                context.go("/homeAdmin");
+              } else
+                context.go("/home");
             }
           },
         ),

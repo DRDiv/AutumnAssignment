@@ -33,7 +33,8 @@ class RequestListView(generics.ListCreateAPIView):
             team=get_object_or_404(Team.objects.all(),teamId=team_id)
             event=get_object_or_404(Event.objects.all(),eventId=event_id)
             query=queryset.filter(teamId=team).filter(event=event).all()
-            if query is not None:
+            print(query)
+            if query :
                 return Response({"message": "Request already pending"})
             request = Request(
                
@@ -60,18 +61,18 @@ class RequestListView(generics.ListCreateAPIView):
             dateSlot = datetime.strptime(date, date_time_format).date()
              
             timeStart = datetime.strptime(time, date_time_format).time()
-            print(dateSlot,timeStart)
+          
             for indv in users:
                 print(indv)
                 userind=get_object_or_404(User.objects.all(),userId=indv)
                
                 userobj.append(userind)
-                print(userobj)
+               
                 query=queryset.filter(  individuals__in=userobj,    amenity=amenity,dateSlot=dateSlot,timeStart__contains=timeStart, ).all()
-                print(query)
+                
                 if query.count()!=0:
                     return Response({'message':f"Request Already Pending for {userind.userName}"})
-            print(request.data)
+           
             request = Request(
                
                 amenity=amenity,
@@ -92,6 +93,46 @@ class RequestListView(generics.ListCreateAPIView):
 class RequestDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Request.objects.all()
     serializer_class = RequestSerializer
+class RequestProvider(generics.ListAPIView):
+    lookup_field = "userProvider"
+    serializer_class = RequestSerializer
+
+    def get_queryset(self):
+        userId = self.kwargs['userProvider']
+        queryset = Request.objects.filter(userProvider=userId)
+        return queryset
+class RequestToBooking(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Request.objects.all()
+    serializer_class = RequestSerializer
+
+    def get(self, request, *args, **kwargs):
+        requestObj = self.get_object()
+
+        
+       
+        
+       
+        booking = Booking(
+                event=requestObj.event,
+            amenity=requestObj.amenity,
+            timeRequest=requestObj.timeRequest,
+            capacity=requestObj.capacity,
+            teamId=requestObj.teamId,
+            dateSlot=requestObj.dateSlot,
+    timeStart=requestObj.timeStart,
+            verified=False
+        )
+        booking.save()   
+        for individual in requestObj.individuals.all():
+                booking.individuals.add(individual)  
+        requestObj.delete()    
+        if booking.event is not None and booking.teamId is not None:
+            team = Team.objects.get(pk=booking.teamId)
+            team.bookedEvents.add(booking.event)
+            team.save()   
+        return Response( status=status.HTTP_201_CREATED)
+        
+
 
 
 

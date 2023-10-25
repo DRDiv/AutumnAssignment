@@ -26,7 +26,7 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
     for (var indv in response.data) {
       Amenity amenityInd = Amenity.defaultAmenity();
 
-      await amenityInd.setData(indv);
+      await amenityInd.setData(indv, "", "");
 
       amenity.add(amenityInd);
     }

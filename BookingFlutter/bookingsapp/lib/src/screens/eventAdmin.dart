@@ -213,7 +213,6 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                   }
 
                   if (_payment.text.isEmpty) {
-                    // Payment field is empty, show an error message.
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Please enter a payment amount.'),
@@ -223,7 +222,6 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                   }
 
                   if (_minTeam > _maxTeam) {
-                    // MinTeam size is greater than or equal to MaxTeam size, show an error message.
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(

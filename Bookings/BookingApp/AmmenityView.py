@@ -34,13 +34,14 @@ class AmenityListView(generics.ListCreateAPIView):
             amenityName=amenityName,
             amenityPicture=amenityPicture,
             userProvider=user,
-            recurrance=recurance
-
+            recurrance=recurance,
+            capacity=capacity,
         )
         amenity.save()
         for index in range(len(start_times)):
             amenitySlot=AmenitySlot(
                 amenity=amenity,
+                amenityDate=None,
                 amenitySlotStart=start_times[index],
                 amenitySlotEnd=end_times[index],
                 capacity=capacity,
@@ -78,5 +79,15 @@ class AmmenitySlotTiming(generics.ListCreateAPIView):
         amenityobj=get_object_or_404(Amenity.objects.all(),amenityId=amenity)
         
         queryset = AmenitySlot.objects.filter(amenity=amenityobj,amenityDate__isnull=True)
+        
+        return queryset
+class AmmenityUserProvider(generics.ListCreateAPIView):
+    lookup_field ='userProvider'
+    serializer_class=AmenitySerializer
+    def get_queryset(self):
+        userProvider = self.kwargs.get('userProvider')
+        user=get_object_or_404(User.objects.all(),userId=userProvider)
+        
+        queryset = Amenity.objects.filter(userProvider=user)
         
         return queryset

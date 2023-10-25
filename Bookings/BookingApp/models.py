@@ -30,7 +30,7 @@ class Amenity(models.Model):
     amenityPicture=models.ImageField(upload_to='images/',blank=True)
     userProvider=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     recurrance=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
-
+    capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
 class AmenitySlot(models.Model):
     
     amenity=models.ForeignKey(Amenity,on_delete=models.CASCADE)
@@ -63,14 +63,16 @@ class Request(models.Model):
     
 
 class Booking(models.Model):
-    bookingId=models.CharField(max_length=100,primary_key=True,default='0')
+    bookingId=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event=models.ForeignKey(Event, on_delete=models.CASCADE,blank=True,default=None,null=True)
     amenity=models.ForeignKey(Amenity, on_delete=models.CASCADE,blank=True,default=None,null=True)
     timeRequest=models.DateTimeField(default=timezone.now)
     capacity=models.IntegerField(validators=[MinValueValidator(1)] ,default=1)
     teamId=models.ForeignKey(Team, on_delete=models.CASCADE,default=None,blank=True,null=True)
-    individuals=models.ForeignKey(User,on_delete=models.CASCADE,default=None,blank=True,null=True)
+    individuals=models.ManyToManyField(User,blank=True)
     verified=models.BooleanField(default=False)
+    dateSlot=models.DateField(blank=True,null=True)
+    timeStart=models.TimeField(blank=True,null=True)
 
 
 

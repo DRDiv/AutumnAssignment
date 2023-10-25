@@ -25,36 +25,37 @@ class DateSelector extends StatefulWidget {
 
 class _DateSelectorState extends State<DateSelector> {
   String recurance = '';
-  late List<DateTime> dates;
+  List<DateTime> dates = [];
 
   int selectedIndex = 0;
   void initState() {
     super.initState();
-    if (widget.recurance == "D") {
+    print(widget.recurance);
+    if (widget.recurance == "Daily") {
       setState(() {
         dates = List.generate(30, (index) {
           return DateTime.now().add(Duration(days: index));
         });
       });
-    } else if (widget.recurance == "W") {
+    } else if (widget.recurance == "Weekly") {
       setState(() {
         dates = List.generate(15, (index) {
           return DateTime.now().add(Duration(days: index * 7));
         });
       });
-    } else if (widget.recurance == "M") {
+    } else if (widget.recurance == "Monthly") {
       setState(() {
         dates = List.generate(3, (index) {
           return DateTime.now().add(Duration(days: index * 30));
         });
       });
-    } else if (widget.recurance == "Y") {
+    } else if (widget.recurance == "Yearly") {
       setState(() {
         dates = List.generate(1, (index) {
           return DateTime.now().add(Duration(days: index * 365));
         });
       });
-    } else if (widget.recurance == "O") {
+    } else if (widget.recurance == "Onetime") {
       setState(() {
         dates = List.generate(1, (index) {
           return DateTime.now().add(Duration(days: index));
@@ -269,14 +270,16 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
   Future<void> setData() async {
     Amenity a = Amenity.defaultAmenity();
     await a.setData(
-        (await DatabaseQueries.getAmmenityDetails(widget.amenityId)).data);
+        (await DatabaseQueries.getAmmenityDetails(widget.amenityId)).data,
+        "",
+        "");
     var response = await DatabaseQueries.getAmmenitySlot(a.amenityId);
-
+    print(response.data);
     setState(() {
       users.add(ref.read(userLogged).userId);
       for (var indv in response.data) {
-        slots.add(formatTimeRange(
-            indv['ammenitySlotStart'], indv['ammenitySlotEnd']));
+        slots.add(
+            formatTimeRange(indv['amenitySlotStart'], indv['amenitySlotEnd']));
       }
       amenity = a;
 

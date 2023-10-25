@@ -1,70 +1,52 @@
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
-import 'package:bookingsapp/main.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 import 'package:bookingsapp/src/models/event.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
-import 'package:bookingsapp/src/screens/amenitysearch.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
-import 'package:bookingsapp/src/screens/userprofile.dart';
-import 'package:bookingsapp/src/screens/webview.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
-class IndividualTab extends StatefulWidget {
+class AmenityTab extends StatefulWidget {
   final User userlogged;
-
-  IndividualTab(this.userlogged);
+  const AmenityTab(this.userlogged);
 
   @override
-  _IndividualTabState createState() => _IndividualTabState();
+  State<AmenityTab> createState() => _AmenityTabState();
 }
 
-class _IndividualTabState extends State<IndividualTab> {
+class _AmenityTabState extends State<AmenityTab> {
   late Future<List<dynamic>> dataIndvFuture;
-
-  @override
   void initState() {
     super.initState();
     setState(() {
-      dataIndvFuture = getBookingsIndvidual();
+      dataIndvFuture = getAmmenityUser();
     });
   }
 
-  Future<List<dynamic>> getBookingsIndvidual() async {
+  Future<List<dynamic>> getAmmenityUser() async {
     try {
-      var bookingUser =
-          await DatabaseQueries.getBookingsUser(widget.userlogged.userId);
+      var amenityUser =
+          await DatabaseQueries.getAmmenityUser(widget.userlogged.userId);
 
-      if (bookingUser.statusCode == 200) {
-        List<dynamic> responseData = bookingUser.data;
+      if (amenityUser.statusCode == 200) {
+        List<dynamic> responseData = amenityUser.data;
 
         List<dynamic> typedData = [];
 
-        for (var responseInd in bookingUser.data) {
-          if (responseInd['amenity'] != null) {
-            var responseAmenity = await DatabaseQueries.getAmmenityDetails(
-                responseInd['amenity']);
-            Amenity amenity = Amenity.defaultAmenity();
-            await amenity.setData(responseAmenity.data, responseInd['dateSlot'],
-                responseInd['timeStart']);
-            typedData.add(amenity);
-          }
-          if (responseInd['event'] != null) {
-            var responseEvent =
-                await DatabaseQueries.getEventDetails(responseInd['event']);
-            Event event = Event.defaultEvent();
+        for (var responseInd in amenityUser.data) {
+          var responseAmenity = await DatabaseQueries.getAmmenityDetails(
+              responseInd['amenityId']);
 
-            await event.setData(responseEvent.data);
-            typedData.add(event);
-          }
+          Amenity amenity = Amenity.defaultAmenity();
+
+          await amenity.setData(responseAmenity.data, "", "");
+          typedData.add(amenity);
         }
 
         return typedData;
@@ -93,109 +75,79 @@ class _IndividualTabState extends State<IndividualTab> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
             child: Text(
-              "No Bookings Found",
+              "No Amenity Found",
               style: FontsCustom.bodyBigText,
             ),
           );
         } else {
-          // Data is available, build the ListView
           List<dynamic> dataIndv = snapshot.data ?? [];
           return ListView.builder(
             itemCount: dataIndv.length,
             itemBuilder: (context, index) {
               final item = dataIndv[index];
-              bool opcode = item.runtimeType.toString() == "Event";
-
-              // DateTime inputDateTime =
-              //     DateTime.parse(opcode ? item.eventDate : item.amenityDate);
-
-              // String formattedDateTime =
-              //     DateFormat.yMMMMd().add_jm().format(inputDateTime);
-              String formattedDateTime =
-                  opcode ? item.eventDate : item.amenityDate;
 
               return ListTile(
                 leading: CircleAvatar(
                     backgroundColor: ColorCustomScheme.backgroundColor,
                     radius: 15.0,
-                    child: ((opcode
-                                ? item.eventPicture
-                                : item.amenityPicture) ==
-                            "")
+                    child: ((item.amenityPicture) == "")
                         ? const Icon(Icons.access_alarm,
                             size: 30, color: Colors.black)
                         : ClipOval(
                             child: Image.network(
-                            opcode ? item.eventPicture : item.amenityPicture,
+                            item.amenityPicture,
                             width: 30.0,
                             height: 30.0,
                             fit: BoxFit.cover,
                           ))),
-                title: Text(opcode ? item.eventName : item.amenityName),
-                trailing: Text(formattedDateTime),
+                title: Text(item.amenityName),
               );
             },
           );
         }
       },
     );
+    ;
   }
 }
 
-class TeamTab extends StatefulWidget {
+class EventTab extends StatefulWidget {
   final User userlogged;
-
-  TeamTab(this.userlogged);
+  const EventTab(this.userlogged);
 
   @override
-  _TeamTabState createState() => _TeamTabState();
+  State<EventTab> createState() => _EventTabState();
 }
 
-class _TeamTabState extends State<TeamTab> {
-  late Future<List<dynamic>> dataTeamFuture;
-  List<String> teams = [];
-  @override
+class _EventTabState extends State<EventTab> {
+  late Future<List<dynamic>> dataIndvFuture;
   void initState() {
     super.initState();
     setState(() {
-      dataTeamFuture = getBookingsTeam();
+      dataIndvFuture = getAmmenityUser();
     });
   }
 
-  Future<List<dynamic>> getBookingsTeam() async {
+  Future<List<dynamic>> getAmmenityUser() async {
     try {
-      var bookingTeam =
-          await DatabaseQueries.getBookingsTeam(widget.userlogged.userId);
+      var amenityUser =
+          await DatabaseQueries.getEventUser(widget.userlogged.userId);
 
-      if (bookingTeam.statusCode == 200) {
-        List<dynamic> responseData = bookingTeam.data;
+      if (amenityUser.statusCode == 200) {
+        List<dynamic> responseData = amenityUser.data;
 
         List<dynamic> typedData = [];
-        List<String> teams = [];
-        for (var responseInd in bookingTeam.data) {
-          if (responseInd['amenity'] != null) {
-            var responseAmenity = await DatabaseQueries.getAmmenityDetails(
-                responseInd['amenity']);
-            Amenity amenity = Amenity.defaultAmenity();
-            await amenity.setData(responseAmenity.data, responseInd['dateSlot'],
-                responseInd['timeStart']);
-            typedData.add(amenity);
-          }
-          if (responseInd['event'] != null) {
-            var responseEvent =
-                await DatabaseQueries.getEventDetails(responseInd['event']);
-            Event event = Event.defaultEvent();
 
-            await event.setData(responseEvent.data);
-            typedData.add(event);
-          }
-          teams.add(
-              (await DatabaseQueries.getTeamDetails(responseInd['teamId']))
-                  .data['teamName']);
+        for (var responseInd in amenityUser.data) {
+          var responseEvent =
+              await DatabaseQueries.getEventDetails(responseInd['eventId']);
+
+          Event event = Event.defaultEvent();
+
+          await event.setData(responseEvent.data);
+          typedData.add(event);
         }
-        setState(() {
-          this.teams = teams;
-        });
+
         return typedData;
       }
     } catch (e) {
@@ -208,7 +160,7 @@ class _TeamTabState extends State<TeamTab> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-      future: dataTeamFuture,
+      future: dataIndvFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -222,51 +174,43 @@ class _TeamTabState extends State<TeamTab> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
             child: Text(
-              "No Bookings Found",
+              "No Amenity Found",
               style: FontsCustom.bodyBigText,
             ),
           );
         } else {
-          // Data is available, build the ListView
-          List<dynamic> dataTeam = snapshot.data ?? [];
+          List<dynamic> dataIndv = snapshot.data ?? [];
           return ListView.builder(
-            itemCount: dataTeam.length,
+            itemCount: dataIndv.length,
             itemBuilder: (context, index) {
-              final item = dataTeam[index];
-              bool opcode = item.runtimeType.toString() == "Event";
-
-              DateTime inputDateTime =
-                  DateTime.parse(opcode ? item.eventDate : item.amenityDate);
+              final item = dataIndv[index];
+              DateTime inputDateTime = DateTime.parse(item.eventDate);
 
               String formattedDateTime =
                   DateFormat.yMMMMd().add_jm().format(inputDateTime);
-
               return ListTile(
                 leading: CircleAvatar(
                     backgroundColor: ColorCustomScheme.backgroundColor,
-                    radius: 20.0,
-                    child: ((opcode
-                                ? item.eventPicture
-                                : item.amenityPicture) ==
-                            "")
+                    radius: 15.0,
+                    child: ((item.eventPicture) == "")
                         ? const Icon(Icons.access_alarm,
                             size: 30, color: Colors.black)
                         : ClipOval(
                             child: Image.network(
-                            opcode ? item.eventPicture : item.amenityPicture,
+                            item.eventPicture,
                             width: 30.0,
                             height: 30.0,
                             fit: BoxFit.cover,
                           ))),
-                title: Text(opcode ? item.eventName : item.amenityName),
-                subtitle: Text(teams[index]),
-                trailing: Text(formattedDateTime),
+                title: Text(item.eventName),
+                subtitle: Text(formattedDateTime),
               );
             },
           );
         }
       },
     );
+    ;
   }
 }
 
@@ -279,22 +223,13 @@ class TabWidget extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _TabWidgetState();
 }
 
-class _TabWidgetState extends ConsumerState<TabWidget>
-    with TickerProviderStateMixin {
-  late TabController tabController;
-  void initState() {
-    super.initState();
-    setState(() {
-      tabController = TabController(length: 2, vsync: this);
-    });
-  }
-
+class _TabWidgetState extends ConsumerState<TabWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: DefaultTabController(
-      length: 2,
-      child: Scaffold(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
           appBar: AppBar(
             backgroundColor: ColorCustomScheme.appBarColor,
             title: Text(
@@ -302,25 +237,16 @@ class _TabWidgetState extends ConsumerState<TabWidget>
               style: FontsCustom.heading,
             ),
             centerTitle: true,
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    router.push("/userprofile/${ref.read(userLogged).userId}");
-                  },
-                  icon: Icon(Icons.person))
-            ],
             bottom: TabBar(
-              controller: tabController,
-              tabs: [Tab(text: 'Individual/Group'), Tab(text: 'Team')],
+              tabs: [Tab(text: 'Amenity'), Tab(text: 'Event')],
               indicator:
                   BoxDecoration(color: ColorCustomScheme.appBarColorSelected),
             ),
           ),
           body: TabBarView(
-            controller: tabController,
             children: [
-              IndividualTab(widget.userlogged),
-              TeamTab(widget.userlogged)
+              AmenityTab(widget.userlogged),
+              EventTab(widget.userlogged),
             ],
           ),
           bottomNavigationBar: BottomAppBar(
@@ -331,7 +257,7 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                   Expanded(
                     child: IconButton(
                         onPressed: () {
-                          context.go("/home");
+                          context.go("/homeAdmin");
                         },
                         icon: Icon(
                           Icons.home,
@@ -341,10 +267,32 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                   Expanded(
                     child: IconButton(
                         onPressed: () {
-                          context.go("/team");
+                          router.push("/eventAdmin");
                         },
                         icon: Icon(
-                          Icons.people,
+                          Icons.event,
+                          color: ColorCustomScheme.backgroundColor,
+                        )),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                        onPressed: () {
+                          router.push("/amenityAdmin");
+                        },
+                        icon: Icon(
+                          Icons.local_activity,
+                          color: ColorCustomScheme.backgroundColor,
+                        )),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                        onPressed: () async {
+                          final storage = new FlutterSecureStorage();
+                          await storage.deleteAll();
+                          context.go("/adminManage");
+                        },
+                        icon: Icon(
+                          Icons.admin_panel_settings,
                           color: ColorCustomScheme.backgroundColor,
                         )),
                   ),
@@ -362,29 +310,20 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                   )
                 ],
               )),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AmenityAlertBox();
-                  });
-            },
-            child: Icon(Icons.add),
-            backgroundColor: ColorCustomScheme.appBarColor,
-          )),
-    ));
+        ),
+      ),
+    );
   }
 }
 
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+class AdminManage extends ConsumerStatefulWidget {
+  const AdminManage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _AdminManageState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _AdminManageState extends ConsumerState<AdminManage> {
   List<dynamic> dataIndv = [];
   Map dataTeam = {};
   bool isLoading = true;

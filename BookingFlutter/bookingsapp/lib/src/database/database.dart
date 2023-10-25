@@ -81,6 +81,14 @@ class DatabaseQueries {
     return response;
   }
 
+  static Future<Response> getAmmenityUser(String userId) async {
+    String pathAmenity = "$ipAdd/amenity/getbyuser/$userId/";
+    var dio = Dio();
+    var response = await dio.get(pathAmenity);
+
+    return response;
+  }
+
   static Future<Response> getAmmenitySlot(String ammenityId) async {
     String pathAmenity = "$ipAdd/amenity/getslot/$ammenityId/";
     var dio = Dio();
@@ -91,6 +99,14 @@ class DatabaseQueries {
 
   static Future<Response> getEventDetails(String eventId) async {
     String pathEvent = "$ipAdd/event/$eventId/";
+    var dio = Dio();
+    var response = await dio.get(pathEvent);
+
+    return response;
+  }
+
+  static Future<Response> getEventUser(String userId) async {
+    String pathEvent = "$ipAdd/event/getbyuser/$userId/";
     var dio = Dio();
     var response = await dio.get(pathEvent);
 
@@ -255,5 +271,29 @@ class DatabaseQueries {
       });
     }
     var response = await dio.post(path, data: formData);
+  }
+
+  static Future<Response> getRequest(String userId) async {
+    String pathUser = "$ipAdd/request/userprovider/$userId/";
+    var dio = Dio();
+    var response = await dio.get(pathUser);
+
+    return response;
+  }
+
+  static Future<Response> deleteRequest(String reqId) async {
+    String pathUser = "$ipAdd/request/$reqId";
+    var dio = Dio();
+    var response = await dio.delete(pathUser);
+
+    return response;
+  }
+
+  static Future<Response> requestToBooking(String reqId) async {
+    String pathUser = "$ipAdd/request/tobooking/$reqId";
+    var dio = Dio();
+    var response = await dio.get(pathUser);
+
+    return response;
   }
 }

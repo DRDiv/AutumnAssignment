@@ -29,19 +29,22 @@ urlpatterns = [
 
     path('request/', RequestListView.as_view(), name='request-list'),
     path('request/<str:pk>/', RequestDetailView.as_view(), name='request-detail'),
-
+    path('request/userprovider/<str:userProvider>/', RequestProvider.as_view(), name='request-detail'),
+    path('request/tobooking/<str:pk>/', RequestToBooking.as_view(), name='request-to-booking'),
 
     path('event/', EventListView.as_view(), name='event-list'),
     path('event/<str:pk>/', EventDetailView.as_view(), name='event-detail'),
     path('event/by-eventname/<str:eventname>/', EventByName.as_view(), name='event-by-name'),
     path('event/update/<int:pk>/', EventUpdateView.as_view(), name='event-update'),
     path('event/regex/<str:eventName>/', EventRegex.as_view(), name='event-regex'),
+    path('event/getbyuser/<str:userProvider>/',EventUserProvider.as_view(),name='amenity-user-provider'),
 
     path('amenity/', AmenityListView.as_view(), name='amenity-list'),
     path('amenity/<str:pk>/', AmenityDetailView.as_view(), name='amenity-detail'),
     path('amenity/by-amenityname/<str:amenityname>/', AmenityByName.as_view(), name='amenity-by-name'),
     path('amenity/regex/<str:amenityName>/', AmenityRegex.as_view(), name='amenity-regex'),
     path('amenity/getslot/<str:amenityId>/', AmmenitySlotTiming.as_view(), name='amenity-slot'),
+    path('amenity/getbyuser/<str:userProvider>/',AmmenityUserProvider.as_view(),name='amenity-user-provider'),
 
     path('booking/', BookingListView.as_view(), name='booking-list'),
     path('booking/<str:pk>/', BookingDetailView.as_view(), name='booking-detail'),
