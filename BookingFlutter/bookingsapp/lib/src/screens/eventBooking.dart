@@ -109,6 +109,11 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                       style: FontsCustom.bodySmallText,
                                     ),
                                     ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty
+                                              .all<Color>(ColorCustomScheme
+                                                  .appBarColor), // Change this color to your desired background color
+                                        ),
                                         onPressed: _getImage,
                                         child:
                                             Text("Insert Payment Screenshot"))
@@ -120,6 +125,11 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                     ),
                     SizedBox(height: 100),
                     ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              ColorCustomScheme
+                                  .appBarColor), // Change this color to your desired background color
+                        ),
                         onPressed: () async {
                           if (event.payment > 0 && image == null) {
                             showDialog(
@@ -138,6 +148,11 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                           style: FontsCustom.bodyBigText,
                                         ),
                                         ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor: MaterialStateProperty
+                                                  .all<Color>(ColorCustomScheme
+                                                      .appBarColor), // Change this color to your desired background color
+                                            ),
                                             onPressed: () {
                                               router.pop();
                                             },
@@ -173,8 +188,16 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                         style: FontsCustom.bodyBigText,
                                       ),
                                       ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty
+                                                .all<Color>(ColorCustomScheme
+                                                    .appBarColor), // Change this color to your desired background color
+                                          ),
                                           onPressed: () {
                                             router.pop();
+                                            if (json.decode(response
+                                                    .toString())['code'] ==
+                                                200) router.pop();
                                           },
                                           child: Text("OK"))
                                     ],
@@ -183,7 +206,6 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                               );
                             },
                           );
-                          router.pop();
                         },
                         child: Text("Send Request"))
                   ],

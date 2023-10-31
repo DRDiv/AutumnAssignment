@@ -47,10 +47,10 @@ class _SlotsEditorState extends State<SlotsEditor> {
               slot.endTime.hour * 60 + slot.endTime.minute &&
           newSlot.endTime.hour * 60 + newSlot.endTime.minute >
               slot.startTime.hour * 60 + slot.startTime.minute) {
-        return true; // Overlapping
+        return true;
       }
     }
-    return false; // Not overlapping
+    return false;
   }
 
   void addSlot() {
@@ -107,13 +107,17 @@ class _SlotsEditorState extends State<SlotsEditor> {
           ],
         ),
         SizedBox(height: 16),
-        Text('Selected Slots', style: FontsCustom.bodyBigText),
+        Text('SELECTED SLOTS', style: FontsCustom.bodyHeading),
         (widget.slots.isEmpty)
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text('No Slot Selected', style: FontsCustom.bodyBigText),
               )
-            : Expanded(
+            : Container(
+                constraints: BoxConstraints(
+                  maxHeight: 300.0, // Maximum height you want
+                ),
+                height: widget.slots.length * 100,
                 child: ListView.builder(
                   itemCount: widget.slots.length,
                   itemBuilder: (context, index) {
@@ -149,6 +153,10 @@ class TimePicker extends StatelessWidget {
       children: [
         Text(labelText),
         ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(ColorCustomScheme.appBarColor),
+          ),
           onPressed: () async {
             final pickedTime = await showTimePicker(
               context: context,
@@ -293,6 +301,9 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
             Text('Capacity: ${_capacity.toStringAsFixed(0)}',
                 style: FontsCustom.bodyBigText),
             Slider(
+              thumbColor: ColorCustomScheme.appBarColor,
+              activeColor: ColorCustomScheme.appBarColor,
+              inactiveColor: ColorCustomScheme.sliderColor,
               value: _capacity,
               onChanged: (newValue) {
                 setState(() {
@@ -332,16 +343,32 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                  height: 300,
-                  width: 300,
-                  child: SlotsEditor(slotDataList, slots)),
+              child: SlotsEditor(slotDataList, slots),
             ),
             SizedBox(
               height: 20,
             ),
             ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      ColorCustomScheme.appBarColor),
+                ),
                 onPressed: () async {
+                  if (_amenityName.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Amenity name cannot be empty'),
+                      ),
+                    );
+                    return;
+                  }
+                  if (slots.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("No slots selected"),
+                      ),
+                    );
+                  }
                   await DatabaseQueries.createAmenity(
                       _amenityName.text,
                       ref.read(userLogged).userId,

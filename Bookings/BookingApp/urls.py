@@ -30,6 +30,7 @@ urlpatterns = [
     path('request/', RequestListView.as_view(), name='request-list'),
     path('request/<str:pk>/', RequestDetailView.as_view(), name='request-detail'),
     path('request/userprovider/<str:userProvider>/', RequestProvider.as_view(), name='request-detail'),
+    path('request/user/<str:userId>/', RequestByUser.as_view(), name='request-user'),
     path('request/tobooking/<str:pk>/', RequestToBooking.as_view(), name='request-to-booking'),
 
     path('event/', EventListView.as_view(), name='event-list'),

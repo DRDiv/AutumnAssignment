@@ -7,7 +7,7 @@ import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 
 import 'package:bookingsapp/src/routing/routing.dart';
-import 'package:bookingsapp/src/screens/groupmembers.dart';
+import 'package:bookingsapp/src/screens/groupMembers.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,6 +72,11 @@ class _TeamCreationState extends ConsumerState<TeamCreation> {
               ),
               SizedBox(height: 50),
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      ColorCustomScheme
+                          .appBarColor), // Change this color to your desired background color
+                ),
                 onPressed: () async {
                   users = await showDialog(
                     context: context,
@@ -84,9 +89,12 @@ class _TeamCreationState extends ConsumerState<TeamCreation> {
               ),
               SizedBox(height: 100),
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      ColorCustomScheme.appBarColor),
+                ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    // The form is valid, proceed with creating the team
                     print(_text.text);
                     await DatabaseQueries.createTeam(
                       _text.text,

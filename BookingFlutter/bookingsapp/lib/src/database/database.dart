@@ -49,6 +49,14 @@ class DatabaseQueries {
     return response;
   }
 
+  static Future<Response> getUserRequest(String userId) async {
+    String pathUser = "$ipAdd/request/user/$userId/";
+    var dio = Dio();
+    var response = await dio.get(pathUser);
+
+    return response;
+  }
+
   static Future<Response> getTeamDetails(String teamId) async {
     String pathTeam = "$ipAdd/team/$teamId/";
     var dio = Dio();
@@ -282,7 +290,15 @@ class DatabaseQueries {
   }
 
   static Future<Response> deleteRequest(String reqId) async {
-    String pathUser = "$ipAdd/request/$reqId";
+    String pathUser = "$ipAdd/request/$reqId/";
+    var dio = Dio();
+    var response = await dio.delete(pathUser);
+
+    return response;
+  }
+
+  static Future<Response> deleteBooking(String bookingId) async {
+    String pathUser = "$ipAdd/booking/$bookingId/";
     var dio = Dio();
     var response = await dio.delete(pathUser);
 

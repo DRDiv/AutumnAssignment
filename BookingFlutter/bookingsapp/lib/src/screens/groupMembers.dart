@@ -28,7 +28,8 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
 
     for (var indv in response.data) {
       if (indv['userId'] != ref.read(userLogged).userId) {
-        users.add(User.set(indv));
+        User temp = User.set(indv);
+        if (!temp.ammenityProvider) users.add(temp);
       }
     }
 
@@ -144,6 +145,11 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
               },
             ),
             ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      ColorCustomScheme
+                          .appBarColor), // Change this color to your desired background color
+                ),
                 onPressed: () async {
                   List<String> userReturn = [];
                   print(add);

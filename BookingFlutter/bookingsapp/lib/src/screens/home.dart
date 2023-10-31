@@ -5,10 +5,11 @@ import 'package:bookingsapp/main.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 import 'package:bookingsapp/src/models/event.dart';
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/models/request.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
-import 'package:bookingsapp/src/screens/amenitysearch.dart';
+import 'package:bookingsapp/src/screens/amenitySearch.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
-import 'package:bookingsapp/src/screens/userprofile.dart';
+import 'package:bookingsapp/src/screens/userProfile.dart';
 import 'package:bookingsapp/src/screens/webview.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -78,66 +79,72 @@ class _IndividualTabState extends State<IndividualTab> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: dataIndvFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          print(snapshot.error);
-          return Center(
-            child: Text("An error occurred."),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-            child: Text(
-              "No Bookings Found",
-              style: FontsCustom.bodyBigText,
-            ),
-          );
-        } else {
-          // Data is available, build the ListView
-          List<dynamic> dataIndv = snapshot.data ?? [];
-          return ListView.builder(
-            itemCount: dataIndv.length,
-            itemBuilder: (context, index) {
-              final item = dataIndv[index];
-              bool opcode = item.runtimeType.toString() == "Event";
-
-              // DateTime inputDateTime =
-              //     DateTime.parse(opcode ? item.eventDate : item.amenityDate);
-
-              // String formattedDateTime =
-              //     DateFormat.yMMMMd().add_jm().format(inputDateTime);
-              String formattedDateTime =
-                  opcode ? item.eventDate : item.amenityDate;
-
-              return ListTile(
-                leading: CircleAvatar(
-                    backgroundColor: ColorCustomScheme.backgroundColor,
-                    radius: 15.0,
-                    child: ((opcode
-                                ? item.eventPicture
-                                : item.amenityPicture) ==
-                            "")
-                        ? const Icon(Icons.access_alarm,
-                            size: 30, color: Colors.black)
-                        : ClipOval(
-                            child: Image.network(
-                            opcode ? item.eventPicture : item.amenityPicture,
-                            width: 30.0,
-                            height: 30.0,
-                            fit: BoxFit.cover,
-                          ))),
-                title: Text(opcode ? item.eventName : item.amenityName),
-                trailing: Text(formattedDateTime),
-              );
-            },
-          );
-        }
+    return RefreshIndicator(
+      onRefresh: () async {
+        Future<List<dynamic>> dataIndvFuture = getBookingsIndvidual();
+        setState(() {
+          this.dataIndvFuture = dataIndvFuture;
+        });
       },
+      child: FutureBuilder<List<dynamic>>(
+        future: dataIndvFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            print(snapshot.error);
+            return Center(
+              child: Text("An error occurred."),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text(
+                "No Bookings Found",
+                style: FontsCustom.bodyBigText,
+              ),
+            );
+          } else {
+            List<dynamic> dataIndv = snapshot.data ?? [];
+            return ListView.builder(
+              itemCount: dataIndv.length,
+              itemBuilder: (context, index) {
+                final item = dataIndv[index];
+                bool opcode = item.runtimeType.toString() == "Event";
+
+                String formattedDateTime = opcode
+                    ? DateFormat.yMMMMd()
+                        .add_jm()
+                        .format(DateTime.parse(item.eventDate))
+                    : DateFormat("MMMM dd h:mm a").format(DateTime.parse(
+                        item.amenityDate + " " + item.amenitySlot));
+
+                return ListTile(
+                  leading: CircleAvatar(
+                      backgroundColor: ColorCustomScheme.backgroundColor,
+                      radius: 15.0,
+                      child: ((opcode
+                                  ? item.eventPicture
+                                  : item.amenityPicture) ==
+                              "")
+                          ? const Icon(Icons.access_alarm,
+                              size: 30, color: Colors.black)
+                          : ClipOval(
+                              child: Image.network(
+                              opcode ? item.eventPicture : item.amenityPicture,
+                              width: 30.0,
+                              height: 30.0,
+                              fit: BoxFit.cover,
+                            ))),
+                  title: Text(opcode ? item.eventName : item.amenityName),
+                  trailing: Text(formattedDateTime),
+                );
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -207,65 +214,224 @@ class _TeamTabState extends State<TeamTab> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: dataTeamFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          print(snapshot.error);
-          return Center(
-            child: Text("An error occurred."),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-            child: Text(
-              "No Bookings Found",
-              style: FontsCustom.bodyBigText,
-            ),
-          );
-        } else {
-          // Data is available, build the ListView
-          List<dynamic> dataTeam = snapshot.data ?? [];
-          return ListView.builder(
-            itemCount: dataTeam.length,
-            itemBuilder: (context, index) {
-              final item = dataTeam[index];
-              bool opcode = item.runtimeType.toString() == "Event";
-
-              DateTime inputDateTime =
-                  DateTime.parse(opcode ? item.eventDate : item.amenityDate);
-
-              String formattedDateTime =
-                  DateFormat.yMMMMd().add_jm().format(inputDateTime);
-
-              return ListTile(
-                leading: CircleAvatar(
-                    backgroundColor: ColorCustomScheme.backgroundColor,
-                    radius: 20.0,
-                    child: ((opcode
-                                ? item.eventPicture
-                                : item.amenityPicture) ==
-                            "")
-                        ? const Icon(Icons.access_alarm,
-                            size: 30, color: Colors.black)
-                        : ClipOval(
-                            child: Image.network(
-                            opcode ? item.eventPicture : item.amenityPicture,
-                            width: 30.0,
-                            height: 30.0,
-                            fit: BoxFit.cover,
-                          ))),
-                title: Text(opcode ? item.eventName : item.amenityName),
-                subtitle: Text(teams[index]),
-                trailing: Text(formattedDateTime),
-              );
-            },
-          );
-        }
+    return RefreshIndicator(
+      onRefresh: () async {
+        Future<List<dynamic>> dataTeamFuture = getBookingsTeam();
+        setState(() {
+          this.dataTeamFuture = dataTeamFuture;
+        });
       },
+      child: FutureBuilder<List<dynamic>>(
+        future: dataTeamFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            print(snapshot.error);
+            return Center(
+              child: Text("An error occurred."),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text(
+                "No Bookings Found",
+                style: FontsCustom.bodyBigText,
+              ),
+            );
+          } else {
+            // Data is available, build the ListView
+            List<dynamic> dataTeam = snapshot.data ?? [];
+            return ListView.builder(
+              itemCount: dataTeam.length,
+              itemBuilder: (context, index) {
+                final item = dataTeam[index];
+                bool opcode = item.runtimeType.toString() == "Event";
+
+                DateTime inputDateTime =
+                    DateTime.parse(opcode ? item.eventDate : item.amenityDate);
+
+                String formattedDateTime =
+                    DateFormat.yMMMMd().add_jm().format(inputDateTime);
+
+                return ListTile(
+                  leading: CircleAvatar(
+                      backgroundColor: ColorCustomScheme.backgroundColor,
+                      radius: 20.0,
+                      child: ((opcode
+                                  ? item.eventPicture
+                                  : item.amenityPicture) ==
+                              "")
+                          ? const Icon(Icons.access_alarm,
+                              size: 30, color: Colors.black)
+                          : ClipOval(
+                              child: Image.network(
+                              opcode ? item.eventPicture : item.amenityPicture,
+                              width: 30.0,
+                              height: 30.0,
+                              fit: BoxFit.cover,
+                            ))),
+                  title: Text(opcode ? item.eventName : item.amenityName),
+                  subtitle: Text(teams[index]),
+                  trailing: Text(formattedDateTime),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class RequestTab extends StatefulWidget {
+  final User userlogged;
+
+  RequestTab(this.userlogged);
+
+  @override
+  _RequestTabState createState() => _RequestTabState();
+}
+
+class _RequestTabState extends State<RequestTab> {
+  late Future<List<Requests>> dataReq;
+
+  List<String> teams = [];
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      dataReq = getRequest();
+    });
+  }
+
+  void rebuild() {
+    setState(() {
+      dataReq = getRequest();
+    });
+  }
+
+  Future<List<Requests>> getRequest() async {
+    try {
+      var bookingTeam =
+          await DatabaseQueries.getUserRequest(widget.userlogged.userId);
+      print(bookingTeam);
+      if (bookingTeam.statusCode == 200) {
+        var responseData = bookingTeam.data;
+
+        List<Requests> typedData = [];
+
+        for (var requestindv in responseData) {
+          Requests request = Requests.defaultRequest();
+          await request.setData(requestindv);
+          setState(() {
+            typedData.add(request);
+          });
+        }
+        return typedData;
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return [];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        Future<List<Requests>> dataReq = getRequest();
+        setState(() {
+          this.dataReq = dataReq;
+        });
+      },
+      child: FutureBuilder<List<dynamic>>(
+        future: dataReq,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            print(snapshot.error);
+            return Center(
+              child: Text("An error occurred."),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text(
+                "No Bookings Found",
+                style: FontsCustom.bodyBigText,
+              ),
+            );
+          } else {
+            // Data is available, build the ListView
+            List<dynamic> dataTeam = snapshot.data ?? [];
+            return ListView.builder(
+              itemCount: dataTeam.length,
+              itemBuilder: (context, index) {
+                final item = dataTeam[index];
+                bool opcode = item.runtimeType.toString() == "Event";
+
+                String formattedDateTime = opcode
+                    ? DateFormat.yMMMMd()
+                        .add_jm()
+                        .format(DateTime.parse(item.getDateTime()))
+                    : DateFormat("MMMM dd, yyyy h:mm a")
+                        .format(DateTime.parse(item.getDateTime()));
+
+                return ListTile(
+                  leading: CircleAvatar(
+                      backgroundColor: ColorCustomScheme.backgroundColor,
+                      radius: 20.0,
+                      child: (item.getImage() == "")
+                          ? const Icon(Icons.access_alarm,
+                              size: 30, color: Colors.black)
+                          : ClipOval(
+                              child: Image.network(
+                              item.getImage(),
+                              width: 30.0,
+                              height: 30.0,
+                              fit: BoxFit.cover,
+                            ))),
+                  title: Text(item.getName()),
+                  subtitle: Text(formattedDateTime),
+                  trailing: IconButton(
+                    icon: Icon(Icons.cancel),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .all<Color>(ColorCustomScheme
+                                            .appBarColor), // Change this color to your desired background color
+                                  ),
+                                  onPressed: () async {
+                                    await DatabaseQueries.deleteRequest(
+                                        item.requestId);
+                                    setState(() {
+                                      rebuild();
+                                    });
+
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Confirm')),
+                            );
+                          });
+                    },
+                    color: ColorCustomScheme.appBarColor,
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -285,7 +451,7 @@ class _TabWidgetState extends ConsumerState<TabWidget>
   void initState() {
     super.initState();
     setState(() {
-      tabController = TabController(length: 2, vsync: this);
+      tabController = TabController(length: 3, vsync: this);
     });
   }
 
@@ -293,7 +459,7 @@ class _TabWidgetState extends ConsumerState<TabWidget>
   Widget build(BuildContext context) {
     return MaterialApp(
         home: DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: ColorCustomScheme.appBarColor,
@@ -311,7 +477,11 @@ class _TabWidgetState extends ConsumerState<TabWidget>
             ],
             bottom: TabBar(
               controller: tabController,
-              tabs: [Tab(text: 'Individual/Group'), Tab(text: 'Team')],
+              tabs: [
+                Tab(text: 'Individual'),
+                Tab(text: 'Team'),
+                Tab(text: 'Requests')
+              ],
               indicator:
                   BoxDecoration(color: ColorCustomScheme.appBarColorSelected),
             ),
@@ -320,7 +490,8 @@ class _TabWidgetState extends ConsumerState<TabWidget>
             controller: tabController,
             children: [
               IndividualTab(widget.userlogged),
-              TeamTab(widget.userlogged)
+              TeamTab(widget.userlogged),
+              RequestTab(widget.userlogged)
             ],
           ),
           bottomNavigationBar: BottomAppBar(

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:bookingsapp/src/assets/colors.dart';
+import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/main.dart';
 import 'package:bookingsapp/src/models/user.dart';
@@ -63,6 +65,33 @@ class _TransitionScreenState extends ConsumerState<TransitionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ColorCustomScheme.appBarColor,
+        title: SizedBox(
+          height: 100,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "BOOKING\$",
+                style: FontsCustom.heading,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Discover. Book. Enjoy.",
+                  style: FontsCustom.subHeading,
+                ),
+              )
+            ],
+          ),
+        ),
+        centerTitle: true,
+        toolbarHeight: 100,
+      ),
+      body: Center(child: CircularProgressIndicator()),
+    );
   }
 }

@@ -141,6 +141,10 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 'Selected Date ${DateFormat('dd-MM-yyyy').format(selectedDate)}',
                 style: FontsCustom.bodyBigText),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(ColorCustomScheme
+                    .appBarColor), // Change this color to your desired background color
+              ),
               onPressed: () => _selectDate(context),
               child: Text('Select Date'),
             ),
@@ -150,6 +154,10 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
             Text('Selected Time ${selectedTime.format(context)}',
                 style: FontsCustom.bodyBigText),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(ColorCustomScheme
+                    .appBarColor), // Change this color to your desired background color
+              ),
               onPressed: () => _selectTime(context),
               child: Text('Select Time'),
             ),
@@ -159,6 +167,9 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
             Text('Min Team Size: ${_minTeam.toStringAsFixed(0)}',
                 style: FontsCustom.bodyBigText),
             Slider(
+              thumbColor: ColorCustomScheme.appBarColor,
+              activeColor: ColorCustomScheme.appBarColor,
+              inactiveColor: ColorCustomScheme.sliderColor,
               value: _minTeam,
               onChanged: (newValue) {
                 setState(() {
@@ -176,6 +187,9 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
             Text('Max Team Size: ${_maxTeam.toStringAsFixed(0)}',
                 style: FontsCustom.bodyBigText),
             Slider(
+              thumbColor: ColorCustomScheme.appBarColor,
+              activeColor: ColorCustomScheme.appBarColor,
+              inactiveColor: ColorCustomScheme.sliderColor,
               value: _maxTeam,
               onChanged: (newValue) {
                 setState(() {
@@ -201,6 +215,11 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
               height: 20,
             ),
             ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      ColorCustomScheme
+                          .appBarColor), // Change this color to your desired background color
+                ),
                 onPressed: () async {
                   if (_eventName.text.isEmpty) {
                     // Name field is empty, show an error message.

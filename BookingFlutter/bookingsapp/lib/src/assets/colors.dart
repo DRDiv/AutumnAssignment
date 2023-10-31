@@ -6,4 +6,5 @@ class ColorCustomScheme {
   static Color appBarColorSelected = Color.fromARGB(255, 46, 134, 138);
   static Color textBodyDark = Color(0xFF050505);
   static Color tileColor = Color.fromARGB(255, 45, 71, 79);
+  static Color sliderColor = Color.fromARGB(255, 187, 187, 187);
 }

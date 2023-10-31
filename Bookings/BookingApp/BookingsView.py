@@ -9,6 +9,8 @@ from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
+from django.utils import timezone
+from django.db.models import Q
 
 
 class BookingListView(generics.ListCreateAPIView):
@@ -27,7 +29,11 @@ class BookingUserView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
-        queryset = Booking.objects.filter(individuals=user_id)
+        queryset = Booking.objects.filter(
+            Q(individuals=user_id) &
+            (Q(event__isnull=False, event__eventDate__gte=timezone.now()) |
+             Q(amenity__isnull=False, dateSlot__gte=timezone.now().date()))
+        )
         return queryset
 
 class BookingTeamView(generics.ListCreateAPIView):

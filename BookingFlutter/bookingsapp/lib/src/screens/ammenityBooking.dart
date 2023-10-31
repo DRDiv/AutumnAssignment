@@ -7,7 +7,7 @@ import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 
 import 'package:bookingsapp/src/routing/routing.dart';
-import 'package:bookingsapp/src/screens/groupmembers.dart';
+import 'package:bookingsapp/src/screens/groupMembers.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -382,6 +382,11 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                     ),
                     SizedBox(height: 50),
                     ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              ColorCustomScheme
+                                  .appBarColor), // Change this color to your desired background color
+                        ),
                         onPressed: () async {
                           users = await showDialog(
                               context: context,
@@ -392,6 +397,11 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                         child: Text("Add Group Members")),
                     SizedBox(height: 100),
                     ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              ColorCustomScheme
+                                  .appBarColor), // Change this color to your desired background color
+                        ),
                         onPressed: () async {
                           dynamic response =
                               await DatabaseQueries.makeAmmenityRequest(
@@ -418,12 +428,16 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                         style: FontsCustom.bodyBigText,
                                       ),
                                       ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty
+                                                .all<Color>(ColorCustomScheme
+                                                    .appBarColor), // Change this color to your desired background color
+                                          ),
                                           onPressed: () {
                                             Navigator.pop(context);
                                             if (json.decode(response
-                                                    .toString())['message'] ==
-                                                "Request created successfully")
-                                              router.pop();
+                                                    .toString())['code'] ==
+                                                200) router.pop();
                                           },
                                           child: Text("OK"))
                                     ],

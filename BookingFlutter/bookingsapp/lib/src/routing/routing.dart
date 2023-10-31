@@ -1,16 +1,16 @@
-import 'package:bookingsapp/src/screens/adminmanage.dart';
+import 'package:bookingsapp/src/screens/adminManage.dart';
 import 'package:bookingsapp/src/screens/amenityAdmin.dart';
-import 'package:bookingsapp/src/screens/ammenitybooking.dart';
+import 'package:bookingsapp/src/screens/ammenityBooking.dart';
 import 'package:bookingsapp/src/screens/eventAdmin.dart';
-import 'package:bookingsapp/src/screens/eventbooking.dart';
+import 'package:bookingsapp/src/screens/eventBooking.dart';
 import 'package:bookingsapp/src/screens/home.dart';
-import 'package:bookingsapp/src/screens/homeadmin.dart';
+import 'package:bookingsapp/src/screens/homeAdmin.dart';
 import 'package:bookingsapp/src/screens/login.dart';
-import 'package:bookingsapp/src/screens/teamcreation.dart';
+import 'package:bookingsapp/src/screens/teamCreation.dart';
 import 'package:bookingsapp/src/screens/teams.dart';
-import 'package:bookingsapp/src/screens/teammanagement.dart';
+import 'package:bookingsapp/src/screens/teamManagement.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
-import 'package:bookingsapp/src/screens/userprofile.dart';
+import 'package:bookingsapp/src/screens/userProfile.dart';
 import 'package:bookingsapp/src/screens/webview.dart';
 
 import 'package:flutter/material.dart';
