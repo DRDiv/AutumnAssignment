@@ -8,12 +8,22 @@ final ip = StateProvider<String>((ref) => "http://10.81.50.27:8000");
 final String ipAdd = "http://10.81.50.27:8000";
 
 class DatabaseQueries {
-  static get dio => null;
-
   static Future<Response> getCurrentUser(String token) async {
     String path = "$ipAdd/user/session/$token/";
     var dio = Dio();
     var response = await dio.get(path);
+    return response;
+  }
+
+  static Future<Response> adminLogin(String username, String password) async {
+    String path = "$ipAdd/adminlogin/";
+
+    var dio = Dio();
+    var formData = FormData.fromMap({
+      'username': username,
+      'password': password,
+    });
+    var response = await dio.get(path, data: formData);
     return response;
   }
 

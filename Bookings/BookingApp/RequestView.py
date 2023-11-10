@@ -158,10 +158,7 @@ class RequestToBooking(generics.RetrieveUpdateDestroyAPIView):
                     for individual in requestObj.individuals.all():
                             booking.individuals.add(individual)  
                     requestObj.delete()    
-                    if booking.event is not None and booking.teamId is not None:
-                        team = Team.objects.get(pk=booking.teamId)
-                        team.bookedEvents.add(booking.event)
-                        team.save()  
+                    
             else:
                 availability=availability.first()
                 if (availability.capacity-len(requestObj.individuals.all())>=0):
@@ -173,12 +170,14 @@ class RequestToBooking(generics.RetrieveUpdateDestroyAPIView):
                     for individual in requestObj.individuals.all():
                             booking.individuals.add(individual)  
                     requestObj.delete()    
-                    if booking.event is not None and booking.teamId is not None:
-                        team = Team.objects.get(pk=booking.teamId)
+                     
+        print(booking.event,booking.teamId)
+        if booking.event is not None and booking.teamId is not None:
+                        team = Team.objects.get(pk=booking.teamId.teamId)
                         team.bookedEvents.add(booking.event)
-                        team.save()   
-        
-
+                        team.save()  
+                        booking.save()
+                        requestObj.delete() 
         return Response( status=status.HTTP_201_CREATED)
         
 

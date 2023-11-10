@@ -59,7 +59,7 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
         child: Column(
           children: [
             Container(
-              color: ColorCustomScheme.backgroundColor,
+              color: ColorSchemes.backgroundColor,
               child: TextFormField(
                 onChanged: (text) {
                   setState(() {
@@ -70,11 +70,10 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
                 decoration: InputDecoration(
                   hintText: 'Enter Username',
                   focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: ColorCustomScheme.appBarColor),
+                    borderSide: BorderSide(color: ColorSchemes.primaryColor),
                   ),
                 ),
-                cursorColor: ColorCustomScheme.appBarColor,
+                cursorColor: ColorSchemes.primaryColor,
               ),
             ),
             FutureBuilder<List<User>>(
@@ -111,8 +110,7 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
                             rebuildWidget();
                           },
                           leading: CircleAvatar(
-                              backgroundColor:
-                                  ColorCustomScheme.backgroundColor,
+                              backgroundColor: ColorSchemes.backgroundColor,
                               radius: 15.0,
                               child: (snapshot.data![index].data['person'] ==
                                           null ||
@@ -146,9 +144,8 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
             ),
             ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      ColorCustomScheme
-                          .appBarColor), // Change this color to your desired background color
+                  backgroundColor: MaterialStateProperty.all<Color>(ColorSchemes
+                      .primaryColor), // Change this color to your desired background color
                 ),
                 onPressed: () async {
                   List<String> userReturn = [];

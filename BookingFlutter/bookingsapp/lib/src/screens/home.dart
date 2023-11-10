@@ -1,3 +1,4 @@
+import 'package:bookingsapp/functions/get.dart';
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
@@ -35,53 +36,16 @@ class _IndividualTabState extends State<IndividualTab> {
   void initState() {
     super.initState();
     setState(() {
-      dataIndvFuture = getBookingsIndvidual();
+      dataIndvFuture = getBookingsIndvidual(widget.userlogged.userId);
     });
-  }
-
-  Future<List<dynamic>> getBookingsIndvidual() async {
-    try {
-      var bookingUser =
-          await DatabaseQueries.getBookingsUser(widget.userlogged.userId);
-
-      if (bookingUser.statusCode == 200) {
-        List<dynamic> responseData = bookingUser.data;
-
-        List<dynamic> typedData = [];
-
-        for (var responseInd in bookingUser.data) {
-          if (responseInd['amenity'] != null) {
-            var responseAmenity = await DatabaseQueries.getAmmenityDetails(
-                responseInd['amenity']);
-            Amenity amenity = Amenity.defaultAmenity();
-            await amenity.setData(responseAmenity.data, responseInd['dateSlot'],
-                responseInd['timeStart']);
-            typedData.add(amenity);
-          }
-          if (responseInd['event'] != null) {
-            var responseEvent =
-                await DatabaseQueries.getEventDetails(responseInd['event']);
-            Event event = Event.defaultEvent();
-
-            await event.setData(responseEvent.data);
-            typedData.add(event);
-          }
-        }
-
-        return typedData;
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    return [];
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        Future<List<dynamic>> dataIndvFuture = getBookingsIndvidual();
+        Future<List<dynamic>> dataIndvFuture =
+            getBookingsIndvidual(widget.userlogged.userId);
         setState(() {
           this.dataIndvFuture = dataIndvFuture;
         });
@@ -122,7 +86,7 @@ class _IndividualTabState extends State<IndividualTab> {
 
                 return ListTile(
                   leading: CircleAvatar(
-                      backgroundColor: ColorCustomScheme.backgroundColor,
+                      backgroundColor: ColorSchemes.backgroundColor,
                       radius: 15.0,
                       child: ((opcode
                                   ? item.eventPicture
@@ -149,7 +113,7 @@ class _IndividualTabState extends State<IndividualTab> {
   }
 }
 
-class TeamTab extends StatefulWidget {
+class TeamTab extends ConsumerStatefulWidget {
   final User userlogged;
 
   TeamTab(this.userlogged);
@@ -158,65 +122,25 @@ class TeamTab extends StatefulWidget {
   _TeamTabState createState() => _TeamTabState();
 }
 
-class _TeamTabState extends State<TeamTab> {
+class _TeamTabState extends ConsumerState<TeamTab> {
   late Future<List<dynamic>> dataTeamFuture;
   List<String> teams = [];
+
   @override
   void initState() {
     super.initState();
     setState(() {
-      dataTeamFuture = getBookingsTeam();
+      dataTeamFuture = getBookingsTeam(widget.userlogged.userId, ref);
+      teams = ref.read(teamsList);
     });
-  }
-
-  Future<List<dynamic>> getBookingsTeam() async {
-    try {
-      var bookingTeam =
-          await DatabaseQueries.getBookingsTeam(widget.userlogged.userId);
-
-      if (bookingTeam.statusCode == 200) {
-        List<dynamic> responseData = bookingTeam.data;
-
-        List<dynamic> typedData = [];
-        List<String> teams = [];
-        for (var responseInd in bookingTeam.data) {
-          if (responseInd['amenity'] != null) {
-            var responseAmenity = await DatabaseQueries.getAmmenityDetails(
-                responseInd['amenity']);
-            Amenity amenity = Amenity.defaultAmenity();
-            await amenity.setData(responseAmenity.data, responseInd['dateSlot'],
-                responseInd['timeStart']);
-            typedData.add(amenity);
-          }
-          if (responseInd['event'] != null) {
-            var responseEvent =
-                await DatabaseQueries.getEventDetails(responseInd['event']);
-            Event event = Event.defaultEvent();
-
-            await event.setData(responseEvent.data);
-            typedData.add(event);
-          }
-          teams.add(
-              (await DatabaseQueries.getTeamDetails(responseInd['teamId']))
-                  .data['teamName']);
-        }
-        setState(() {
-          this.teams = teams;
-        });
-        return typedData;
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    return [];
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        Future<List<dynamic>> dataTeamFuture = getBookingsTeam();
+        Future<List<dynamic>> dataTeamFuture =
+            getBookingsTeam(widget.userlogged.userId, ref);
         setState(() {
           this.dataTeamFuture = dataTeamFuture;
         });
@@ -241,7 +165,6 @@ class _TeamTabState extends State<TeamTab> {
               ),
             );
           } else {
-            // Data is available, build the ListView
             List<dynamic> dataTeam = snapshot.data ?? [];
             return ListView.builder(
               itemCount: dataTeam.length,
@@ -257,7 +180,7 @@ class _TeamTabState extends State<TeamTab> {
 
                 return ListTile(
                   leading: CircleAvatar(
-                      backgroundColor: ColorCustomScheme.backgroundColor,
+                      backgroundColor: ColorSchemes.backgroundColor,
                       radius: 20.0,
                       child: ((opcode
                                   ? item.eventPicture
@@ -297,52 +220,25 @@ class RequestTab extends StatefulWidget {
 class _RequestTabState extends State<RequestTab> {
   late Future<List<Requests>> dataReq;
 
-  List<String> teams = [];
   @override
   void initState() {
     super.initState();
     setState(() {
-      dataReq = getRequest();
+      dataReq = getRequest(widget.userlogged.userId);
     });
   }
 
   void rebuild() {
     setState(() {
-      dataReq = getRequest();
+      dataReq = getRequest(widget.userlogged.userId);
     });
-  }
-
-  Future<List<Requests>> getRequest() async {
-    try {
-      var bookingTeam =
-          await DatabaseQueries.getUserRequest(widget.userlogged.userId);
-      print(bookingTeam);
-      if (bookingTeam.statusCode == 200) {
-        var responseData = bookingTeam.data;
-
-        List<Requests> typedData = [];
-
-        for (var requestindv in responseData) {
-          Requests request = Requests.defaultRequest();
-          await request.setData(requestindv);
-          setState(() {
-            typedData.add(request);
-          });
-        }
-        return typedData;
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    return [];
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        Future<List<Requests>> dataReq = getRequest();
+        Future<List<Requests>> dataReq = getRequest(widget.userlogged.userId);
         setState(() {
           this.dataReq = dataReq;
         });
@@ -384,7 +280,7 @@ class _RequestTabState extends State<RequestTab> {
 
                 return ListTile(
                   leading: CircleAvatar(
-                      backgroundColor: ColorCustomScheme.backgroundColor,
+                      backgroundColor: ColorSchemes.backgroundColor,
                       radius: 20.0,
                       child: (item.getImage() == "")
                           ? const Icon(Icons.access_alarm,
@@ -408,8 +304,8 @@ class _RequestTabState extends State<RequestTab> {
                               content: ElevatedButton(
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty
-                                        .all<Color>(ColorCustomScheme
-                                            .appBarColor), // Change this color to your desired background color
+                                        .all<Color>(ColorSchemes
+                                            .primaryColor), // Change this color to your desired background color
                                   ),
                                   onPressed: () async {
                                     await DatabaseQueries.deleteRequest(
@@ -424,7 +320,7 @@ class _RequestTabState extends State<RequestTab> {
                             );
                           });
                     },
-                    color: ColorCustomScheme.appBarColor,
+                    color: ColorSchemes.primaryColor,
                   ),
                 );
               },
@@ -462,7 +358,7 @@ class _TabWidgetState extends ConsumerState<TabWidget>
       length: 3,
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: ColorCustomScheme.appBarColor,
+            backgroundColor: ColorSchemes.primaryColor,
             title: Text(
               "BOOKING\$",
               style: FontsCustom.heading,
@@ -470,10 +366,11 @@ class _TabWidgetState extends ConsumerState<TabWidget>
             centerTitle: true,
             actions: [
               IconButton(
+                  tooltip: 'User Profile',
                   onPressed: () {
                     router.push("/userprofile/${ref.read(userLogged).userId}");
                   },
-                  icon: Icon(Icons.person))
+                  icon: Icon(Icons.person)),
             ],
             bottom: TabBar(
               controller: tabController,
@@ -482,45 +379,56 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                 Tab(text: 'Team'),
                 Tab(text: 'Requests')
               ],
-              indicator:
-                  BoxDecoration(color: ColorCustomScheme.appBarColorSelected),
+              indicator: BoxDecoration(color: ColorSchemes.secondayColor),
             ),
           ),
-          body: TabBarView(
-            controller: tabController,
-            children: [
-              IndividualTab(widget.userlogged),
-              TeamTab(widget.userlogged),
-              RequestTab(widget.userlogged)
-            ],
+          body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [ColorSchemes.tertiaryColor, ColorSchemes.whiteColor],
+              ),
+            ),
+            child: TabBarView(
+              controller: tabController,
+              children: [
+                IndividualTab(widget.userlogged),
+                TeamTab(widget.userlogged),
+                RequestTab(widget.userlogged)
+              ],
+            ),
           ),
           bottomNavigationBar: BottomAppBar(
-              color: ColorCustomScheme.appBarColor,
+              color: ColorSchemes.primaryColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Expanded(
                     child: IconButton(
+                        tooltip: 'Home',
                         onPressed: () {
                           context.go("/home");
                         },
                         icon: Icon(
                           Icons.home,
-                          color: ColorCustomScheme.backgroundColor,
+                          color: ColorSchemes.backgroundColor,
                         )),
                   ),
                   Expanded(
                     child: IconButton(
+                        tooltip: 'Your Teams',
                         onPressed: () {
                           context.go("/team");
                         },
                         icon: Icon(
                           Icons.people,
-                          color: ColorCustomScheme.backgroundColor,
+                          color: ColorSchemes.backgroundColor,
                         )),
                   ),
                   Expanded(
                     child: IconButton(
+                        tooltip: 'Logout',
                         onPressed: () async {
                           final storage = new FlutterSecureStorage();
                           await storage.deleteAll();
@@ -528,12 +436,13 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                         },
                         icon: Icon(
                           Icons.logout,
-                          color: ColorCustomScheme.backgroundColor,
+                          color: ColorSchemes.backgroundColor,
                         )),
                   )
                 ],
               )),
           floatingActionButton: FloatingActionButton(
+            tooltip: 'Book an Amenity',
             onPressed: () {
               showDialog(
                   context: context,
@@ -542,7 +451,7 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                   });
             },
             child: Icon(Icons.add),
-            backgroundColor: ColorCustomScheme.appBarColor,
+            backgroundColor: ColorSchemes.blendColor,
           )),
     ));
   }

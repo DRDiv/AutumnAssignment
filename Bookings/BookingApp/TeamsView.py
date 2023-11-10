@@ -56,6 +56,7 @@ class AddUserToTeamView(generics.UpdateAPIView):
     serializer_class = TeamSerializer
 
     def get(self, request, *args, **kwargs):
+       
         team = self.get_object()
         userid = kwargs.get('userId')
         user = get_object_or_404(User, userId=userid)  

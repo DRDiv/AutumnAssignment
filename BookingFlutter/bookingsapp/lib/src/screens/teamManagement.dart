@@ -37,7 +37,7 @@ class TeamMembersState extends State<TeamMembers> {
 
           return ListTile(
             leading: CircleAvatar(
-                backgroundColor: ColorCustomScheme.backgroundColor,
+                backgroundColor: ColorSchemes.whiteColor,
                 radius: 20.0,
                 child: (user.data['person'] == null ||
                         user.data['person']['displayPicture'] == null)
@@ -77,7 +77,7 @@ class TeamMembersState extends State<TeamMembers> {
                                     Navigator.of(context).pop();
                                   },
                                   child: Text('Confirm')),
-                              backgroundColor: ColorCustomScheme.appBarColor,
+                              backgroundColor: ColorSchemes.primaryColor,
                             );
                           });
                     },
@@ -182,7 +182,7 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: ColorCustomScheme.appBarColor,
+          backgroundColor: ColorSchemes.primaryColor,
           title: Text(
             "BOOKING\$",
             style: FontsCustom.heading,
@@ -191,8 +191,7 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
           bottom: TabBar(
             controller: tabController,
             tabs: [Tab(text: 'Team Members'), Tab(text: 'Events')],
-            indicator:
-                BoxDecoration(color: ColorCustomScheme.appBarColorSelected),
+            indicator: BoxDecoration(color: ColorSchemes.secondayColor),
           ),
         ),
         body: isLoading
@@ -206,7 +205,7 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
                 ],
               ),
         bottomNavigationBar: BottomAppBar(
-            color: ColorCustomScheme.appBarColor,
+            color: ColorSchemes.primaryColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -217,7 +216,7 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
                       },
                       icon: Icon(
                         Icons.home,
-                        color: ColorCustomScheme.backgroundColor,
+                        color: ColorSchemes.backgroundColor,
                       )),
                 ),
                 Expanded(
@@ -227,7 +226,7 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
                       },
                       icon: Icon(
                         Icons.people,
-                        color: ColorCustomScheme.backgroundColor,
+                        color: ColorSchemes.backgroundColor,
                       )),
                 )
               ],
@@ -254,7 +253,7 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
                   }
                 },
                 child: Icon(Icons.add),
-                backgroundColor: ColorCustomScheme.appBarColor,
+                backgroundColor: ColorSchemes.secondayColor,
               )
             : null,
       ),

@@ -53,7 +53,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorCustomScheme.appBarColor,
+        backgroundColor: ColorSchemes.primaryColor,
         title: Text(
           "BOOKING\$",
           style: FontsCustom.heading,
@@ -76,7 +76,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                             height: 200,
                             width: 300,
                             decoration: BoxDecoration(
-                              color: ColorCustomScheme.backgroundColor,
+                              color: ColorSchemes.backgroundColor,
                             ),
                             child: (event.eventPicture == "")
                                 ? Icon(
@@ -111,8 +111,8 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                     ElevatedButton(
                                         style: ButtonStyle(
                                           backgroundColor: MaterialStateProperty
-                                              .all<Color>(ColorCustomScheme
-                                                  .appBarColor), // Change this color to your desired background color
+                                              .all<Color>(ColorSchemes
+                                                  .primaryColor), // Change this color to your desired background color
                                         ),
                                         onPressed: _getImage,
                                         child:
@@ -127,8 +127,8 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                     ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              ColorCustomScheme
-                                  .appBarColor), // Change this color to your desired background color
+                              ColorSchemes
+                                  .primaryColor), // Change this color to your desired background color
                         ),
                         onPressed: () async {
                           if (event.payment > 0 && image == null) {
@@ -150,8 +150,8 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                         ElevatedButton(
                                             style: ButtonStyle(
                                               backgroundColor: MaterialStateProperty
-                                                  .all<Color>(ColorCustomScheme
-                                                      .appBarColor), // Change this color to your desired background color
+                                                  .all<Color>(ColorSchemes
+                                                      .primaryColor), // Change this color to your desired background color
                                             ),
                                             onPressed: () {
                                               router.pop();
@@ -190,8 +190,8 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                       ElevatedButton(
                                           style: ButtonStyle(
                                             backgroundColor: MaterialStateProperty
-                                                .all<Color>(ColorCustomScheme
-                                                    .appBarColor), // Change this color to your desired background color
+                                                .all<Color>(ColorSchemes
+                                                    .primaryColor), // Change this color to your desired background color
                                           ),
                                           onPressed: () {
                                             router.pop();

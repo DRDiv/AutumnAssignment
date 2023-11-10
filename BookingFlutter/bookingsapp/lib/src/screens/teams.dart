@@ -1,7 +1,9 @@
+import 'package:bookingsapp/functions/get.dart';
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/main.dart';
+import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
@@ -13,6 +15,7 @@ import 'package:go_router/go_router.dart';
 class WidgetCustom extends StatefulWidget {
   User userlogged;
   String ipAdd;
+
   WidgetCustom(this.userlogged, this.ipAdd);
 
   @override
@@ -20,58 +23,45 @@ class WidgetCustom extends StatefulWidget {
 }
 
 class _WidgetCustomState extends State<WidgetCustom> {
-  late Future<List<String>> dataIndvFuture;
-  List<String> teamIds = [];
+  late Future<List<Team>> dataIndvFuture;
+
   @override
   void initState() {
     super.initState();
     setState(() {
-      dataIndvFuture = getTeams();
+      dataIndvFuture = getTeams(widget.userlogged.userId);
     });
   }
 
   void rebuild() {
     setState(() {
-      dataIndvFuture = getTeams();
+      dataIndvFuture = getTeams(widget.userlogged.userId);
     });
-  }
-
-  Future<List<String>> getTeams() async {
-    try {
-      var response =
-          await DatabaseQueries.getUserTeams(widget.userlogged.userId);
-
-      if (response.statusCode == 200) {
-        List<String> typedData = [];
-
-        for (var responseInd in response.data) {
-          typedData.add(responseInd['teamName']);
-          teamIds.add(responseInd['teamId']);
-        }
-
-        return typedData;
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    return [];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorCustomScheme.appBarColor,
+        elevation: 2.0,
+        backgroundColor: ColorSchemes.primaryColor,
         title: Text(
           "BOOKING\$",
           style: FontsCustom.heading,
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-        child: FutureBuilder<List<String>>(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [ColorSchemes.tertiaryColor, ColorSchemes.whiteColor],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+          child: FutureBuilder<List<Team>>(
             future: dataIndvFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -91,65 +81,75 @@ class _WidgetCustomState extends State<WidgetCustom> {
                   ),
                 );
               } else {
-                List<String> dataIndv = snapshot.data ?? [];
+                List<Team> dataIndv = (snapshot.data ?? []).reversed.toList();
                 return ListView.builder(
-                    itemCount: dataIndv.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: ColorCustomScheme.tileColor),
-                            ),
-                            child: TextButton(
-                              child: Text(
-                                dataIndv[index],
-                                style: FontsCustom.bodyBigText,
-                              ),
-                              onPressed: () {
-                                context.go('/team/${teamIds[index]}');
-                              },
-                            )),
-                      );
-                    });
+                  itemCount: dataIndv.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 2.0,
+                      margin: EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.all(8.0),
+                        title: Text(
+                          dataIndv[index].teamName,
+                          style: FontsCustom.bodyBigText,
+                        ),
+                        leading:
+                            Icon(Icons.group, color: ColorSchemes.primaryColor),
+                        trailing: Icon(Icons.arrow_forward),
+                        onTap: () {
+                          context.go('/team/${dataIndv[index].teamId}');
+                        },
+                      ),
+                    );
+                  },
+                );
               }
-            }),
+            },
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: ColorSchemes.blendColor,
         onPressed: () async {
           await router.push("/teamCreation/");
           rebuild();
         },
-        backgroundColor: ColorCustomScheme.appBarColor,
         child: Icon(Icons.add),
+        tooltip: "Create a New Team",
       ),
       bottomNavigationBar: BottomAppBar(
-          color: ColorCustomScheme.appBarColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: IconButton(
-                    onPressed: () {
-                      context.go("/home");
-                    },
-                    icon: Icon(
-                      Icons.home,
-                      color: ColorCustomScheme.backgroundColor,
-                    )),
+        color: ColorSchemes.primaryColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: IconButton(
+                onPressed: () {
+                  context.go("/home");
+                },
+                icon: Icon(
+                  Icons.home,
+                  color: ColorSchemes.whiteColor,
+                ),
+                tooltip: "Home",
               ),
-              Expanded(
-                child: IconButton(
-                    onPressed: () {
-                      context.go("/team");
-                    },
-                    icon: Icon(
-                      Icons.people,
-                      color: ColorCustomScheme.backgroundColor,
-                    )),
-              )
-            ],
-          )),
+            ),
+            Expanded(
+              child: IconButton(
+                onPressed: () {
+                  context.go("/team");
+                },
+                icon: Icon(
+                  Icons.people,
+                  color: ColorSchemes.whiteColor,
+                ),
+                tooltip: "Teams",
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

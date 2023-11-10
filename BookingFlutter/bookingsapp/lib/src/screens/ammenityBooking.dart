@@ -78,7 +78,7 @@ class _DateSelectorState extends State<DateSelector> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: ColorCustomScheme.appBarColor, // Custom color
+        backgroundColor: ColorSchemes.primaryColor, // Custom color
       ),
       body: Center(
         child: Container(
@@ -99,7 +99,7 @@ class _DateSelectorState extends State<DateSelector> {
                   margin: EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
                     color: selectedIndex == index
-                        ? ColorCustomScheme.appBarColorSelected // Custom color
+                        ? ColorSchemes.secondayColor // Custom color
                         : Colors.grey,
                     borderRadius: BorderRadius.circular(10.0),
                     boxShadow: [
@@ -156,7 +156,7 @@ class _TimeSelectorState extends State<TimeSelector> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: ColorCustomScheme.appBarColor, // Custom color
+        backgroundColor: ColorSchemes.primaryColor, // Custom color
       ),
       body: Center(
         child: Container(
@@ -179,7 +179,7 @@ class _TimeSelectorState extends State<TimeSelector> {
                   margin: EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
                     color: selectedIndex == index
-                        ? ColorCustomScheme.appBarColorSelected // Custom color
+                        ? ColorSchemes.secondayColor // Custom color
                         : Colors.grey,
                     borderRadius: BorderRadius.circular(10.0),
                     boxShadow: [
@@ -233,7 +233,6 @@ String formatTimeRange(String startTime, String endTime) {
 }
 
 DateTime parseStartTime(String formattedTimeRange) {
-  // Split the formatted time range into start and end times
   final parts = formattedTimeRange.split(' - ');
 
   if (parts.length == 2) {
@@ -255,7 +254,6 @@ DateTime parseStartTime(String formattedTimeRange) {
     }
   }
 
-  // Return null if parsing fails
   return DateTime.now();
 }
 
@@ -274,7 +272,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
         "",
         "");
     var response = await DatabaseQueries.getAmmenitySlot(a.amenityId);
-    print(response.data);
+
     setState(() {
       users.add(ref.read(userLogged).userId);
       for (var indv in response.data) {
@@ -297,7 +295,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorCustomScheme.appBarColor,
+        backgroundColor: ColorSchemes.primaryColor,
         title: Text(
           "BOOKING\$",
           style: FontsCustom.heading,
@@ -320,7 +318,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                             height: 200,
                             width: 300,
                             decoration: BoxDecoration(
-                              color: ColorCustomScheme.backgroundColor,
+                              color: ColorSchemes.backgroundColor,
                             ),
                             child: (amenity.amenityPicture == "")
                                 ? Icon(
@@ -384,8 +382,8 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                     ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              ColorCustomScheme
-                                  .appBarColor), // Change this color to your desired background color
+                              ColorSchemes
+                                  .secondayColor), // Change this color to your desired background color
                         ),
                         onPressed: () async {
                           users = await showDialog(
@@ -399,8 +397,8 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                     ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              ColorCustomScheme
-                                  .appBarColor), // Change this color to your desired background color
+                              ColorSchemes
+                                  .secondayColor), // Change this color to your desired background color
                         ),
                         onPressed: () async {
                           dynamic response =
@@ -430,8 +428,8 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                       ElevatedButton(
                                           style: ButtonStyle(
                                             backgroundColor: MaterialStateProperty
-                                                .all<Color>(ColorCustomScheme
-                                                    .appBarColor), // Change this color to your desired background color
+                                                .all<Color>(ColorSchemes
+                                                    .primaryColor), // Change this color to your desired background color
                                           ),
                                           onPressed: () {
                                             Navigator.pop(context);

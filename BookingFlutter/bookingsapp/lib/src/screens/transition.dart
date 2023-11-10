@@ -67,31 +67,43 @@ class _TransitionScreenState extends ConsumerState<TransitionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorCustomScheme.appBarColor,
-        title: SizedBox(
-          height: 100,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "BOOKING\$",
-                style: FontsCustom.heading,
+        backgroundColor: ColorSchemes.primaryColor,
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "BOOKING\$",
+              style: FontsCustom.heading,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Discover. Book. Enjoy.",
+                style: FontsCustom.subHeading,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Discover. Book. Enjoy.",
-                  style: FontsCustom.subHeading,
-                ),
-              )
-            ],
-          ),
+            ),
+          ],
         ),
         centerTitle: true,
-        toolbarHeight: 100,
+        toolbarHeight: 120, // Increased toolbar height for better alignment
       ),
-      body: Center(child: CircularProgressIndicator()),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(ColorSchemes.primaryColor),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Loading...",
+              style: FontsCustom.bodyBigText,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

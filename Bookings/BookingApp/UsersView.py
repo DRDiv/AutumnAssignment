@@ -27,6 +27,33 @@ class UserListView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class AdminLogin(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    def get(self, request, *args, **kwargs):
+        try:
+            user = request.data.get('username')
+            password = request.data.get('password')
+            admin = User.objects.get(userName=user)
+        except User.DoesNotExist:
+            return Response({'message': 'Invalid Username'}, status=status.HTTP_226_IM_USED)
+
+        admin_data = json.loads(admin.data)
+
+        if password == admin_data['password']:
+            user_session_token = str(uuid.uuid4())
+            last_redirect_param = {
+                'userId': admin.userId,
+                'sessionToken': user_session_token
+            }
+            return Response(last_redirect_param, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({'message': 'Invalid Password'}, status=status.HTTP_226_IM_USED)
+
+       
+       
+
+
 class UserLogin(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -90,7 +117,7 @@ class UserLogin(generics.ListCreateAPIView):
                         'state':'finished',
                         'userId': user_data['userId'],
                         'sessionToken':userSessionToken }
-                    print(response)
+                   
                     return redirect(ip+'userlogin/?'+urlencode(last_redirect_param))
                      
                 else:

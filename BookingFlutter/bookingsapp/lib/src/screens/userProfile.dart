@@ -24,7 +24,6 @@ class _UserProfileState extends ConsumerState<UserProfile> {
       userCurrent = userTemp;
       isLoading = false;
     });
-    print(userCurrent.data);
   }
 
   void initState() {
@@ -35,6 +34,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorSchemes.backgroundColor,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -43,83 +43,92 @@ class _UserProfileState extends ConsumerState<UserProfile> {
             router.pop();
           },
         ),
-        backgroundColor: ColorCustomScheme.appBarColor,
+        backgroundColor: ColorSchemes.primaryColor,
         title: Text(
           "BOOKING\$",
           style: FontsCustom.heading,
         ),
         centerTitle: true,
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 24.0, 8, 24),
-                child: Center(
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                          backgroundColor: ColorCustomScheme.backgroundColor,
-                          radius: 40.0,
-                          child: (userCurrent.data['person'] == null ||
-                                  userCurrent.data['person']
-                                          ['displayPicture'] ==
-                                      null)
-                              ? const Icon(Icons.person,
-                                  size: 80, color: Colors.black)
-                              : ClipOval(
-                                  child: Image.network(
-                                  "https://channeli.in/" +
-                                      userCurrent.data['person']
-                                          ['displayPicture'],
-                                  width: 80.0,
-                                  height: 80.0,
-                                  fit: BoxFit.cover,
-                                ))),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          userCurrent.userName,
-                          style: FontsCustom.bodyHeading,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [ColorSchemes.tertiaryColor, ColorSchemes.whiteColor],
+          ),
+        ),
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 24.0, 8, 24),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                            backgroundColor: ColorSchemes.backgroundColor,
+                            radius: 40.0,
+                            child: (userCurrent.data['person'] == null ||
+                                    userCurrent.data['person']
+                                            ['displayPicture'] ==
+                                        null)
+                                ? const Icon(Icons.person,
+                                    size: 80, color: Colors.black)
+                                : ClipOval(
+                                    child: Image.network(
+                                    "https://channeli.in/" +
+                                        userCurrent.data['person']
+                                            ['displayPicture'],
+                                    width: 80.0,
+                                    height: 80.0,
+                                    fit: BoxFit.cover,
+                                  ))),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            userCurrent.userName,
+                            style: FontsCustom.bodyHeading,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          userCurrent.data['student']['enrolmentNumber'],
-                          style: FontsCustom.bodySmallText,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            userCurrent.data['student']['enrolmentNumber'],
+                            style: FontsCustom.bodySmallText,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          userCurrent.data['student']['branch name'],
-                          style: FontsCustom.bodySmallText,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            userCurrent.data['student']['branch name'],
+                            style: FontsCustom.bodySmallText,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Year: " +
-                              userCurrent.data['student']['currentYear']
-                                  .toString(),
-                          style: FontsCustom.bodySmallText,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Year: " +
+                                userCurrent.data['student']['currentYear']
+                                    .toString(),
+                            style: FontsCustom.bodySmallText,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Penalties: " + userCurrent.penalties.toString(),
-                          style: FontsCustom.bodySmallText,
-                        ),
-                      )
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Penalties: " + userCurrent.penalties.toString(),
+                            style: FontsCustom.bodySmallText,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+      ),
       bottomNavigationBar: BottomAppBar(
-          color: ColorCustomScheme.appBarColor,
+          color: ColorSchemes.primaryColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -130,7 +139,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                     },
                     icon: Icon(
                       Icons.home,
-                      color: ColorCustomScheme.backgroundColor,
+                      color: ColorSchemes.whiteColor,
                     )),
               ),
               Expanded(
@@ -140,7 +149,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                     },
                     icon: Icon(
                       Icons.people,
-                      color: ColorCustomScheme.backgroundColor,
+                      color: ColorSchemes.whiteColor,
                     )),
               )
             ],

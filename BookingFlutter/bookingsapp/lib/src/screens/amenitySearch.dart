@@ -1,3 +1,4 @@
+import 'package:bookingsapp/functions/get.dart';
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
@@ -19,20 +20,6 @@ class AmenityAlertBox extends ConsumerStatefulWidget {
 class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
   TextEditingController _text = TextEditingController();
   String like = '';
-  Future<List<Amenity>> getAmenity(String like) async {
-    var response = await DatabaseQueries.getAmenityRegex(like);
-    List<Amenity> amenity = [];
-
-    for (var indv in response.data) {
-      Amenity amenityInd = Amenity.defaultAmenity();
-
-      await amenityInd.setData(indv, "", "");
-
-      amenity.add(amenityInd);
-    }
-
-    return amenity;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +31,9 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
           child: Column(
             children: [
               Container(
-                color: ColorCustomScheme.backgroundColor,
+                color: ColorSchemes.backgroundColor,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: TextFormField(
                   onChanged: (text) {
                     setState(() {
@@ -54,31 +43,30 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
                   controller: _text,
                   decoration: InputDecoration(
                     hintText: 'Search Amenity',
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: ColorCustomScheme.appBarColor),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: ColorSchemes.primaryColor),
                     ),
                   ),
-                  cursorColor: ColorCustomScheme.appBarColor,
+                  cursorColor: ColorSchemes.primaryColor,
                 ),
               ),
+              const SizedBox(height: 8),
               FutureBuilder<List<Amenity>>(
                 future: getAmenity(like),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 40, 8, 0),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                    return Center(
+                      child: CircularProgressIndicator(),
                     );
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 40, 8, 0),
-                      child: Center(
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 40),
                         child: Text(
                           "No Amenity Found",
-                          style: FontsCustom.bodyBigText,
+                          style: FontsCustom.bodyBigText.copyWith(
+                            color: Colors.red, // Customize color
+                          ),
                         ),
                       ),
                     );
@@ -87,28 +75,13 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
                       child: ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return ListTile(
+                          return AmenityTile(
+                            amenity: snapshot.data![index],
                             onTap: () async {
                               Navigator.of(context).pop();
                               router.push(
                                   "/amenityBooking/${snapshot.data![index].amenityId}");
                             },
-                            leading: CircleAvatar(
-                                backgroundColor:
-                                    ColorCustomScheme.backgroundColor,
-                                radius: 15.0,
-                                child: (snapshot.data![index].amenityPicture ==
-                                        "")
-                                    ? const Icon(Icons.alarm,
-                                        size: 30, color: Colors.black)
-                                    : ClipOval(
-                                        child: Image.network(
-                                        snapshot.data![index].amenityPicture,
-                                        width: 30.0,
-                                        height: 30.0,
-                                        fit: BoxFit.cover,
-                                      ))),
-                            title: Text(snapshot.data![index].amenityName),
                           );
                         },
                       ),
@@ -119,6 +92,56 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class AmenityTile extends StatelessWidget {
+  final Amenity amenity;
+  final VoidCallback onTap;
+
+  const AmenityTile({
+    required this.amenity,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onTap,
+      tileColor: ColorSchemes.backgroundColor,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: ColorSchemes.tertiaryColor),
+      ),
+      leading: ClipOval(
+        child: Container(
+          width: 50,
+          height: 50,
+          color: ColorSchemes.backgroundColor,
+          child: (amenity.amenityPicture == "")
+              ? const Icon(Icons.alarm, size: 30, color: Colors.black)
+              : Image.network(
+                  amenity.amenityPicture,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+        ),
+      ),
+      title: Text(
+        amenity.amenityName,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      trailing: Icon(
+        Icons.arrow_forward,
+        color: ColorSchemes.primaryColor,
       ),
     );
   }

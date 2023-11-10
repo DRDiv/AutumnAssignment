@@ -54,10 +54,8 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
               await DatabaseQueries.updateSessionToken(
                   ref.read(userLogged).userId,
                   url.queryParameters['sessionToken']!);
-              if (ref.read(userLogged).ammenityProvider) {
-                context.go("/homeAdmin");
-              } else
-                context.go("/home");
+
+              context.go("/home");
             }
           },
         ),

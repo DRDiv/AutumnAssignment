@@ -155,7 +155,7 @@ class TimePicker extends StatelessWidget {
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor:
-                MaterialStateProperty.all<Color>(ColorCustomScheme.appBarColor),
+                MaterialStateProperty.all<Color>(ColorSchemes.secondayColor),
           ),
           onPressed: () async {
             final pickedTime = await showTimePicker(
@@ -238,7 +238,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
           style: FontsCustom.heading,
         ),
         centerTitle: true,
-        backgroundColor: ColorCustomScheme.appBarColor,
+        backgroundColor: ColorSchemes.primaryColor,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -251,8 +251,8 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                 height: 200,
                 width: 200,
                 decoration: BoxDecoration(
-                  color: ColorCustomScheme
-                      .backgroundColor, // Change to your desired background color
+                  color: ColorSchemes
+                      .whiteColor, // Change to your desired background color
                 ),
                 child: Stack(
                   children: [
@@ -274,7 +274,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                       right: 0,
                       bottom: 0,
                       child: FloatingActionButton(
-                        backgroundColor: ColorCustomScheme.appBarColor,
+                        backgroundColor: ColorSchemes.secondayColor,
                         child: Icon(Icons.add),
                         onPressed: _getImage,
                       ),
@@ -301,9 +301,9 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
             Text('Capacity: ${_capacity.toStringAsFixed(0)}',
                 style: FontsCustom.bodyBigText),
             Slider(
-              thumbColor: ColorCustomScheme.appBarColor,
-              activeColor: ColorCustomScheme.appBarColor,
-              inactiveColor: ColorCustomScheme.sliderColor,
+              thumbColor: ColorSchemes.secondayColor,
+              activeColor: ColorSchemes.secondayColor,
+              inactiveColor: ColorSchemes.tertiaryColor,
               value: _capacity,
               onChanged: (newValue) {
                 setState(() {
@@ -351,7 +351,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
             ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                      ColorCustomScheme.appBarColor),
+                      ColorSchemes.secondayColor),
                 ),
                 onPressed: () async {
                   if (_amenityName.text.isEmpty) {

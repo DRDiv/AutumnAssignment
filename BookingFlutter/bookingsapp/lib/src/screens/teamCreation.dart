@@ -39,74 +39,84 @@ class _TeamCreationState extends ConsumerState<TeamCreation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorCustomScheme.appBarColor,
+        backgroundColor: ColorSchemes.primaryColor,
         title: Text(
           "BOOKING\$",
           style: FontsCustom.heading,
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: 300,
-                    child: TextFormField(
-                      decoration: InputDecoration(hintText: 'Enter Team Name'),
-                      controller: _text,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a team name';
-                        }
-                        return null;
-                      },
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [ColorSchemes.tertiaryColor, ColorSchemes.whiteColor],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Enter Team Name',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 50),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      ColorCustomScheme
-                          .appBarColor), // Change this color to your desired background color
+                  controller: _text,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a team name';
+                    }
+                    return null;
+                  },
                 ),
-                onPressed: () async {
-                  users = await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return GroupMembers(context, users);
-                    },
-                  );
-                },
-                child: Text("Add Team Members"),
-              ),
-              SizedBox(height: 100),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      ColorCustomScheme.appBarColor),
-                ),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    print(_text.text);
-                    await DatabaseQueries.createTeam(
-                      _text.text,
-                      users,
-                      ref.read(userLogged).userId,
+                SizedBox(height: 30),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorSchemes.secondayColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  onPressed: () async {
+                    users = await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return GroupMembers(context, users);
+                      },
                     );
-                    router.pop();
-                  }
-                },
-                child: Text('Create Team'),
-              ),
-            ],
+                  },
+                  child: Text("Add Team Members"),
+                ),
+                SizedBox(height: 30),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorSchemes.secondayColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      print(_text.text);
+                      await DatabaseQueries.createTeam(
+                        _text.text,
+                        users,
+                        ref.read(userLogged).userId,
+                      );
+                      router.pop();
+                    }
+                  },
+                  child: Text('Create Team'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -43,7 +43,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorCustomScheme.appBarColor,
+        backgroundColor: ColorSchemes.primaryColor,
         title: Text(
           "BOOKING\$",
           style: FontsCustom.heading,
@@ -142,7 +142,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                   )),
       ),
       bottomNavigationBar: BottomAppBar(
-          color: ColorCustomScheme.appBarColor,
+          color: ColorSchemes.primaryColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -153,7 +153,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     },
                     icon: Icon(
                       Icons.home,
-                      color: ColorCustomScheme.backgroundColor,
+                      color: ColorSchemes.whiteColor,
                     )),
               ),
               Expanded(
@@ -163,7 +163,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     },
                     icon: Icon(
                       Icons.event,
-                      color: ColorCustomScheme.backgroundColor,
+                      color: ColorSchemes.whiteColor,
                     )),
               ),
               Expanded(
@@ -173,7 +173,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     },
                     icon: Icon(
                       Icons.local_activity,
-                      color: ColorCustomScheme.backgroundColor,
+                      color: ColorSchemes.whiteColor,
                     )),
               ),
               Expanded(
@@ -185,7 +185,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     },
                     icon: Icon(
                       Icons.admin_panel_settings,
-                      color: ColorCustomScheme.backgroundColor,
+                      color: ColorSchemes.whiteColor,
                     )),
               ),
               Expanded(
@@ -197,7 +197,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     },
                     icon: Icon(
                       Icons.logout,
-                      color: ColorCustomScheme.backgroundColor,
+                      color: ColorSchemes.whiteColor,
                     )),
               )
             ],

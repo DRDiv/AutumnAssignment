@@ -1,3 +1,4 @@
+import 'package:bookingsapp/functions/get.dart';
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
@@ -88,7 +89,7 @@ class _AmenityTabState extends State<AmenityTab> {
 
               return ListTile(
                 leading: CircleAvatar(
-                    backgroundColor: ColorCustomScheme.backgroundColor,
+                    backgroundColor: ColorSchemes.backgroundColor,
                     radius: 15.0,
                     child: ((item.amenityPicture) == "")
                         ? const Icon(Icons.access_alarm,
@@ -124,37 +125,8 @@ class _EventTabState extends State<EventTab> {
   void initState() {
     super.initState();
     setState(() {
-      dataIndvFuture = getAmmenityUser();
+      dataIndvFuture = getAmmenityUser(widget.userlogged.userId);
     });
-  }
-
-  Future<List<dynamic>> getAmmenityUser() async {
-    try {
-      var amenityUser =
-          await DatabaseQueries.getEventUser(widget.userlogged.userId);
-
-      if (amenityUser.statusCode == 200) {
-        List<dynamic> responseData = amenityUser.data;
-
-        List<dynamic> typedData = [];
-
-        for (var responseInd in amenityUser.data) {
-          var responseEvent =
-              await DatabaseQueries.getEventDetails(responseInd['eventId']);
-
-          Event event = Event.defaultEvent();
-
-          await event.setData(responseEvent.data);
-          typedData.add(event);
-        }
-
-        return typedData;
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    return [];
   }
 
   @override
@@ -190,7 +162,7 @@ class _EventTabState extends State<EventTab> {
                   DateFormat.yMMMMd().add_jm().format(inputDateTime);
               return ListTile(
                 leading: CircleAvatar(
-                    backgroundColor: ColorCustomScheme.backgroundColor,
+                    backgroundColor: ColorSchemes.backgroundColor,
                     radius: 15.0,
                     child: ((item.eventPicture) == "")
                         ? const Icon(Icons.access_alarm,
@@ -231,7 +203,7 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: ColorCustomScheme.appBarColor,
+            backgroundColor: ColorSchemes.primaryColor,
             title: Text(
               "BOOKING\$",
               style: FontsCustom.heading,
@@ -239,8 +211,7 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
             centerTitle: true,
             bottom: TabBar(
               tabs: [Tab(text: 'Amenity'), Tab(text: 'Event')],
-              indicator:
-                  BoxDecoration(color: ColorCustomScheme.appBarColorSelected),
+              indicator: BoxDecoration(color: ColorSchemes.secondayColor),
             ),
           ),
           body: TabBarView(
@@ -250,7 +221,7 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
             ],
           ),
           bottomNavigationBar: BottomAppBar(
-              color: ColorCustomScheme.appBarColor,
+              color: ColorSchemes.primaryColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -261,7 +232,7 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                         },
                         icon: Icon(
                           Icons.home,
-                          color: ColorCustomScheme.backgroundColor,
+                          color: ColorSchemes.backgroundColor,
                         )),
                   ),
                   Expanded(
@@ -271,7 +242,7 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                         },
                         icon: Icon(
                           Icons.event,
-                          color: ColorCustomScheme.backgroundColor,
+                          color: ColorSchemes.backgroundColor,
                         )),
                   ),
                   Expanded(
@@ -281,7 +252,7 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                         },
                         icon: Icon(
                           Icons.local_activity,
-                          color: ColorCustomScheme.backgroundColor,
+                          color: ColorSchemes.backgroundColor,
                         )),
                   ),
                   Expanded(
@@ -293,7 +264,7 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                         },
                         icon: Icon(
                           Icons.admin_panel_settings,
-                          color: ColorCustomScheme.backgroundColor,
+                          color: ColorSchemes.backgroundColor,
                         )),
                   ),
                   Expanded(
@@ -305,7 +276,7 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                         },
                         icon: Icon(
                           Icons.logout,
-                          color: ColorCustomScheme.backgroundColor,
+                          color: ColorSchemes.backgroundColor,
                         )),
                   )
                 ],

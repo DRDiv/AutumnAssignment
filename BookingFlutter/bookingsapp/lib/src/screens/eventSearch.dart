@@ -43,7 +43,7 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
           child: Column(
             children: [
               Container(
-                color: ColorCustomScheme.backgroundColor,
+                color: ColorSchemes.backgroundColor,
                 child: TextFormField(
                   onChanged: (text) {
                     setState(() {
@@ -54,11 +54,10 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                   decoration: InputDecoration(
                     hintText: 'Search Event',
                     focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: ColorCustomScheme.appBarColor),
+                      borderSide: BorderSide(color: ColorSchemes.primaryColor),
                     ),
                   ),
-                  cursorColor: ColorCustomScheme.appBarColor,
+                  cursorColor: ColorSchemes.primaryColor,
                 ),
               ),
               FutureBuilder<List<Event>>(
@@ -93,8 +92,7 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                                   "/eventBooking/${snapshot.data![index].eventId}/${widget.team.teamId}/");
                             },
                             leading: CircleAvatar(
-                                backgroundColor:
-                                    ColorCustomScheme.backgroundColor,
+                                backgroundColor: ColorSchemes.backgroundColor,
                                 radius: 15.0,
                                 child:
                                     (snapshot.data![index].eventPicture == "")

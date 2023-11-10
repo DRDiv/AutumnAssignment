@@ -77,7 +77,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
           style: FontsCustom.heading,
         ),
         centerTitle: true,
-        backgroundColor: ColorCustomScheme.appBarColor,
+        backgroundColor: ColorSchemes.primaryColor,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -90,7 +90,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 height: 200,
                 width: 200,
                 decoration: BoxDecoration(
-                  color: ColorCustomScheme
+                  color: ColorSchemes
                       .backgroundColor, // Change to your desired background color
                 ),
                 child: Stack(
@@ -113,7 +113,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                       right: 0,
                       bottom: 0,
                       child: FloatingActionButton(
-                        backgroundColor: ColorCustomScheme.appBarColor,
+                        backgroundColor: ColorSchemes.secondayColor,
                         child: Icon(Icons.add),
                         onPressed: _getImage,
                       ),
@@ -142,8 +142,8 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 style: FontsCustom.bodyBigText),
             ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(ColorCustomScheme
-                    .appBarColor), // Change this color to your desired background color
+                backgroundColor: MaterialStateProperty.all<Color>(ColorSchemes
+                    .secondayColor), // Change this color to your desired background color
               ),
               onPressed: () => _selectDate(context),
               child: Text('Select Date'),
@@ -155,8 +155,8 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 style: FontsCustom.bodyBigText),
             ElevatedButton(
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(ColorCustomScheme
-                    .appBarColor), // Change this color to your desired background color
+                backgroundColor: MaterialStateProperty.all<Color>(ColorSchemes
+                    .secondayColor), // Change this color to your desired background color
               ),
               onPressed: () => _selectTime(context),
               child: Text('Select Time'),
@@ -167,9 +167,9 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
             Text('Min Team Size: ${_minTeam.toStringAsFixed(0)}',
                 style: FontsCustom.bodyBigText),
             Slider(
-              thumbColor: ColorCustomScheme.appBarColor,
-              activeColor: ColorCustomScheme.appBarColor,
-              inactiveColor: ColorCustomScheme.sliderColor,
+              thumbColor: ColorSchemes.secondayColor,
+              activeColor: ColorSchemes.secondayColor,
+              inactiveColor: ColorSchemes.tertiaryColor,
               value: _minTeam,
               onChanged: (newValue) {
                 setState(() {
@@ -187,9 +187,9 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
             Text('Max Team Size: ${_maxTeam.toStringAsFixed(0)}',
                 style: FontsCustom.bodyBigText),
             Slider(
-              thumbColor: ColorCustomScheme.appBarColor,
-              activeColor: ColorCustomScheme.appBarColor,
-              inactiveColor: ColorCustomScheme.sliderColor,
+              thumbColor: ColorSchemes.secondayColor,
+              activeColor: ColorSchemes.secondayColor,
+              inactiveColor: ColorSchemes.tertiaryColor,
               value: _maxTeam,
               onChanged: (newValue) {
                 setState(() {
@@ -216,9 +216,8 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
             ),
             ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      ColorCustomScheme
-                          .appBarColor), // Change this color to your desired background color
+                  backgroundColor: MaterialStateProperty.all<Color>(ColorSchemes
+                      .secondayColor), // Change this color to your desired background color
                 ),
                 onPressed: () async {
                   if (_eventName.text.isEmpty) {
