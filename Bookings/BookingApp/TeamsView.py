@@ -16,24 +16,26 @@ class TeamListView(generics.ListCreateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     def post(self, request, *args, **kwargs):
-        print(request.data)
+      
         teamName = request.data.get('teamName')
         users = request.data.getlist('users')
         isAdmin_data = {}
-
+        isReq_data={}
         for check in users:
             isAdmin_data[check]=(request.data.get(f'isAdmin[{check}]')=='true')
-
+        for check in users:
+            isReq_data[check]=(request.data.get(f'isReq[{check}]')=='true')
         userobj = []
 
         for indv in users:
             userindv = get_object_or_404(User.objects.all(), userId=indv)
-            isAdmin = isAdmin_data.get(indv, False)  # Get the isAdmin value from the extracted data
+            isAdmin = isAdmin_data.get(indv, False)  
             userobj.append(userindv)
 
         team = Team(
             teamName=teamName,
-            isAdmin=isAdmin_data,  # Save the isAdmin data as a dictionary
+            isAdmin=isAdmin_data,  
+            isReq=isReq_data
         )
         team.save()
         team.users.set(userobj)
@@ -50,7 +52,32 @@ class TeamByName(generics.RetrieveAPIView):
         teamname = self.kwargs.get('username')
         team = get_object_or_404(self.get_queryset(), teamName=teamname)
         return Response({'teamId': team.teamId})
-    
+
+class ReqToTeam(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+ 
+    def post(self, request, *args, **kwargs):
+        
+        team = self.get_object()
+        
+        userid = request.POST.get('userId')
+        state = request.POST.get('state')
+        
+        if state=='true':
+            team.isReq[userid] = False
+            team.save()
+        else:
+            user = get_object_or_404(User, userId=userid)
+            team.users.remove(user)
+            del team.isAdmin[(userid)]
+            del team.isReq[userid]  
+           
+            team.save()
+
+        return Response()
+
+
 class AddUserToTeamView(generics.UpdateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
@@ -64,9 +91,11 @@ class AddUserToTeamView(generics.UpdateAPIView):
       
         team.users.add(user)
         team.isAdmin[user.userId]=False
+        team.isReq[user.userId]=True
         team.save()
         serializer = self.get_serializer(team)
         return Response(serializer.data)
+    
 class MakeAdmin(generics.UpdateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer

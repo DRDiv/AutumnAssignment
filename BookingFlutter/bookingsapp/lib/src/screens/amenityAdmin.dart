@@ -204,11 +204,11 @@ class AmenityAdmin extends ConsumerStatefulWidget {
 }
 
 class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
-  List<Map<String, dynamic>> slotDataList = [];
-  List<Slot> slots = [];
-  File? amenityPicture;
-  String userId = "";
-  String selectedOption = 'Daily';
+  List<Map<String, dynamic>> _slotDataList = [];
+  List<Slot> _slots = [];
+  File? _amenityPicture;
+  String _userId = "";
+  String _selectedOption = 'Daily';
 
   List<String> options = [
     'Daily',
@@ -224,7 +224,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
-        amenityPicture = File(pickedImage.path);
+        _amenityPicture = File(pickedImage.path);
       });
     }
   }
@@ -256,7 +256,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                 ),
                 child: Stack(
                   children: [
-                    (amenityPicture == null)
+                    (_amenityPicture == null)
                         ? Center(
                             child: Icon(
                               Icons.category_sharp,
@@ -266,7 +266,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                         : Center(
                             child: ClipRRect(
                                 child: Image.file(
-                              amenityPicture!,
+                              _amenityPicture!,
                               fit: BoxFit.fitHeight,
                             )),
                           ),
@@ -326,7 +326,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                   style: FontsCustom.bodyBigText,
                 ),
                 DropdownButton<String>(
-                  value: selectedOption,
+                  value: _selectedOption,
                   items: options.map((String option) {
                     return DropdownMenuItem<String>(
                       value: option,
@@ -335,7 +335,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                   }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      selectedOption = newValue!;
+                      _selectedOption = newValue!;
                     });
                   },
                 ),
@@ -343,7 +343,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: SlotsEditor(slotDataList, slots),
+              child: SlotsEditor(_slotDataList, _slots),
             ),
             SizedBox(
               height: 20,
@@ -362,7 +362,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                     );
                     return;
                   }
-                  if (slots.isEmpty) {
+                  if (_slots.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("No slots selected"),
@@ -372,9 +372,9 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                   await DatabaseQueries.createAmenity(
                       _amenityName.text,
                       ref.read(userLogged).userId,
-                      selectedOption,
-                      slots,
-                      amenityPicture,
+                      _selectedOption,
+                      _slots,
+                      _amenityPicture,
                       _capacity);
                   router.pop();
                 },

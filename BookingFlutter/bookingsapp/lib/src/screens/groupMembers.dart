@@ -19,8 +19,8 @@ class GroupMembers extends ConsumerStatefulWidget {
 
 class _GroupMembersState extends ConsumerState<GroupMembers> {
   TextEditingController _text = TextEditingController();
-  String like = '';
-  Map<String, bool> add = {};
+  String _like = '';
+  Map<String, bool> _add = {};
 
   Future<List<User>> getUsers(String like) async {
     var response = await DatabaseQueries.getUserRegex(like);
@@ -44,7 +44,7 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
     super.initState();
     setState(() {
       for (var indv in widget.users) {
-        add[indv] = true;
+        _add[indv] = true;
       }
     });
   }
@@ -63,7 +63,7 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
               child: TextFormField(
                 onChanged: (text) {
                   setState(() {
-                    like = text;
+                    _like = text;
                   });
                 },
                 controller: _text,
@@ -77,7 +77,7 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
               ),
             ),
             FutureBuilder<List<User>>(
-              future: getUsers(like),
+              future: getUsers(_like),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Padding(
@@ -103,9 +103,9 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
                       itemBuilder: (context, index) {
                         return ListTile(
                           onTap: () async {
-                            add[snapshot.data![index].userId] =
-                                !(add[snapshot.data![index].userId] ?? false);
-                            print(add);
+                            _add[snapshot.data![index].userId] =
+                                !(_add[snapshot.data![index].userId] ?? false);
+                            print(_add);
 
                             rebuildWidget();
                           },
@@ -129,12 +129,13 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
                                       fit: BoxFit.cover,
                                     ))),
                           title: Text(snapshot.data![index].userName),
-                          trailing: (add[snapshot.data![index].userId] ?? false)
-                              ? Icon(
-                                  Icons.check,
-                                  color: Colors.green,
-                                )
-                              : Icon(Icons.add, color: Colors.red),
+                          trailing:
+                              (_add[snapshot.data![index].userId] ?? false)
+                                  ? Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                    )
+                                  : Icon(Icons.add, color: Colors.red),
                         );
                       },
                     ),
@@ -149,9 +150,9 @@ class _GroupMembersState extends ConsumerState<GroupMembers> {
                 ),
                 onPressed: () async {
                   List<String> userReturn = [];
-                  print(add);
-                  for (var userInd in add.keys) {
-                    if (add[userInd]! && !userReturn.contains(userInd)) {
+                  print(_add);
+                  for (var userInd in _add.keys) {
+                    if (_add[userInd]! && !userReturn.contains(userInd)) {
                       userReturn.add(userInd);
                     }
                   }

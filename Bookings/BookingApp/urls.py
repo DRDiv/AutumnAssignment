@@ -20,12 +20,14 @@ urlpatterns = [
     path('user/regex/<str:userName>/', UserRegex.as_view(), name='user-regex'),
     path('adminlogin/',AdminLogin.as_view(), name='admin-login'),
 
-    
+   
     path('team/', TeamListView.as_view(), name='team-list'),
     path('team/<str:pk>/', TeamDetailView.as_view(), name='team-detail'),
     path('team/user/<str:user_id>/', TeamUser.as_view(), name='team-user'),
     path('team/by-teamname/<str:teamname>/', TeamByName.as_view(), name='team-by-name'),
+   
     path('team/<str:pk>/adduser/<str:userId>/', AddUserToTeamView.as_view(), name='add-user-to-team'),
+    path('team/req/<str:pk>/req/', ReqToTeam.as_view(), name='req-user-to-team'),
     path('team/<str:pk>/makeadmin/<str:userId>/', MakeAdmin.as_view(), name='add-user-to-team'),
 
     path('request/', RequestListView.as_view(), name='request-list'),

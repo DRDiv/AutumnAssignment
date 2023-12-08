@@ -21,16 +21,16 @@ class EventBooking extends ConsumerStatefulWidget {
 }
 
 class _EventBookingState extends ConsumerState<EventBooking> {
-  Event event = Event.defaultEvent();
-  bool isLoading = true;
-  File? image;
+  Event _event = Event.defaultEvent();
+  bool _isLoading = true;
+  File? _image;
   Future<void> setData() async {
     Event e = Event.defaultEvent();
     await e
         .setData((await DatabaseQueries.getEventDetails(widget.eventId)).data);
     setState(() {
-      event = e;
-      isLoading = false;
+      _event = e;
+      _isLoading = false;
     });
   }
 
@@ -44,7 +44,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
-        image = File(pickedImage.path);
+        _image = File(pickedImage.path);
       });
     }
   }
@@ -60,7 +60,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
         ),
         centerTitle: true,
       ),
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -78,14 +78,14 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                             decoration: BoxDecoration(
                               color: ColorSchemes.backgroundColor,
                             ),
-                            child: (event.eventPicture == "")
+                            child: (_event.eventPicture == "")
                                 ? Icon(
                                     Icons.category_sharp,
                                     size: 100,
                                   )
                                 : ClipRRect(
                                     child: Image.network(
-                                    event.eventPicture,
+                                    _event.eventPicture,
                                     fit: BoxFit.fitHeight,
                                   )),
                           ),
@@ -93,11 +93,11 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            event.eventName,
+                            _event.eventName,
                             style: FontsCustom.bodyHeading,
                           ),
                         ),
-                        (event.payment > 0)
+                        (_event.payment > 0)
                             ? Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Row(
@@ -131,7 +131,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                   .primaryColor), // Change this color to your desired background color
                         ),
                         onPressed: () async {
-                          if (event.payment > 0 && image == null) {
+                          if (_event.payment > 0 && _image == null) {
                             showDialog(
                               context: context,
                               builder: (context) {
@@ -168,7 +168,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
 
                           dynamic response =
                               await DatabaseQueries.makeEventRequest(
-                                  widget.eventId, widget.teamId, image);
+                                  widget.eventId, widget.teamId, _image);
 
                           showDialog(
                             barrierDismissible: false,

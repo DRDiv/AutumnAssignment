@@ -258,13 +258,13 @@ DateTime parseStartTime(String formattedTimeRange) {
 }
 
 class _AmenityBookingState extends ConsumerState<AmenityBooking> {
-  Amenity amenity = Amenity.defaultAmenity();
-  List<String> slots = [];
-  List<String> users = [];
-  bool isLoading = true;
-  File? image;
-  DateTime selectedDate = DateTime.now();
-  String selectedTime = '';
+  Amenity _amenity = Amenity.defaultAmenity();
+  List<String> _slots = [];
+  List<String> _users = [];
+  bool _isLoading = true;
+  File? _image;
+  DateTime _selectedDate = DateTime.now();
+  String _selectedTime = '';
   Future<void> setData() async {
     Amenity a = Amenity.defaultAmenity();
     await a.setData(
@@ -274,15 +274,15 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
     var response = await DatabaseQueries.getAmmenitySlot(a.amenityId);
 
     setState(() {
-      users.add(ref.read(userLogged).userId);
+      _users.add(ref.read(userLogged).userId);
       for (var indv in response.data) {
-        slots.add(
+        _slots.add(
             formatTimeRange(indv['amenitySlotStart'], indv['amenitySlotEnd']));
       }
-      amenity = a;
+      _amenity = a;
 
-      selectedTime = slots[0];
-      isLoading = false;
+      _selectedTime = _slots[0];
+      _isLoading = false;
     });
   }
 
@@ -302,7 +302,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
         ),
         centerTitle: true,
       ),
-      body: isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -320,14 +320,14 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                             decoration: BoxDecoration(
                               color: ColorSchemes.backgroundColor,
                             ),
-                            child: (amenity.amenityPicture == "")
+                            child: (_amenity.amenityPicture == "")
                                 ? Icon(
                                     Icons.category_sharp,
                                     size: 100,
                                   )
                                 : ClipRRect(
                                     child: Image.network(
-                                    amenity.amenityPicture,
+                                    _amenity.amenityPicture,
                                     fit: BoxFit.fitHeight,
                                   )),
                           ),
@@ -335,7 +335,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            amenity.amenityName,
+                            _amenity.amenityName,
                             style: FontsCustom.bodyHeading,
                           ),
                         ),
@@ -350,10 +350,10 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                   ),
                                 ),
                                 child: DateSelector(
-                                  amenity.recurrence,
+                                  _amenity.recurrence,
                                   (date) {
                                     setState(() {
-                                      selectedDate = date;
+                                      _selectedDate = date;
                                     });
                                   },
                                 ))),
@@ -369,10 +369,10 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                   ),
                                 ),
                                 child: TimeSelector(
-                                  slots,
+                                  _slots,
                                   (time) {
                                     setState(() {
-                                      selectedTime = time;
+                                      _selectedTime = time;
                                     });
                                   },
                                 ))),
@@ -386,10 +386,10 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                   .secondayColor), // Change this color to your desired background color
                         ),
                         onPressed: () async {
-                          users = await showDialog(
+                          _users = await showDialog(
                               context: context,
                               builder: (context) {
-                                return GroupMembers(context, users);
+                                return GroupMembers(context, _users);
                               });
                         },
                         child: Text("Add Group Members")),
@@ -403,10 +403,10 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                         onPressed: () async {
                           dynamic response =
                               await DatabaseQueries.makeAmmenityRequest(
-                                  amenity.amenityId,
-                                  users,
-                                  parseStartTime(selectedTime),
-                                  selectedDate);
+                                  _amenity.amenityId,
+                                  _users,
+                                  parseStartTime(_selectedTime),
+                                  _selectedDate);
 
                           showDialog(
                             barrierDismissible: false,

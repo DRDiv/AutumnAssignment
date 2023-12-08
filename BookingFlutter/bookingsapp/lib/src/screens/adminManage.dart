@@ -22,11 +22,11 @@ class AmenityTab extends StatefulWidget {
 }
 
 class _AmenityTabState extends State<AmenityTab> {
-  late Future<List<dynamic>> dataIndvFuture;
+  late Future<List<dynamic>> _dataIndvFuture;
   void initState() {
     super.initState();
     setState(() {
-      dataIndvFuture = getAmmenityUser();
+      _dataIndvFuture = getAmmenityUser();
     });
   }
 
@@ -62,7 +62,7 @@ class _AmenityTabState extends State<AmenityTab> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-      future: dataIndvFuture,
+      future: _dataIndvFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -121,18 +121,18 @@ class EventTab extends StatefulWidget {
 }
 
 class _EventTabState extends State<EventTab> {
-  late Future<List<dynamic>> dataIndvFuture;
+  late Future<List<dynamic>> _dataIndvFuture;
   void initState() {
     super.initState();
     setState(() {
-      dataIndvFuture = getAmmenityUser(widget.userlogged.userId);
+      _dataIndvFuture = getAmmenityUser(widget.userlogged.userId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-      future: dataIndvFuture,
+      future: _dataIndvFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -202,25 +202,25 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: ColorSchemes.primaryColor,
-            title: Text(
-              "BOOKING\$",
-              style: FontsCustom.heading,
+            appBar: AppBar(
+              backgroundColor: ColorSchemes.primaryColor,
+              title: Text(
+                "BOOKING\$",
+                style: FontsCustom.heading,
+              ),
+              centerTitle: true,
+              bottom: TabBar(
+                tabs: [Tab(text: 'Amenity'), Tab(text: 'Event')],
+                indicator: BoxDecoration(color: ColorSchemes.secondayColor),
+              ),
             ),
-            centerTitle: true,
-            bottom: TabBar(
-              tabs: [Tab(text: 'Amenity'), Tab(text: 'Event')],
-              indicator: BoxDecoration(color: ColorSchemes.secondayColor),
+            body: TabBarView(
+              children: [
+                AmenityTab(widget.userlogged),
+                EventTab(widget.userlogged),
+              ],
             ),
-          ),
-          body: TabBarView(
-            children: [
-              AmenityTab(widget.userlogged),
-              EventTab(widget.userlogged),
-            ],
-          ),
-          bottomNavigationBar: BottomAppBar(
+            bottomNavigationBar: BottomAppBar(
               color: ColorSchemes.primaryColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -230,9 +230,17 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                         onPressed: () {
                           context.go("/homeAdmin");
                         },
-                        icon: Icon(
-                          Icons.home,
-                          color: ColorSchemes.backgroundColor,
+                        icon: Column(
+                          children: [
+                            Icon(
+                              Icons.home,
+                              color: ColorSchemes.whiteColor,
+                            ),
+                            Text(
+                              'Home',
+                              style: FontsCustom.smallText,
+                            ),
+                          ],
                         )),
                   ),
                   Expanded(
@@ -240,9 +248,17 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                         onPressed: () {
                           router.push("/eventAdmin");
                         },
-                        icon: Icon(
-                          Icons.event,
-                          color: ColorSchemes.backgroundColor,
+                        icon: Column(
+                          children: [
+                            Icon(
+                              Icons.event,
+                              color: ColorSchemes.whiteColor,
+                            ),
+                            Text(
+                              'Event',
+                              style: FontsCustom.smallText,
+                            ),
+                          ],
                         )),
                   ),
                   Expanded(
@@ -250,9 +266,17 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                         onPressed: () {
                           router.push("/amenityAdmin");
                         },
-                        icon: Icon(
-                          Icons.local_activity,
-                          color: ColorSchemes.backgroundColor,
+                        icon: Column(
+                          children: [
+                            Icon(
+                              Icons.local_activity,
+                              color: ColorSchemes.whiteColor,
+                            ),
+                            Text(
+                              'Amenity',
+                              style: FontsCustom.smallText,
+                            ),
+                          ],
                         )),
                   ),
                   Expanded(
@@ -262,9 +286,17 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                           await storage.deleteAll();
                           context.go("/adminManage");
                         },
-                        icon: Icon(
-                          Icons.admin_panel_settings,
-                          color: ColorSchemes.backgroundColor,
+                        icon: Column(
+                          children: [
+                            Icon(
+                              Icons.admin_panel_settings,
+                              color: ColorSchemes.whiteColor,
+                            ),
+                            Text(
+                              'Manage',
+                              style: FontsCustom.smallText,
+                            ),
+                          ],
                         )),
                   ),
                   Expanded(
@@ -274,14 +306,22 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                           await storage.deleteAll();
                           context.go("/login");
                         },
-                        icon: Icon(
-                          Icons.logout,
-                          color: ColorSchemes.backgroundColor,
+                        icon: Column(
+                          children: [
+                            Icon(
+                              Icons.logout,
+                              color: ColorSchemes.whiteColor,
+                            ),
+                            Text(
+                              'Logout',
+                              style: FontsCustom.smallText,
+                            ),
+                          ],
                         )),
                   )
                 ],
-              )),
-        ),
+              ),
+            )),
       ),
     );
   }

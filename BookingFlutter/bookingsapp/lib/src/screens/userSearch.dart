@@ -21,15 +21,15 @@ class UserSearch extends ConsumerStatefulWidget {
 
 class _UserSearchState extends ConsumerState<UserSearch> {
   TextEditingController _text = TextEditingController();
-  String like = '';
-  Map<String, bool> add = {};
+  String _like = '';
+  Map<String, bool> _add = {};
 
   void rebuildWidget() {
     setState(() {});
   }
 
   Future<List<User>> setUsers() async {
-    List<User> users = await getUsers(like, widget.users);
+    List<User> users = await getUsers(_like, widget.users);
     return users;
   }
 
@@ -50,7 +50,7 @@ class _UserSearchState extends ConsumerState<UserSearch> {
                 child: TextFormField(
                   onChanged: (text) {
                     setState(() {
-                      like = text;
+                      _like = text;
                     });
                   },
                   controller: _text,
@@ -85,8 +85,8 @@ class _UserSearchState extends ConsumerState<UserSearch> {
                       itemBuilder: (context, index) {
                         return ListTile(
                           onTap: () async {
-                            add[snapshot.data![index].userId] =
-                                !(add[snapshot.data![index].userId] ?? false);
+                            _add[snapshot.data![index].userId] =
+                                !(_add[snapshot.data![index].userId] ?? false);
                             rebuildWidget();
                           },
                           leading: CircleAvatar(
@@ -111,12 +111,13 @@ class _UserSearchState extends ConsumerState<UserSearch> {
                                   ),
                           ),
                           title: Text(snapshot.data![index].userName),
-                          trailing: (add[snapshot.data![index].userId] ?? false)
-                              ? Icon(
-                                  Icons.check,
-                                  color: Colors.green,
-                                )
-                              : Icon(Icons.add, color: Colors.red),
+                          trailing:
+                              (_add[snapshot.data![index].userId] ?? false)
+                                  ? Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                    )
+                                  : Icon(Icons.add, color: Colors.red),
                         );
                       },
                     );
@@ -131,8 +132,8 @@ class _UserSearchState extends ConsumerState<UserSearch> {
                 textStyle: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                for (var userInd in add.keys) {
-                  if (add[userInd]!) {
+                for (var userInd in _add.keys) {
+                  if (_add[userInd]!) {
                     await DatabaseQueries.addUserTeam(widget.teamId, userInd);
                   }
                 }

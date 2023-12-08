@@ -23,7 +23,7 @@ class TeamCreation extends ConsumerStatefulWidget {
 
 class _TeamCreationState extends ConsumerState<TeamCreation> {
   TextEditingController _text = TextEditingController();
-  List<String> users = [];
+  List<String> _users = [];
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -31,7 +31,7 @@ class _TeamCreationState extends ConsumerState<TeamCreation> {
   void initState() {
     super.initState();
     setState(() {
-      users.add(ref.read(userLogged).userId);
+      _users.add(ref.read(userLogged).userId);
     });
   }
 
@@ -47,13 +47,6 @@ class _TeamCreationState extends ConsumerState<TeamCreation> {
         centerTitle: true,
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [ColorSchemes.tertiaryColor, ColorSchemes.whiteColor],
-          ),
-        ),
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Form(
@@ -85,10 +78,10 @@ class _TeamCreationState extends ConsumerState<TeamCreation> {
                     ),
                   ),
                   onPressed: () async {
-                    users = await showDialog(
+                    _users = await showDialog(
                       context: context,
                       builder: (context) {
-                        return GroupMembers(context, users);
+                        return GroupMembers(context, _users);
                       },
                     );
                   },
@@ -104,10 +97,9 @@ class _TeamCreationState extends ConsumerState<TeamCreation> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      print(_text.text);
                       await DatabaseQueries.createTeam(
                         _text.text,
-                        users,
+                        _users,
                         ref.read(userLogged).userId,
                       );
                       router.pop();

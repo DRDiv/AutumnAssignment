@@ -133,7 +133,7 @@ Future<List<Team>> getTeams(String userId) async {
 
       for (var responseInd in response.data) {
         Team team = Team.defaultTeam();
-        team.setData(responseInd);
+        await team.setData(responseInd);
         typedData.add(team);
       }
 
@@ -187,4 +187,17 @@ Future<List<dynamic>> getAmmenityUser(String userId) async {
   }
 
   return [];
+}
+
+Future<List<Event>> getEvents(String like) async {
+  var response = await DatabaseQueries.getEventRegex(like);
+  List<Event> events = [];
+
+  for (var indv in response.data) {
+    Event eventInd = Event.defaultEvent();
+    await eventInd.setData(indv);
+
+    events.add(eventInd);
+  }
+  return events;
 }

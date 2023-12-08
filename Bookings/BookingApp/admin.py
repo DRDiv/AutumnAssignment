@@ -10,3 +10,4 @@ admin.site.register(AmenitySlot)
 admin.site.register(Request)
 admin.site.register(Team)
 admin.site.register(Booking)
+

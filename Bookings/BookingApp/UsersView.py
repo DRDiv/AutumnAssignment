@@ -62,9 +62,10 @@ class UserLogin(generics.ListCreateAPIView):
             
             if (state=='finished'):
                 return JsonResponse({'data':'nothing'})
-            
+            print(ip)
             
             redirect_uri = ip+'userlogin/'
+
             authorization_code = request.GET.get('code')
            
 

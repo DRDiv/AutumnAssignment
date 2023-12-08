@@ -75,6 +75,7 @@ class AmmenitySlotTiming(generics.ListCreateAPIView):
     lookup_field = 'amenity'
     serializer_class = AmenitySlotSerializer
     def get_queryset(self):
+        
         amenity = self.kwargs.get('amenityId')
         amenityobj=get_object_or_404(Amenity.objects.all(),amenityId=amenity)
         

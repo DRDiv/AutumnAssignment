@@ -16,11 +16,12 @@ import 'package:intl/intl.dart';
 class TeamMembers extends StatefulWidget {
   List<User> members;
   Map<String, dynamic> isAdmin;
+  Map<String, dynamic> isReq;
   User userlogged;
   String teamId;
   Function rebuild;
-  TeamMembers(
-      this.members, this.isAdmin, this.userlogged, this.teamId, this.rebuild);
+  TeamMembers(this.members, this.isAdmin, this.isReq, this.userlogged,
+      this.teamId, this.rebuild);
 
   @override
   State<TeamMembers> createState() => TeamMembersState();
@@ -59,7 +60,8 @@ class TeamMembersState extends State<TeamMembers> {
                   (user.userName +
                       ((user.userId == widget.userlogged.userId)
                           ? " (You)"
-                          : "")),
+                          : "") +
+                      ((widget.isReq[user.userId]) ? " (Req)" : "")),
                 )),
             trailing: (widget.isAdmin[widget.userlogged.userId] &&
                     !widget.isAdmin[user.userId])
@@ -137,19 +139,19 @@ class TabWidget extends StatefulWidget {
 }
 
 class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
-  Team team = Team.defaultTeam();
-  bool isLoading = true;
-  late TabController tabController;
+  Team _team = Team.defaultTeam();
+  bool _isLoading = true;
+  late TabController _tabController;
   int currentTabIndex = 0;
   Future<void> setTeam() async {
     var response = await DatabaseQueries.getTeamDetails(widget.teamId);
-    await team.setData(response.data);
+    await _team.setData(response.data);
   }
 
   Future<void> loadTeamData() async {
     await setTeam();
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -158,10 +160,10 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
     super.initState();
     loadTeamData();
     setState(() {
-      tabController = TabController(initialIndex: 0, length: 2, vsync: this);
-      tabController.addListener(() {
+      _tabController = TabController(initialIndex: 0, length: 2, vsync: this);
+      _tabController.addListener(() {
         setState(() {
-          currentTabIndex = tabController.index;
+          currentTabIndex = _tabController.index;
         });
       });
     });
@@ -169,8 +171,8 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
 
   void rebuild() {
     setState(() {
-      isLoading = true;
-      team = Team.defaultTeam();
+      _isLoading = true;
+      _team = Team.defaultTeam();
     });
     loadTeamData();
   }
@@ -189,19 +191,19 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
           ),
           centerTitle: true,
           bottom: TabBar(
-            controller: tabController,
+            controller: _tabController,
             tabs: [Tab(text: 'Team Members'), Tab(text: 'Events')],
             indicator: BoxDecoration(color: ColorSchemes.secondayColor),
           ),
         ),
-        body: isLoading
+        body: _isLoading
             ? Center(child: CircularProgressIndicator())
             : TabBarView(
-                controller: tabController,
+                controller: _tabController,
                 children: [
-                  TeamMembers(team.users, team.isAdmin, widget.userlogged,
-                      team.teamId, rebuild),
-                  EventsBooked(team.events, team)
+                  TeamMembers(_team.users, _team.isAdmin, _team.isReq,
+                      widget.userlogged, _team.teamId, rebuild),
+                  EventsBooked(_team.events, _team)
                 ],
               ),
         bottomNavigationBar: BottomAppBar(
@@ -231,15 +233,15 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
                 )
               ],
             )),
-        floatingActionButton: !isLoading &&
-                team.isAdmin[widget.userlogged.userId]
+        floatingActionButton: !_isLoading &&
+                _team.isAdmin[widget.userlogged.userId]
             ? FloatingActionButton(
                 onPressed: () async {
-                  if (tabController.index == 0) {
+                  if (_tabController.index == 0) {
                     final result = await showDialog(
                         context: context,
                         builder: (context) {
-                          return UserSearch(context, team.users, team.teamId);
+                          return UserSearch(context, _team.users, _team.teamId);
                         });
                     if (result == "confirmed") {
                       rebuild();
@@ -248,7 +250,7 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
                     showDialog(
                         context: context,
                         builder: (context) {
-                          return EventAlertBox(team);
+                          return EventAlertBox(_team);
                         });
                   }
                 },

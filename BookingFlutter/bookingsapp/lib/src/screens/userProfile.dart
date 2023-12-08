@@ -15,14 +15,14 @@ class UserProfile extends ConsumerStatefulWidget {
 }
 
 class _UserProfileState extends ConsumerState<UserProfile> {
-  User userCurrent = User.defaultUser();
-  bool isLoading = true;
+  User _userCurrent = User.defaultUser();
+  bool _isLoading = true;
   Future<void> setUser() async {
     User userTemp =
         User.set((await DatabaseQueries.getUserDetails(widget.userId)).data);
     setState(() {
-      userCurrent = userTemp;
-      isLoading = false;
+      _userCurrent = userTemp;
+      _isLoading = false;
     });
   }
 
@@ -51,14 +51,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
         centerTitle: true,
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [ColorSchemes.tertiaryColor, ColorSchemes.whiteColor],
-          ),
-        ),
-        child: isLoading
+        child: _isLoading
             ? Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
                 child: Padding(
@@ -69,8 +62,8 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                         CircleAvatar(
                             backgroundColor: ColorSchemes.backgroundColor,
                             radius: 40.0,
-                            child: (userCurrent.data['person'] == null ||
-                                    userCurrent.data['person']
+                            child: (_userCurrent.data['person'] == null ||
+                                    _userCurrent.data['person']
                                             ['displayPicture'] ==
                                         null)
                                 ? const Icon(Icons.person,
@@ -78,7 +71,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                                 : ClipOval(
                                     child: Image.network(
                                     "https://channeli.in/" +
-                                        userCurrent.data['person']
+                                        _userCurrent.data['person']
                                             ['displayPicture'],
                                     width: 80.0,
                                     height: 80.0,
@@ -87,21 +80,21 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            userCurrent.userName,
+                            _userCurrent.userName,
                             style: FontsCustom.bodyHeading,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            userCurrent.data['student']['enrolmentNumber'],
+                            _userCurrent.data['student']['enrolmentNumber'],
                             style: FontsCustom.bodySmallText,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            userCurrent.data['student']['branch name'],
+                            _userCurrent.data['student']['branch name'],
                             style: FontsCustom.bodySmallText,
                           ),
                         ),
@@ -109,7 +102,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             "Year: " +
-                                userCurrent.data['student']['currentYear']
+                                _userCurrent.data['student']['currentYear']
                                     .toString(),
                             style: FontsCustom.bodySmallText,
                           ),
@@ -117,7 +110,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Penalties: " + userCurrent.penalties.toString(),
+                            "Penalties: " + _userCurrent.penalties.toString(),
                             style: FontsCustom.bodySmallText,
                           ),
                         )

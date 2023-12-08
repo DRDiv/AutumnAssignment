@@ -19,7 +19,7 @@ class AmenityAlertBox extends ConsumerStatefulWidget {
 
 class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
   TextEditingController _text = TextEditingController();
-  String like = '';
+  String _like = '';
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
                 child: TextFormField(
                   onChanged: (text) {
                     setState(() {
-                      like = text;
+                      _like = text;
                     });
                   },
                   controller: _text,
@@ -52,7 +52,7 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
               ),
               const SizedBox(height: 8),
               FutureBuilder<List<Amenity>>(
-                future: getAmenity(like),
+                future: getAmenity(_like),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(

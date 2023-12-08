@@ -1,11 +1,12 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final ip = StateProvider<String>((ref) => "http://10.81.50.27:8000");
-final String ipAdd = "http://10.81.50.27:8000";
+final ip = StateProvider<String>((ref) => "http://192.168.29.33:8000");
+final String ipAdd = "http://192.168.29.33:8000";
 
 class DatabaseQueries {
   static Future<Response> getCurrentUser(String token) async {
@@ -79,6 +80,19 @@ class DatabaseQueries {
     String pathTeam = "$ipAdd/team/$teamId/adduser/$userId/";
     var dio = Dio();
     var response = await dio.get(pathTeam);
+
+    return response;
+  }
+
+  static Future<Response> reqUserTeam(
+      String teamId, String userId, bool state) async {
+    String pathTeam = "$ipAdd/team/req/$teamId/req/";
+    var dio = Dio();
+    FormData formData = FormData.fromMap({
+      'userId': userId,
+      'state': state,
+    });
+    var response = await dio.post(pathTeam, data: formData);
 
     return response;
   }
@@ -214,11 +228,15 @@ class DatabaseQueries {
     Map<String, bool> isAdmin =
         Map.fromIterable(users, key: (user) => user, value: (_) => false);
     isAdmin[userlogged] = true;
+    Map<String, bool> isReq =
+        Map.fromIterable(users, key: (user) => user, value: (_) => true);
+    isReq[userlogged] = false;
 
     formData = FormData.fromMap({
       'teamName': teamName,
       'users': users,
       'isAdmin': isAdmin,
+      'isReq': isReq
     });
 
     var response = await dio.post(path, data: formData);

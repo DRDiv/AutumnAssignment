@@ -44,9 +44,13 @@ class AmenitySlot(models.Model):
 class Team(models.Model):
     teamId=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     teamName=models.CharField(max_length=100)
+    
     users=models.ManyToManyField(User)
     isAdmin=models.JSONField(default=dict,blank=True)
+    isReq=models.JSONField(default=dict,blank=True)
     bookedEvents=models.ManyToManyField(Event,blank=True)
+
+
 
 class Request(models.Model):
     requestId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

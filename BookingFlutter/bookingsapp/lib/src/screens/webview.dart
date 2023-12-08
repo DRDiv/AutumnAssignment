@@ -17,7 +17,7 @@ class WebViewScreen extends ConsumerStatefulWidget {
 class _WebViewScreenState extends ConsumerState<WebViewScreen> {
   String url = '';
   String oauth_authorize_url =
-      "https://channeli.in/oauth/authorise/?client_id=1XDTUULqBMBdeIy4GyMEBuAwl8CWTjvzeTpr29Hy&redirect_uri=http%3A%2F%2F10.81.50.27%3A8000%2Fuserlogin%2F&state=done";
+      "https://channeli.in/oauth/authorise/?client_id=1XDTUULqBMBdeIy4GyMEBuAwl8CWTjvzeTpr29Hy&redirect_uri=http%3A%2F%2F192.168.29.33%3A8000%2Fuserlogin%2F&state=done";
   bool finished = false;
   void initState() {
     super.initState();

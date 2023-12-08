@@ -1,3 +1,5 @@
+import 'package:bookingsapp/src/assets/colors.dart';
+import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

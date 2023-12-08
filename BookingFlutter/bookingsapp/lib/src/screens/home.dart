@@ -30,13 +30,13 @@ class IndividualTab extends StatefulWidget {
 }
 
 class _IndividualTabState extends State<IndividualTab> {
-  late Future<List<dynamic>> dataIndvFuture;
+  late Future<List<dynamic>> _dataIndvFuture;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      dataIndvFuture = getBookingsIndvidual(widget.userlogged.userId);
+      _dataIndvFuture = getBookingsIndvidual(widget.userlogged.userId);
     });
   }
 
@@ -47,11 +47,11 @@ class _IndividualTabState extends State<IndividualTab> {
         Future<List<dynamic>> dataIndvFuture =
             getBookingsIndvidual(widget.userlogged.userId);
         setState(() {
-          this.dataIndvFuture = dataIndvFuture;
+          this._dataIndvFuture = dataIndvFuture;
         });
       },
       child: FutureBuilder<List<dynamic>>(
-        future: dataIndvFuture,
+        future: _dataIndvFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -123,14 +123,14 @@ class TeamTab extends ConsumerStatefulWidget {
 }
 
 class _TeamTabState extends ConsumerState<TeamTab> {
-  late Future<List<dynamic>> dataTeamFuture;
+  late Future<List<dynamic>> _dataTeamFuture;
   List<String> teams = [];
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      dataTeamFuture = getBookingsTeam(widget.userlogged.userId, ref);
+      _dataTeamFuture = getBookingsTeam(widget.userlogged.userId, ref);
       teams = ref.read(teamsList);
     });
   }
@@ -142,11 +142,11 @@ class _TeamTabState extends ConsumerState<TeamTab> {
         Future<List<dynamic>> dataTeamFuture =
             getBookingsTeam(widget.userlogged.userId, ref);
         setState(() {
-          this.dataTeamFuture = dataTeamFuture;
+          this._dataTeamFuture = dataTeamFuture;
         });
       },
       child: FutureBuilder<List<dynamic>>(
-        future: dataTeamFuture,
+        future: _dataTeamFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -366,30 +366,29 @@ class _TabWidgetState extends ConsumerState<TabWidget>
             centerTitle: true,
             actions: [
               IconButton(
-                  tooltip: 'User Profile',
-                  onPressed: () {
-                    router.push("/userprofile/${ref.read(userLogged).userId}");
+                  tooltip: 'Logout',
+                  onPressed: () async {
+                    final storage = new FlutterSecureStorage();
+                    await storage.deleteAll();
+                    context.go("/login");
                   },
-                  icon: Icon(Icons.person)),
+                  icon: Icon(
+                    Icons.logout,
+                    color: ColorSchemes.backgroundColor,
+                  ))
             ],
             bottom: TabBar(
               controller: tabController,
+              labelColor: Colors.white,
               tabs: [
                 Tab(text: 'Individual'),
                 Tab(text: 'Team'),
                 Tab(text: 'Requests')
               ],
-              indicator: BoxDecoration(color: ColorSchemes.secondayColor),
+              // indicator: BoxDecoration(color: ColorSchemes.secondayColor),
             ),
           ),
           body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [ColorSchemes.tertiaryColor, ColorSchemes.whiteColor],
-              ),
-            ),
             child: TabBarView(
               controller: tabController,
               children: [
@@ -410,9 +409,17 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                         onPressed: () {
                           context.go("/home");
                         },
-                        icon: Icon(
-                          Icons.home,
-                          color: ColorSchemes.backgroundColor,
+                        icon: Column(
+                          children: [
+                            Icon(
+                              Icons.home,
+                              color: ColorSchemes.backgroundColor,
+                            ),
+                            Text(
+                              'Home',
+                              style: FontsCustom.smallText,
+                            )
+                          ],
                         )),
                   ),
                   Expanded(
@@ -421,22 +428,37 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                         onPressed: () {
                           context.go("/team");
                         },
-                        icon: Icon(
-                          Icons.people,
-                          color: ColorSchemes.backgroundColor,
+                        icon: Column(
+                          children: [
+                            Icon(
+                              Icons.people,
+                              color: ColorSchemes.backgroundColor,
+                            ),
+                            Text(
+                              'Teams',
+                              style: FontsCustom.smallText,
+                            )
+                          ],
                         )),
                   ),
                   Expanded(
                     child: IconButton(
-                        tooltip: 'Logout',
-                        onPressed: () async {
-                          final storage = new FlutterSecureStorage();
-                          await storage.deleteAll();
-                          context.go("/login");
+                        tooltip: 'User Profile',
+                        onPressed: () {
+                          router.push(
+                              "/userprofile/${ref.read(userLogged).userId}");
                         },
-                        icon: Icon(
-                          Icons.logout,
-                          color: ColorSchemes.backgroundColor,
+                        icon: Column(
+                          children: [
+                            Icon(
+                              Icons.person,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              'Profile',
+                              style: FontsCustom.smallText,
+                            )
+                          ],
                         )),
                   )
                 ],
@@ -451,7 +473,7 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                   });
             },
             child: Icon(Icons.add),
-            backgroundColor: ColorSchemes.blendColor,
+            backgroundColor: ColorSchemes.primaryColor,
           )),
     ));
   }

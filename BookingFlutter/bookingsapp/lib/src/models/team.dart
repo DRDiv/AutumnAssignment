@@ -6,8 +6,10 @@ class Team {
   String teamId = "", teamName = "";
   List<User> users = [];
   Map<String, dynamic> isAdmin = {};
+  Map<String, dynamic> isReq = {};
   List<Event> events = [];
-  Team(this.teamId, this.teamName, this.users, this.isAdmin, this.events);
+  Team(this.teamId, this.teamName, this.users, this.isAdmin, this.isReq,
+      this.events);
   Team.defaultTeam();
   Future<void> setData(Map<String, dynamic> responseData) async {
     teamId = responseData["teamId"];
@@ -16,6 +18,7 @@ class Team {
       users.add(User.set((await DatabaseQueries.getUserDetails(key)).data));
     }
     isAdmin = responseData["isAdmin"];
+    isReq = responseData["isReq"];
     for (var key in responseData['bookedEvents']) {
       Event event = Event.defaultEvent();
       await event.setData((await DatabaseQueries.getEventDetails(key)).data);

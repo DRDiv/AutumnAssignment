@@ -17,8 +17,8 @@ class HomeAdmin extends ConsumerStatefulWidget {
 }
 
 class _HomeAdminState extends ConsumerState<HomeAdmin> {
-  List<Requests> requests = [];
-  bool isLoading = true;
+  List<Requests> _requests = [];
+  bool _isLoading = true;
   Future<void> setData() async {
     List<dynamic> reponse =
         (await DatabaseQueries.getRequest(ref.read(userLogged).userId)).data;
@@ -26,11 +26,11 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
       Requests request = Requests.defaultRequest();
       await request.setData(requestindv);
       setState(() {
-        requests.add(request);
+        _requests.add(request);
       });
     }
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -53,24 +53,24 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() {
-            isLoading = true;
-            requests.clear();
+            _isLoading = true;
+            _requests.clear();
           });
 
           await setData();
         },
-        child: isLoading
+        child: _isLoading
             ? Center(child: CircularProgressIndicator())
-            : ((requests.length == 0)
+            : ((_requests.length == 0)
                 ? Center(
                     child: Text(
                     "No Aprrovals Pending!!",
                     style: FontsCustom.bodyBigText,
                   ))
                 : ListView.builder(
-                    itemCount: requests.length,
+                    itemCount: _requests.length,
                     itemBuilder: (context, index) {
-                      final request = requests[index];
+                      final request = _requests[index];
 
                       return Dismissible(
                         key: UniqueKey(),
@@ -79,13 +79,13 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                             await DatabaseQueries.deleteRequest(
                                 request.requestId);
                             setState(() {
-                              requests.removeAt(index);
+                              _requests.removeAt(index);
                             });
                           } else if (direction == DismissDirection.startToEnd) {
                             await DatabaseQueries.requestToBooking(
                                 request.requestId);
                             setState(() {
-                              requests.removeAt(index);
+                              _requests.removeAt(index);
                             });
                           }
                         },
@@ -151,9 +151,17 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     onPressed: () {
                       context.go("/homeAdmin");
                     },
-                    icon: Icon(
-                      Icons.home,
-                      color: ColorSchemes.whiteColor,
+                    icon: Column(
+                      children: [
+                        Icon(
+                          Icons.home,
+                          color: ColorSchemes.whiteColor,
+                        ),
+                        Text(
+                          'Home',
+                          style: FontsCustom.smallText,
+                        ),
+                      ],
                     )),
               ),
               Expanded(
@@ -161,9 +169,17 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     onPressed: () {
                       router.push("/eventAdmin");
                     },
-                    icon: Icon(
-                      Icons.event,
-                      color: ColorSchemes.whiteColor,
+                    icon: Column(
+                      children: [
+                        Icon(
+                          Icons.event,
+                          color: ColorSchemes.whiteColor,
+                        ),
+                        Text(
+                          'Event',
+                          style: FontsCustom.smallText,
+                        ),
+                      ],
                     )),
               ),
               Expanded(
@@ -171,9 +187,17 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                     onPressed: () {
                       router.push("/amenityAdmin");
                     },
-                    icon: Icon(
-                      Icons.local_activity,
-                      color: ColorSchemes.whiteColor,
+                    icon: Column(
+                      children: [
+                        Icon(
+                          Icons.local_activity,
+                          color: ColorSchemes.whiteColor,
+                        ),
+                        Text(
+                          'Amenity',
+                          style: FontsCustom.smallText,
+                        ),
+                      ],
                     )),
               ),
               Expanded(
@@ -183,9 +207,17 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                       await storage.deleteAll();
                       context.go("/adminManage");
                     },
-                    icon: Icon(
-                      Icons.admin_panel_settings,
-                      color: ColorSchemes.whiteColor,
+                    icon: Column(
+                      children: [
+                        Icon(
+                          Icons.admin_panel_settings,
+                          color: ColorSchemes.whiteColor,
+                        ),
+                        Text(
+                          'Manage',
+                          style: FontsCustom.smallText,
+                        ),
+                      ],
                     )),
               ),
               Expanded(
@@ -195,9 +227,17 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                       await storage.deleteAll();
                       context.go("/login");
                     },
-                    icon: Icon(
-                      Icons.logout,
-                      color: ColorSchemes.whiteColor,
+                    icon: Column(
+                      children: [
+                        Icon(
+                          Icons.logout,
+                          color: ColorSchemes.whiteColor,
+                        ),
+                        Text(
+                          'Logout',
+                          style: FontsCustom.smallText,
+                        ),
+                      ],
                     )),
               )
             ],

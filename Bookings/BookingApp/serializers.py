@@ -11,6 +11,7 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = '__all__'  
+
 class AmenitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Amenity

@@ -1,3 +1,4 @@
+import 'package:bookingsapp/functions/get.dart';
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
@@ -19,19 +20,7 @@ class EventAlertBox extends ConsumerStatefulWidget {
 
 class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
   TextEditingController _text = TextEditingController();
-  String like = '';
-  Future<List<Event>> getEvents(String like) async {
-    var response = await DatabaseQueries.getEventRegex(like);
-    List<Event> events = [];
-
-    for (var indv in response.data) {
-      Event eventInd = Event.defaultEvent();
-      await eventInd.setData(indv);
-
-      events.add(eventInd);
-    }
-    return events;
-  }
+  String _like = '';
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +36,7 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                 child: TextFormField(
                   onChanged: (text) {
                     setState(() {
-                      like = text;
+                      _like = text;
                     });
                   },
                   controller: _text,
@@ -61,7 +50,7 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                 ),
               ),
               FutureBuilder<List<Event>>(
-                future: getEvents(like),
+                future: getEvents(_like),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Padding(
