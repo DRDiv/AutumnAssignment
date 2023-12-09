@@ -37,8 +37,9 @@ class FontsCustom {
   );
 
   static final TextStyle smallText = TextStyle(
-    color: Colors.black87,
-    fontFamily: 'Montserrat',
-    fontSize: 10,
+    color: Colors.white70,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Roboto',
+    fontSize: 7,
   );
 }

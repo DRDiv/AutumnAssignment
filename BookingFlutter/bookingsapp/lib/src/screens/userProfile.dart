@@ -1,5 +1,8 @@
+// ignore_for_file: file_names
+
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
+import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
@@ -8,9 +11,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
+// ignore: must_be_immutable
 class UserProfile extends ConsumerStatefulWidget {
   String userId;
-  UserProfile(this.userId);
+  UserProfile(this.userId, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _UserProfileState();
@@ -28,6 +32,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
     });
   }
 
+  @override
   void initState() {
     super.initState();
     setUser();
@@ -38,149 +43,104 @@ class _UserProfileState extends ConsumerState<UserProfile> {
     return Theme(
       data: AppTheme.lightTheme(),
       child: Scaffold(
-        backgroundColor: ColorSchemes.backgroundColor,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              final router = GoRouter.of(context);
-              router.pop();
-            },
+          backgroundColor: ColorSchemes.backgroundColor,
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                context.go('/home');
+              },
+            ),
+            backgroundColor: ColorSchemes.primaryColor,
+            title: Text(
+              "Profile",
+              style: Theme.of(context)
+                  .textTheme
+                  .displayLarge!
+                  .copyWith(color: Colors.white),
+            ),
+            actions: [
+              IconButton(
+                  tooltip: 'Logout',
+                  onPressed: () async {
+                    const storage = FlutterSecureStorage();
+                    await storage.deleteAll();
+                    // ignore: use_build_context_synchronously
+                    context.go('/login');
+                  },
+                  icon: Icon(
+                    Icons.logout,
+                    color: ColorSchemes.backgroundColor,
+                  ))
+            ],
           ),
-          backgroundColor: ColorSchemes.primaryColor,
-          title: Text(
-            "BOOKING\$",
-            style: FontsCustom.heading,
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-                tooltip: 'Logout',
-                onPressed: () async {
-                  final storage = new FlutterSecureStorage();
-                  await storage.deleteAll();
-                  context.go("/login");
-                },
-                icon: Icon(
-                  Icons.logout,
-                  color: ColorSchemes.backgroundColor,
-                ))
-          ],
-        ),
-        body: Container(
-          child: _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 24.0, 8, 24),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                              backgroundColor: ColorSchemes.backgroundColor,
-                              radius: 40.0,
-                              child: (_userCurrent.data['person'] == null ||
-                                      _userCurrent.data['person']
-                                              ['displayPicture'] ==
-                                          null)
-                                  ? const Icon(Icons.person,
-                                      size: 80, color: Colors.black)
-                                  : ClipOval(
-                                      child: Image.network(
-                                      "https://channeli.in/" +
-                                          _userCurrent.data['person']
-                                              ['displayPicture'],
-                                      width: 80.0,
-                                      height: 80.0,
-                                      fit: BoxFit.cover,
-                                    ))),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              _userCurrent.userName,
-                              style: FontsCustom.bodyHeading,
+          body: Container(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 24.0, 8, 24),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                                backgroundColor: ColorSchemes.backgroundColor,
+                                radius: 40.0,
+                                child: (_userCurrent.data['person'] == null ||
+                                        _userCurrent.data['person']
+                                                ['displayPicture'] ==
+                                            null)
+                                    ? const Icon(Icons.person,
+                                        size: 80, color: Colors.black)
+                                    : ClipOval(
+                                        child: Image.network(
+                                        "https://channeli.in/${_userCurrent.data['person']['displayPicture']}",
+                                        width: 80.0,
+                                        height: 80.0,
+                                        fit: BoxFit.cover,
+                                      ))),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                _userCurrent.userName,
+                                style: FontsCustom.bodyHeading,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              _userCurrent.data['student']['enrolmentNumber'],
-                              style: FontsCustom.bodySmallText,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                _userCurrent.data['student']['enrolmentNumber'],
+                                style: FontsCustom.bodySmallText,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              _userCurrent.data['student']['branch name'],
-                              style: FontsCustom.bodySmallText,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                _userCurrent.data['student']['branch name'],
+                                style: FontsCustom.bodySmallText,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Year: " +
-                                  _userCurrent.data['student']['currentYear']
-                                      .toString(),
-                              style: FontsCustom.bodySmallText,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Year: ${_userCurrent.data['student']['currentYear']}",
+                                style: FontsCustom.bodySmallText,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Penalties: " + _userCurrent.penalties.toString(),
-                              style: FontsCustom.bodySmallText,
-                            ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Penalties: ${_userCurrent.penalties}",
+                                style: FontsCustom.bodySmallText,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-            color: ColorSchemes.primaryColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: IconButton(
-                      tooltip: 'Home',
-                      onPressed: () {
-                        context.go("/home");
-                      },
-                      icon: Column(
-                        children: [
-                          Icon(
-                            Icons.home,
-                          ),
-                          Text(
-                            'Home',
-                            style: FontsCustom.smallText,
-                          )
-                        ],
-                      )),
-                ),
-                Expanded(
-                  child: IconButton(
-                      tooltip: 'Team',
-                      onPressed: () {
-                        context.go("/team");
-                      },
-                      icon: Column(
-                        children: [
-                          Icon(
-                            Icons.people,
-                          ),
-                          Text(
-                            'Teams',
-                            style: FontsCustom.smallText,
-                          )
-                        ],
-                      )),
-                ),
-              ],
-            )),
-      ),
+          ),
+          bottomNavigationBar: BottomAppBarUser(context, _userCurrent)),
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:bookingsapp/src/models/event.dart';
 import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/models/user.dart';
 
-import 'package:bookingsapp/src/screens/eventSearch.dart';
+import 'package:bookingsapp/src/components/eventSearch.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/screens/userSearch.dart';
 import 'package:bookingsapp/src/theme/theme.dart';

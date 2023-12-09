@@ -52,9 +52,22 @@ class _TeamTabState extends ConsumerState<TeamTab> {
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
-              child: Text(
-                "No Bookings Found",
-                style: FontsCustom.bodyBigText,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.warning,
+                    size: 50, // Adjust the size of the icon as needed
+                    color: Colors.red, // Adjust the color of the icon as needed
+                  ),
+                  SizedBox(
+                      height:
+                          10), // Add some spacing between the icon and the text
+                  Text(
+                    "No Bookings Found",
+                    style: FontsCustom.bodyBigText,
+                  ),
+                ],
               ),
             );
           } else {

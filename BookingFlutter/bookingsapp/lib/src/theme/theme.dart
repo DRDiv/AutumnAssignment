@@ -13,9 +13,9 @@ class AppTheme {
           displayLarge: FontsCustom.heading,
           displayMedium: FontsCustom.subHeading,
           displaySmall: FontsCustom.bodyHeading,
-          headlineMedium: FontsCustom.bodyBigText,
-          headlineSmall: FontsCustom.bodySmallText,
-          titleLarge: FontsCustom.smallText,
+          bodyLarge: FontsCustom.bodyBigText,
+          bodySmall: FontsCustom.bodySmallText,
+          labelSmall: FontsCustom.smallText,
         ),
         appBarTheme: AppBarTheme(
           backgroundColor: ColorSchemes.primaryColor,
@@ -61,6 +61,29 @@ class AppTheme {
           indicatorColor: ColorSchemes.tertiaryColor,
           indicatorSize: TabBarIndicatorSize.label,
           labelStyle: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle: TextStyle(
+            color: ColorSchemes.primaryColor,
+            fontWeight: FontWeight.bold,
+          ),
+          hintStyle: TextStyle(
+            color: ColorSchemes.secondayColor,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: ColorSchemes.primaryColor,
+              width: 2.0,
+            ),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: ColorSchemes.secondayColor,
+              width: 1.0,
+            ),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
         ),
         iconTheme: IconThemeData(
           color: ColorSchemes.whiteColor,
