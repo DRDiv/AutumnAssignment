@@ -8,6 +8,7 @@ import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/screens/eventSearch.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/screens/userSearch.dart';
+import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -180,35 +181,33 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: AppTheme.lightTheme(),
         home: DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: ColorSchemes.primaryColor,
-          title: Text(
-            "BOOKING\$",
-            style: FontsCustom.heading,
-          ),
-          centerTitle: true,
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: [Tab(text: 'Team Members'), Tab(text: 'Events')],
-            indicator: BoxDecoration(color: ColorSchemes.secondayColor),
-          ),
-        ),
-        body: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : TabBarView(
-                controller: _tabController,
-                children: [
-                  TeamMembers(_team.users, _team.isAdmin, _team.isReq,
-                      widget.userlogged, _team.teamId, rebuild),
-                  EventsBooked(_team.events, _team)
-                ],
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "BOOKING\$",
+                style: FontsCustom.heading,
               ),
-        bottomNavigationBar: BottomAppBar(
-            color: ColorSchemes.primaryColor,
-            child: Row(
+              centerTitle: true,
+              bottom: TabBar(
+                controller: _tabController,
+                tabs: [Tab(text: 'Team Members'), Tab(text: 'Events')],
+              ),
+            ),
+            body: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      TeamMembers(_team.users, _team.isAdmin, _team.isReq,
+                          widget.userlogged, _team.teamId, rebuild),
+                      EventsBooked(_team.events, _team)
+                    ],
+                  ),
+            bottomNavigationBar: BottomAppBar(
+                child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
@@ -233,33 +232,34 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
                 )
               ],
             )),
-        floatingActionButton: !_isLoading &&
-                _team.isAdmin[widget.userlogged.userId]
-            ? FloatingActionButton(
-                onPressed: () async {
-                  if (_tabController.index == 0) {
-                    final result = await showDialog(
-                        context: context,
-                        builder: (context) {
-                          return UserSearch(context, _team.users, _team.teamId);
-                        });
-                    if (result == "confirmed") {
-                      rebuild();
-                    }
-                  } else {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return EventAlertBox(_team);
-                        });
-                  }
-                },
-                child: Icon(Icons.add),
-                backgroundColor: ColorSchemes.secondayColor,
-              )
-            : null,
-      ),
-    ));
+            floatingActionButton:
+                !_isLoading && _team.isAdmin[widget.userlogged.userId]
+                    ? FloatingActionButton(
+                        onPressed: () async {
+                          if (_tabController.index == 0) {
+                            final result = await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return UserSearch(
+                                      context, _team.users, _team.teamId);
+                                });
+                            if (result == "confirmed") {
+                              rebuild();
+                            }
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return EventAlertBox(_team);
+                                });
+                          }
+                        },
+                        child: Icon(Icons.add),
+                        backgroundColor: ColorSchemes.secondayColor,
+                      )
+                    : null,
+          ),
+        ));
   }
 }
 

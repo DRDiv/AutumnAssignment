@@ -1,4 +1,4 @@
-import 'package:bookingsapp/functions/get.dart';
+import 'package:bookingsapp/src/functions/get.dart';
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
@@ -47,7 +47,6 @@ class _WidgetCustomState extends State<WidgetCustom> {
       home: Scaffold(
         appBar: AppBar(
           elevation: 2.0,
-          backgroundColor: ColorSchemes.primaryColor,
           title: Text(
             "BOOKING\$",
             style: FontsCustom.heading,
@@ -91,8 +90,9 @@ class _WidgetCustomState extends State<WidgetCustom> {
                             dataIndv[index].teamName,
                             style: FontsCustom.bodyBigText,
                           ),
-                          leading: Icon(Icons.group,
-                              color: ColorSchemes.primaryColor),
+                          leading: Icon(
+                            Icons.group,
+                          ),
                           trailing: dataIndv[index]
                                   .isReq[widget.userlogged.userId]
                               ? SizedBox(
@@ -137,7 +137,6 @@ class _WidgetCustomState extends State<WidgetCustom> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: ColorSchemes.blendColor,
           onPressed: () async {
             await router.push("/teamCreation/");
             rebuild();
@@ -146,7 +145,6 @@ class _WidgetCustomState extends State<WidgetCustom> {
           tooltip: "Create a New Team",
         ),
         bottomNavigationBar: BottomAppBar(
-          color: ColorSchemes.primaryColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -159,7 +157,6 @@ class _WidgetCustomState extends State<WidgetCustom> {
                     children: [
                       Icon(
                         Icons.home,
-                        color: ColorSchemes.whiteColor,
                       ),
                       Text(
                         'Home',
@@ -179,7 +176,6 @@ class _WidgetCustomState extends State<WidgetCustom> {
                     children: [
                       Icon(
                         Icons.people,
-                        color: ColorSchemes.whiteColor,
                       ),
                       Text(
                         'Teams',

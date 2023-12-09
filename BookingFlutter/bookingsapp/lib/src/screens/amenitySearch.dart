@@ -1,4 +1,4 @@
-import 'package:bookingsapp/functions/get.dart';
+import 'package:bookingsapp/src/functions/get.dart';
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';

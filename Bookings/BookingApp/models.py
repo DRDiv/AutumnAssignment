@@ -24,6 +24,7 @@ class Event(models.Model):
     minTeamSize=models.IntegerField(validators=[MinValueValidator(1)] ,default=1)
     maxTeamSize=models.IntegerField(default=1)
     payment=models.DecimalField(default=0,decimal_places=2,max_digits=10)
+
 class Amenity(models.Model):
     amenityId=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     amenityName=models.CharField(max_length=100)
@@ -31,6 +32,7 @@ class Amenity(models.Model):
     userProvider=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     recurrance=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
     capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
+    
 class AmenitySlot(models.Model):
     
     amenity=models.ForeignKey(Amenity,on_delete=models.CASCADE)

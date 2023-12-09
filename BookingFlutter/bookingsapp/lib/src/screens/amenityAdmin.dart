@@ -5,6 +5,7 @@ import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
+import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -231,155 +232,159 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "BOOKING\$",
-          style: FontsCustom.heading,
+    return Theme(
+      data: AppTheme.lightTheme(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "BOOKING\$",
+            style: FontsCustom.heading,
+          ),
+          centerTitle: true,
+          backgroundColor: ColorSchemes.primaryColor,
         ),
-        centerTitle: true,
-        backgroundColor: ColorSchemes.primaryColor,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 25,
-            ),
-            Center(
-              child: Container(
-                height: 200,
-                width: 200,
-                decoration: BoxDecoration(
-                  color: ColorSchemes
-                      .whiteColor, // Change to your desired background color
-                ),
-                child: Stack(
-                  children: [
-                    (_amenityPicture == null)
-                        ? Center(
-                            child: Icon(
-                              Icons.category_sharp,
-                              size: 100,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 25,
+              ),
+              Center(
+                child: Container(
+                  height: 200,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: ColorSchemes
+                        .whiteColor, // Change to your desired background color
+                  ),
+                  child: Stack(
+                    children: [
+                      (_amenityPicture == null)
+                          ? Center(
+                              child: Icon(
+                                Icons.category_sharp,
+                                size: 100,
+                                color: Colors.black,
+                              ),
+                            )
+                          : Center(
+                              child: ClipRRect(
+                                  child: Image.file(
+                                _amenityPicture!,
+                                fit: BoxFit.fitHeight,
+                              )),
                             ),
-                          )
-                        : Center(
-                            child: ClipRRect(
-                                child: Image.file(
-                              _amenityPicture!,
-                              fit: BoxFit.fitHeight,
-                            )),
-                          ),
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: FloatingActionButton(
-                        backgroundColor: ColorSchemes.secondayColor,
-                        child: Icon(Icons.add),
-                        onPressed: _getImage,
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: FloatingActionButton(
+                          backgroundColor: ColorSchemes.secondayColor,
+                          child: Icon(Icons.add),
+                          onPressed: _getImage,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Center(
-              child: SizedBox(
-                width: 200,
-                child: TextFormField(
-                  controller: _amenityName,
-                  decoration: InputDecoration(hintText: "Enter Amenity Name"),
+              SizedBox(
+                height: 25,
+              ),
+              Center(
+                child: SizedBox(
+                  width: 200,
+                  child: TextFormField(
+                    controller: _amenityName,
+                    decoration: InputDecoration(hintText: "Enter Amenity Name"),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text('Capacity: ${_capacity.toStringAsFixed(0)}',
-                style: FontsCustom.bodyBigText),
-            Slider(
-              thumbColor: ColorSchemes.secondayColor,
-              activeColor: ColorSchemes.secondayColor,
-              inactiveColor: ColorSchemes.tertiaryColor,
-              value: _capacity,
-              onChanged: (newValue) {
-                setState(() {
-                  _capacity = newValue;
-                });
-              },
-              min: 1,
-              max: 200,
-              divisions: 199, // Number of discrete divisions
-              label: _capacity.toStringAsFixed(0),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  'Select Recurrance: ',
-                  style: FontsCustom.bodyBigText,
-                ),
-                DropdownButton<String>(
-                  value: _selectedOption,
-                  items: options.map((String option) {
-                    return DropdownMenuItem<String>(
-                      value: option,
-                      child: Text(option),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedOption = newValue!;
-                    });
-                  },
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SlotsEditor(_slotDataList, _slots),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      ColorSchemes.secondayColor),
-                ),
-                onPressed: () async {
-                  if (_amenityName.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Amenity name cannot be empty'),
-                      ),
-                    );
-                    return;
-                  }
-                  if (_slots.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("No slots selected"),
-                      ),
-                    );
-                  }
-                  await DatabaseQueries.createAmenity(
-                      _amenityName.text,
-                      ref.read(userLogged).userId,
-                      _selectedOption,
-                      _slots,
-                      _amenityPicture,
-                      _capacity);
-                  router.pop();
+              SizedBox(
+                height: 20,
+              ),
+              Text('Capacity: ${_capacity.toStringAsFixed(0)}',
+                  style: FontsCustom.bodyBigText),
+              Slider(
+                thumbColor: ColorSchemes.secondayColor,
+                activeColor: ColorSchemes.secondayColor,
+                inactiveColor: ColorSchemes.tertiaryColor,
+                value: _capacity,
+                onChanged: (newValue) {
+                  setState(() {
+                    _capacity = newValue;
+                  });
                 },
-                child: Text('Confirm'))
-          ],
+                min: 1,
+                max: 200,
+                divisions: 199, // Number of discrete divisions
+                label: _capacity.toStringAsFixed(0),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    'Select Recurrance: ',
+                    style: FontsCustom.bodyBigText,
+                  ),
+                  DropdownButton<String>(
+                    value: _selectedOption,
+                    items: options.map((String option) {
+                      return DropdownMenuItem<String>(
+                        value: option,
+                        child: Text(option),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedOption = newValue!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SlotsEditor(_slotDataList, _slots),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        ColorSchemes.secondayColor),
+                  ),
+                  onPressed: () async {
+                    if (_amenityName.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Amenity name cannot be empty'),
+                        ),
+                      );
+                      return;
+                    }
+                    if (_slots.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("No slots selected"),
+                        ),
+                      );
+                    }
+                    await DatabaseQueries.createAmenity(
+                        _amenityName.text,
+                        ref.read(userLogged).userId,
+                        _selectedOption,
+                        _slots,
+                        _amenityPicture,
+                        _capacity);
+                    router.pop();
+                  },
+                  child: Text('Confirm'))
+            ],
+          ),
         ),
       ),
     );

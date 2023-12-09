@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:bookingsapp/functions/get.dart';
+import 'package:bookingsapp/src/functions/get.dart';
 import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
@@ -36,6 +36,7 @@ class _UserSearchState extends ConsumerState<UserSearch> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: ColorSchemes.whiteColor,
       scrollable: true,
       content: SizedBox(
         height: 400,

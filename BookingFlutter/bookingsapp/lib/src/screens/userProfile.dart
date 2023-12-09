@@ -2,8 +2,10 @@ import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
 class UserProfile extends ConsumerStatefulWidget {
@@ -33,120 +35,152 @@ class _UserProfileState extends ConsumerState<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorSchemes.backgroundColor,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            final router = GoRouter.of(context);
-            router.pop();
-          },
+    return Theme(
+      data: AppTheme.lightTheme(),
+      child: Scaffold(
+        backgroundColor: ColorSchemes.backgroundColor,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              final router = GoRouter.of(context);
+              router.pop();
+            },
+          ),
+          backgroundColor: ColorSchemes.primaryColor,
+          title: Text(
+            "BOOKING\$",
+            style: FontsCustom.heading,
+          ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+                tooltip: 'Logout',
+                onPressed: () async {
+                  final storage = new FlutterSecureStorage();
+                  await storage.deleteAll();
+                  context.go("/login");
+                },
+                icon: Icon(
+                  Icons.logout,
+                  color: ColorSchemes.backgroundColor,
+                ))
+          ],
         ),
-        backgroundColor: ColorSchemes.primaryColor,
-        title: Text(
-          "BOOKING\$",
-          style: FontsCustom.heading,
-        ),
-        centerTitle: true,
-      ),
-      body: Container(
-        child: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 24.0, 8, 24),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                            backgroundColor: ColorSchemes.backgroundColor,
-                            radius: 40.0,
-                            child: (_userCurrent.data['person'] == null ||
-                                    _userCurrent.data['person']
-                                            ['displayPicture'] ==
-                                        null)
-                                ? const Icon(Icons.person,
-                                    size: 80, color: Colors.black)
-                                : ClipOval(
-                                    child: Image.network(
-                                    "https://channeli.in/" +
-                                        _userCurrent.data['person']
-                                            ['displayPicture'],
-                                    width: 80.0,
-                                    height: 80.0,
-                                    fit: BoxFit.cover,
-                                  ))),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            _userCurrent.userName,
-                            style: FontsCustom.bodyHeading,
+        body: Container(
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 24.0, 8, 24),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                              backgroundColor: ColorSchemes.backgroundColor,
+                              radius: 40.0,
+                              child: (_userCurrent.data['person'] == null ||
+                                      _userCurrent.data['person']
+                                              ['displayPicture'] ==
+                                          null)
+                                  ? const Icon(Icons.person,
+                                      size: 80, color: Colors.black)
+                                  : ClipOval(
+                                      child: Image.network(
+                                      "https://channeli.in/" +
+                                          _userCurrent.data['person']
+                                              ['displayPicture'],
+                                      width: 80.0,
+                                      height: 80.0,
+                                      fit: BoxFit.cover,
+                                    ))),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              _userCurrent.userName,
+                              style: FontsCustom.bodyHeading,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            _userCurrent.data['student']['enrolmentNumber'],
-                            style: FontsCustom.bodySmallText,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              _userCurrent.data['student']['enrolmentNumber'],
+                              style: FontsCustom.bodySmallText,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            _userCurrent.data['student']['branch name'],
-                            style: FontsCustom.bodySmallText,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              _userCurrent.data['student']['branch name'],
+                              style: FontsCustom.bodySmallText,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Year: " +
-                                _userCurrent.data['student']['currentYear']
-                                    .toString(),
-                            style: FontsCustom.bodySmallText,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Year: " +
+                                  _userCurrent.data['student']['currentYear']
+                                      .toString(),
+                              style: FontsCustom.bodySmallText,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Penalties: " + _userCurrent.penalties.toString(),
-                            style: FontsCustom.bodySmallText,
-                          ),
-                        )
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Penalties: " + _userCurrent.penalties.toString(),
+                              style: FontsCustom.bodySmallText,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+            color: ColorSchemes.primaryColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: IconButton(
+                      tooltip: 'Home',
+                      onPressed: () {
+                        context.go("/home");
+                      },
+                      icon: Column(
+                        children: [
+                          Icon(
+                            Icons.home,
+                          ),
+                          Text(
+                            'Home',
+                            style: FontsCustom.smallText,
+                          )
+                        ],
+                      )),
+                ),
+                Expanded(
+                  child: IconButton(
+                      tooltip: 'Team',
+                      onPressed: () {
+                        context.go("/team");
+                      },
+                      icon: Column(
+                        children: [
+                          Icon(
+                            Icons.people,
+                          ),
+                          Text(
+                            'Teams',
+                            style: FontsCustom.smallText,
+                          )
+                        ],
+                      )),
+                ),
+              ],
+            )),
       ),
-      bottomNavigationBar: BottomAppBar(
-          color: ColorSchemes.primaryColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: IconButton(
-                    onPressed: () {
-                      context.go("/home");
-                    },
-                    icon: Icon(
-                      Icons.home,
-                      color: ColorSchemes.whiteColor,
-                    )),
-              ),
-              Expanded(
-                child: IconButton(
-                    onPressed: () {
-                      context.go("/team");
-                    },
-                    icon: Icon(
-                      Icons.people,
-                      color: ColorSchemes.whiteColor,
-                    )),
-              )
-            ],
-          )),
     );
   }
 }
