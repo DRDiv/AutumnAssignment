@@ -1,7 +1,5 @@
 // ignore_for_file: file_names
 
-import 'package:bookingsapp/src/assets/colors.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/models/user.dart';
@@ -43,7 +41,6 @@ class _UserProfileState extends ConsumerState<UserProfile> {
     return Theme(
       data: AppTheme.lightTheme(),
       child: Scaffold(
-          backgroundColor: ColorSchemes.backgroundColor,
           appBar: AppBar(
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
@@ -51,7 +48,6 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                 context.go('/home');
               },
             ),
-            backgroundColor: ColorSchemes.primaryColor,
             title: Text(
               "Profile",
               style: Theme.of(context)
@@ -70,7 +66,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                   },
                   icon: Icon(
                     Icons.logout,
-                    color: ColorSchemes.backgroundColor,
+                    color: Theme.of(context).scaffoldBackgroundColor,
                   ))
             ],
           ),
@@ -84,7 +80,8 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                         child: Column(
                           children: [
                             CircleAvatar(
-                                backgroundColor: ColorSchemes.backgroundColor,
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 radius: 40.0,
                                 child: (_userCurrent.data['person'] == null ||
                                         _userCurrent.data['person']
@@ -103,35 +100,36 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 _userCurrent.userName,
-                                style: FontsCustom.bodyHeading,
+                                style:
+                                    Theme.of(context).textTheme.displaySmall!,
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 _userCurrent.data['student']['enrolmentNumber'],
-                                style: FontsCustom.bodySmallText,
+                                style: Theme.of(context).textTheme.bodySmall!,
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 _userCurrent.data['student']['branch name'],
-                                style: FontsCustom.bodySmallText,
+                                style: Theme.of(context).textTheme.bodySmall!,
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 "Year: ${_userCurrent.data['student']['currentYear']}",
-                                style: FontsCustom.bodySmallText,
+                                style: Theme.of(context).textTheme.bodySmall!,
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 "Penalties: ${_userCurrent.penalties}",
-                                style: FontsCustom.bodySmallText,
+                                style: Theme.of(context).textTheme.bodySmall!,
                               ),
                             )
                           ],

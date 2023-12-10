@@ -1,5 +1,3 @@
-import 'package:bookingsapp/src/assets/colors.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/functions/get.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +63,7 @@ class _TeamTabState extends ConsumerState<TeamTab> {
                           10), // Add some spacing between the icon and the text
                   Text(
                     "No Bookings Found",
-                    style: FontsCustom.bodyBigText,
+                    style: Theme.of(context).textTheme.bodyLarge!,
                   ),
                 ],
               ),
@@ -86,7 +84,8 @@ class _TeamTabState extends ConsumerState<TeamTab> {
 
                 return ListTile(
                   leading: CircleAvatar(
-                      backgroundColor: ColorSchemes.backgroundColor,
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
                       radius: 20.0,
                       child: ((opcode
                                   ? item.eventPicture

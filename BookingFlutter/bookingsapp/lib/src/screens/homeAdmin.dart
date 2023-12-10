@@ -1,14 +1,10 @@
-import 'package:bookingsapp/src/assets/colors.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
+import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/models/request.dart';
-import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 
 class HomeAdmin extends ConsumerStatefulWidget {
   const HomeAdmin({super.key});
@@ -18,7 +14,7 @@ class HomeAdmin extends ConsumerStatefulWidget {
 }
 
 class _HomeAdminState extends ConsumerState<HomeAdmin> {
-  List<Requests> _requests = [];
+  final List<Requests> _requests = [];
   bool _isLoading = true;
   Future<void> setData() async {
     List<dynamic> reponse =
@@ -35,6 +31,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
     });
   }
 
+  @override
   void initState() {
     super.initState();
     setData();
@@ -46,10 +43,12 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
       data: AppTheme.lightTheme(),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: ColorSchemes.primaryColor,
           title: Text(
             "BOOKING\$",
-            style: FontsCustom.heading,
+            style: Theme.of(context)
+                .textTheme
+                .displayLarge!
+                .copyWith(color: Colors.white),
           ),
           centerTitle: true,
         ),
@@ -63,12 +62,12 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
             await setData();
           },
           child: _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : ((_requests.length == 0)
+              ? const Center(child: CircularProgressIndicator())
+              : ((_requests.isEmpty)
                   ? Center(
                       child: Text(
                       "No Aprrovals Pending!!",
-                      style: FontsCustom.bodyBigText,
+                      style: Theme.of(context).textTheme.bodyLarge!,
                     ))
                   : ListView.builder(
                       itemCount: _requests.length,
@@ -96,8 +95,8 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                           secondaryBackground: Container(
                             color: Colors.red,
                             alignment: Alignment.centerRight,
-                            padding: EdgeInsets.only(right: 16.0),
-                            child: Icon(
+                            padding: const EdgeInsets.only(right: 16.0),
+                            child: const Icon(
                               Icons.delete,
                               color: Colors.white,
                             ),
@@ -105,8 +104,8 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                           background: Container(
                             color: Colors.green,
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(left: 16.0),
-                            child: Icon(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: const Icon(
                               Icons.check,
                               color: Colors.white,
                             ),
@@ -118,9 +117,9 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                                 width: 1.0,
                               ),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
+                                  const BorderRadius.all(Radius.circular(10.0)),
                             ),
-                            margin: EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.all(8.0),
                             child: ListTile(
                               onTap: () {
                                 if (request.payment != "") {
@@ -145,107 +144,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                       },
                     )),
         ),
-        bottomNavigationBar: BottomAppBar(
-            color: ColorSchemes.primaryColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: IconButton(
-                      onPressed: () {
-                        context.go("/homeAdmin");
-                      },
-                      icon: Column(
-                        children: [
-                          Icon(
-                            Icons.home,
-                            color: ColorSchemes.whiteColor,
-                          ),
-                          Text(
-                            'Home',
-                            style: FontsCustom.smallText,
-                          ),
-                        ],
-                      )),
-                ),
-                Expanded(
-                  child: IconButton(
-                      onPressed: () {
-                        router.push("/eventAdmin");
-                      },
-                      icon: Column(
-                        children: [
-                          Icon(
-                            Icons.event,
-                            color: ColorSchemes.whiteColor,
-                          ),
-                          Text(
-                            'Event',
-                            style: FontsCustom.smallText,
-                          ),
-                        ],
-                      )),
-                ),
-                Expanded(
-                  child: IconButton(
-                      onPressed: () {
-                        router.push("/amenityAdmin");
-                      },
-                      icon: Column(
-                        children: [
-                          Icon(
-                            Icons.local_activity,
-                            color: ColorSchemes.whiteColor,
-                          ),
-                          Text(
-                            'Amenity',
-                            style: FontsCustom.smallText,
-                          ),
-                        ],
-                      )),
-                ),
-                Expanded(
-                  child: IconButton(
-                      onPressed: () async {
-                        final storage = new FlutterSecureStorage();
-                        await storage.deleteAll();
-                        context.go("/adminManage");
-                      },
-                      icon: Column(
-                        children: [
-                          Icon(
-                            Icons.admin_panel_settings,
-                            color: ColorSchemes.whiteColor,
-                          ),
-                          Text(
-                            'Manage',
-                            style: FontsCustom.smallText,
-                          ),
-                        ],
-                      )),
-                ),
-                Expanded(
-                  child: IconButton(
-                      onPressed: () async {
-                        final storage = new FlutterSecureStorage();
-                        await storage.deleteAll();
-                        context.go("/login");
-                      },
-                      icon: Column(
-                        children: [
-                          Icon(
-                            Icons.logout,
-                            color: ColorSchemes.whiteColor,
-                          ),
-                          Text(
-                            'Logout',
-                            style: FontsCustom.smallText,
-                          ),
-                        ],
-                      )),
-                )
-              ],
-            )),
+        bottomNavigationBar: BottomAppBarAdmin(context, ref),
       ),
     );
   }

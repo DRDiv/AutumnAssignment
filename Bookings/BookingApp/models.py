@@ -28,8 +28,9 @@ class Event(models.Model):
 class Amenity(models.Model):
     amenityId=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     amenityName=models.CharField(max_length=100)
-    amenityPicture=models.ImageField(upload_to='images/',blank=True)
+    amenityPicture=models.ImageField(upload_to='images/amenity/',blank=True)
     userProvider=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+
     recurrance=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
     capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
     

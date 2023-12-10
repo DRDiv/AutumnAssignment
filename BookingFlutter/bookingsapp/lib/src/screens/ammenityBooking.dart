@@ -7,7 +7,7 @@ import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 
 import 'package:bookingsapp/src/routing/routing.dart';
-import 'package:bookingsapp/src/screens/groupMembers.dart';
+import 'package:bookingsapp/src/components/groupMembers.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

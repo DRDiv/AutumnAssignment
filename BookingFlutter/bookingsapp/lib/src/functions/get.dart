@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 import 'package:bookingsapp/src/models/event.dart';
 import 'package:bookingsapp/src/models/request.dart';
 import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/models/user.dart';
-import 'package:bookingsapp/src/screens/userSearch.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 Future<List<dynamic>> getBookingsIndvidual(String userId) async {
   try {
@@ -124,6 +127,20 @@ Future<List<User>> getUsers(String like, List<User> users) async {
   return users;
 }
 
+Future<List<User>> getUsersGroup(String like, String userId) async {
+  var response = await DatabaseQueries.getUserRegex(like);
+  List<User> users = [];
+
+  for (var indv in response.data) {
+    if (indv['userId'] != userId) {
+      User temp = User.set(indv);
+      if (!temp.ammenityProvider) users.add(temp);
+    }
+  }
+
+  return users;
+}
+
 Future<List<Team>> getTeams(String userId) async {
   try {
     var response = await DatabaseQueries.getUserTeams(userId);
@@ -163,6 +180,34 @@ Future<List<Amenity>> getAmenity(String like) async {
 
 Future<List<dynamic>> getAmmenityUser(String userId) async {
   try {
+    var amenityUser = await DatabaseQueries.getAmmenityUser(userId);
+
+    if (amenityUser.statusCode == 200) {
+      List<dynamic> responseData = amenityUser.data;
+
+      List<dynamic> typedData = [];
+
+      for (var responseInd in amenityUser.data) {
+        var responseAmenity =
+            await DatabaseQueries.getAmmenityDetails(responseInd['amenityId']);
+
+        Amenity amenity = Amenity.defaultAmenity();
+
+        await amenity.setData(responseAmenity.data, "", "");
+        typedData.add(amenity);
+      }
+
+      return typedData;
+    }
+  } catch (e) {
+    print(e);
+  }
+
+  return [];
+}
+
+Future<List<dynamic>> getEventUser(String userId) async {
+  try {
     var amenityUser = await DatabaseQueries.getEventUser(userId);
 
     if (amenityUser.statusCode == 200) {
@@ -200,4 +245,36 @@ Future<List<Event>> getEvents(String like) async {
     events.add(eventInd);
   }
   return events;
+}
+
+Future<File?> getImage(WidgetRef container) async {
+  final pickedImage =
+      await ImagePicker().pickImage(source: ImageSource.gallery);
+  if (pickedImage != null) {
+    return File(pickedImage.path);
+  }
+  return null;
+}
+
+Future<DateTime?> getDate(BuildContext context, DateTime selectedDate) async {
+  final DateTime today = DateTime.now();
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: selectedDate,
+    firstDate: today,
+    lastDate: DateTime(2101),
+  );
+
+  return picked;
+}
+
+Future<TimeOfDay?> getTime(BuildContext context) async {
+  final TimeOfDay now = TimeOfDay.now();
+
+  final TimeOfDay? picked = await showTimePicker(
+    context: context,
+    initialTime: now,
+  );
+
+  return picked;
 }

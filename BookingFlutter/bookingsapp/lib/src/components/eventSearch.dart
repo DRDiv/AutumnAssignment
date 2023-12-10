@@ -1,6 +1,5 @@
 import 'package:bookingsapp/src/functions/get.dart';
-import 'package:bookingsapp/src/assets/colors.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
+
 import 'package:bookingsapp/src/models/event.dart';
 import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
@@ -34,7 +33,7 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
             child: Column(
               children: [
                 Container(
-                  color: ColorSchemes.backgroundColor,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   child: TextFormField(
                     onChanged: (text) {
                       setState(() {
@@ -46,7 +45,6 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                       hintText: 'Search Event',
                       prefixIcon: Icon(Icons.search),
                     ),
-                    cursorColor: ColorSchemes.primaryColor,
                   ),
                 ),
                 FutureBuilder<List<Event>>(
@@ -78,7 +76,7 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                                     10), // Add some spacing between the icon and the text
                             Text(
                               "No Event Found",
-                              style: FontsCustom.bodyBigText,
+                              style: Theme.of(context).textTheme.bodyLarge!,
                             ),
                           ],
                         ),
@@ -95,7 +93,8 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                                     "/eventBooking/${snapshot.data![index].eventId}/${widget.team.teamId}/");
                               },
                               leading: CircleAvatar(
-                                  backgroundColor: ColorSchemes.backgroundColor,
+                                  backgroundColor:
+                                      Theme.of(context).scaffoldBackgroundColor,
                                   radius: 15.0,
                                   child: (snapshot.data![index].eventPicture ==
                                           "")

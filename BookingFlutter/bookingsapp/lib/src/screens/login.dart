@@ -1,4 +1,3 @@
-import 'package:bookingsapp/src/assets/colors.dart';
 import 'package:bookingsapp/src/components/adminLogin.dart';
 import 'package:bookingsapp/src/components/channelI.dart';
 import 'package:bookingsapp/src/theme/theme.dart';

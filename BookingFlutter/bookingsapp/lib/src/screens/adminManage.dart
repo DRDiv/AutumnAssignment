@@ -1,195 +1,18 @@
-import 'package:bookingsapp/src/functions/get.dart';
-import 'package:bookingsapp/src/assets/colors.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
-import 'package:bookingsapp/src/database/database.dart';
-import 'package:bookingsapp/src/models/ammenity.dart';
-import 'package:bookingsapp/src/models/event.dart';
+import 'package:bookingsapp/src/components/amenityTab.dart';
+import 'package:bookingsapp/src/components/bottomAppBar.dart';
+import 'package:bookingsapp/src/components/eventTab.dart';
+
 import 'package:bookingsapp/src/models/user.dart';
-import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
+import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
-class AmenityTab extends StatefulWidget {
-  final User userlogged;
-  const AmenityTab(this.userlogged);
-
-  @override
-  State<AmenityTab> createState() => _AmenityTabState();
-}
-
-class _AmenityTabState extends State<AmenityTab> {
-  late Future<List<dynamic>> _dataIndvFuture;
-  void initState() {
-    super.initState();
-    setState(() {
-      _dataIndvFuture = getAmmenityUser();
-    });
-  }
-
-  Future<List<dynamic>> getAmmenityUser() async {
-    try {
-      var amenityUser =
-          await DatabaseQueries.getAmmenityUser(widget.userlogged.userId);
-
-      if (amenityUser.statusCode == 200) {
-        List<dynamic> responseData = amenityUser.data;
-
-        List<dynamic> typedData = [];
-
-        for (var responseInd in amenityUser.data) {
-          var responseAmenity = await DatabaseQueries.getAmmenityDetails(
-              responseInd['amenityId']);
-
-          Amenity amenity = Amenity.defaultAmenity();
-
-          await amenity.setData(responseAmenity.data, "", "");
-          typedData.add(amenity);
-        }
-
-        return typedData;
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    return [];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: _dataIndvFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          print(snapshot.error);
-          return Center(
-            child: Text("An error occurred."),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-            child: Text(
-              "No Amenity Found",
-              style: FontsCustom.bodyBigText,
-            ),
-          );
-        } else {
-          List<dynamic> dataIndv = snapshot.data ?? [];
-          return ListView.builder(
-            itemCount: dataIndv.length,
-            itemBuilder: (context, index) {
-              final item = dataIndv[index];
-
-              return ListTile(
-                leading: CircleAvatar(
-                    backgroundColor: ColorSchemes.backgroundColor,
-                    radius: 15.0,
-                    child: ((item.amenityPicture) == "")
-                        ? const Icon(Icons.access_alarm,
-                            size: 30, color: Colors.black)
-                        : ClipOval(
-                            child: Image.network(
-                            item.amenityPicture,
-                            width: 30.0,
-                            height: 30.0,
-                            fit: BoxFit.cover,
-                          ))),
-                title: Text(item.amenityName),
-              );
-            },
-          );
-        }
-      },
-    );
-    ;
-  }
-}
-
-class EventTab extends StatefulWidget {
-  final User userlogged;
-  const EventTab(this.userlogged);
-
-  @override
-  State<EventTab> createState() => _EventTabState();
-}
-
-class _EventTabState extends State<EventTab> {
-  late Future<List<dynamic>> _dataIndvFuture;
-  void initState() {
-    super.initState();
-    setState(() {
-      _dataIndvFuture = getAmmenityUser(widget.userlogged.userId);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: _dataIndvFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          print(snapshot.error);
-          return Center(
-            child: Text("An error occurred."),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-            child: Text(
-              "No Amenity Found",
-              style: FontsCustom.bodyBigText,
-            ),
-          );
-        } else {
-          List<dynamic> dataIndv = snapshot.data ?? [];
-          return ListView.builder(
-            itemCount: dataIndv.length,
-            itemBuilder: (context, index) {
-              final item = dataIndv[index];
-              DateTime inputDateTime = DateTime.parse(item.eventDate);
-
-              String formattedDateTime =
-                  DateFormat.yMMMMd().add_jm().format(inputDateTime);
-              return ListTile(
-                leading: CircleAvatar(
-                    backgroundColor: ColorSchemes.backgroundColor,
-                    radius: 15.0,
-                    child: ((item.eventPicture) == "")
-                        ? const Icon(Icons.access_alarm,
-                            size: 30, color: Colors.black)
-                        : ClipOval(
-                            child: Image.network(
-                            item.eventPicture,
-                            width: 30.0,
-                            height: 30.0,
-                            fit: BoxFit.cover,
-                          ))),
-                title: Text(item.eventName),
-                subtitle: Text(formattedDateTime),
-              );
-            },
-          );
-        }
-      },
-    );
-    ;
-  }
-}
-
+// ignore: must_be_immutable
 class TabWidget extends ConsumerStatefulWidget {
   User userlogged;
 
-  TabWidget(this.userlogged);
+  TabWidget(this.userlogged, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TabWidgetState();
@@ -199,19 +22,21 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: AppTheme.lightTheme(),
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
             appBar: AppBar(
-              backgroundColor: ColorSchemes.primaryColor,
               title: Text(
-                "BOOKING\$",
-                style: FontsCustom.heading,
+                "Manage",
+                style: Theme.of(context)
+                    .textTheme
+                    .displayLarge!
+                    .copyWith(color: Colors.white),
               ),
               centerTitle: true,
-              bottom: TabBar(
+              bottom: const TabBar(
                 tabs: [Tab(text: 'Amenity'), Tab(text: 'Event')],
-                indicator: BoxDecoration(color: ColorSchemes.secondayColor),
               ),
             ),
             body: TabBarView(
@@ -220,108 +45,7 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
                 EventTab(widget.userlogged),
               ],
             ),
-            bottomNavigationBar: BottomAppBar(
-              color: ColorSchemes.primaryColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: IconButton(
-                        onPressed: () {
-                          context.go("/homeAdmin");
-                        },
-                        icon: Column(
-                          children: [
-                            Icon(
-                              Icons.home,
-                              color: ColorSchemes.whiteColor,
-                            ),
-                            Text(
-                              'Home',
-                              style: FontsCustom.smallText,
-                            ),
-                          ],
-                        )),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                        onPressed: () {
-                          router.push("/eventAdmin");
-                        },
-                        icon: Column(
-                          children: [
-                            Icon(
-                              Icons.event,
-                              color: ColorSchemes.whiteColor,
-                            ),
-                            Text(
-                              'Event',
-                              style: FontsCustom.smallText,
-                            ),
-                          ],
-                        )),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                        onPressed: () {
-                          router.push("/amenityAdmin");
-                        },
-                        icon: Column(
-                          children: [
-                            Icon(
-                              Icons.local_activity,
-                              color: ColorSchemes.whiteColor,
-                            ),
-                            Text(
-                              'Amenity',
-                              style: FontsCustom.smallText,
-                            ),
-                          ],
-                        )),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                        onPressed: () async {
-                          final storage = new FlutterSecureStorage();
-                          await storage.deleteAll();
-                          context.go("/adminManage");
-                        },
-                        icon: Column(
-                          children: [
-                            Icon(
-                              Icons.admin_panel_settings,
-                              color: ColorSchemes.whiteColor,
-                            ),
-                            Text(
-                              'Manage',
-                              style: FontsCustom.smallText,
-                            ),
-                          ],
-                        )),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                        onPressed: () async {
-                          final storage = new FlutterSecureStorage();
-                          await storage.deleteAll();
-                          context.go("/login");
-                        },
-                        icon: Column(
-                          children: [
-                            Icon(
-                              Icons.logout,
-                              color: ColorSchemes.whiteColor,
-                            ),
-                            Text(
-                              'Logout',
-                              style: FontsCustom.smallText,
-                            ),
-                          ],
-                        )),
-                  )
-                ],
-              ),
-            )),
+            bottomNavigationBar: BottomAppBarAdmin(context, ref)),
       ),
     );
   }

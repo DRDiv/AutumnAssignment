@@ -1,6 +1,6 @@
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/functions/get.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
+
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/models/user.dart';
@@ -71,7 +71,7 @@ class _WidgetCustomState extends State<WidgetCustom> {
                   return Center(
                     child: Text(
                       "No Teams Found",
-                      style: FontsCustom.bodyBigText,
+                      style: Theme.of(context).textTheme.bodyLarge!,
                     ),
                   );
                 } else {
@@ -87,7 +87,7 @@ class _WidgetCustomState extends State<WidgetCustom> {
                           contentPadding: const EdgeInsets.all(8.0),
                           title: Text(
                             dataIndv[index].teamName,
-                            style: FontsCustom.bodyBigText,
+                            style: Theme.of(context).textTheme.bodyLarge!,
                           ),
                           leading: const Icon(
                             Icons.group,
@@ -122,8 +122,8 @@ class _WidgetCustomState extends State<WidgetCustom> {
                               : IconButton(
                                   icon: const Icon(Icons.arrow_forward),
                                   onPressed: () {
-                                    context
-                                        .go('/team/${dataIndv[index].teamId}');
+                                    context.push(
+                                        '/team/${dataIndv[index].teamId}');
                                   },
                                 ),
                         ),

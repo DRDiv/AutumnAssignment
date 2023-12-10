@@ -1,5 +1,3 @@
-import 'package:bookingsapp/src/assets/colors.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
 import 'package:bookingsapp/src/functions/get.dart';
 import 'package:bookingsapp/src/models/request.dart';
@@ -69,7 +67,7 @@ class _RequestTabState extends State<RequestTab> {
                           10), // Add some spacing between the icon and the text
                   Text(
                     "No Requests Found",
-                    style: FontsCustom.bodyBigText,
+                    style: Theme.of(context).textTheme.bodyLarge!,
                   ),
                 ],
               ),
@@ -92,7 +90,8 @@ class _RequestTabState extends State<RequestTab> {
 
                 return ListTile(
                   leading: CircleAvatar(
-                      backgroundColor: ColorSchemes.backgroundColor,
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
                       radius: 20.0,
                       child: (item.getImage() == "")
                           ? const Icon(Icons.access_alarm,
@@ -114,11 +113,6 @@ class _RequestTabState extends State<RequestTab> {
                           builder: (context) {
                             return AlertDialog(
                               content: ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .all<Color>(ColorSchemes
-                                            .primaryColor), // Change this color to your desired background color
-                                  ),
                                   onPressed: () async {
                                     await DatabaseQueries.deleteRequest(
                                         item.requestId);
@@ -132,7 +126,7 @@ class _RequestTabState extends State<RequestTab> {
                             );
                           });
                     },
-                    color: ColorSchemes.primaryColor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 );
               },

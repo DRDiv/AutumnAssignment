@@ -1,20 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bookingsapp/src/assets/colors.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/functions/get.dart';
 import 'package:bookingsapp/src/models/event.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
+import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 
 class EventBooking extends ConsumerStatefulWidget {
   final String eventId;
   final String teamId;
-  const EventBooking(this.eventId, this.teamId);
+  const EventBooking(this.eventId, this.teamId, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EventBookingState();
@@ -22,6 +20,7 @@ class EventBooking extends ConsumerStatefulWidget {
 
 class _EventBookingState extends ConsumerState<EventBooking> {
   Event _event = Event.defaultEvent();
+  bool _paymentAttached = false;
   bool _isLoading = true;
   File? _image;
   Future<void> setData() async {
@@ -34,105 +33,143 @@ class _EventBookingState extends ConsumerState<EventBooking> {
     });
   }
 
+  @override
   void initState() {
     super.initState();
     setData();
   }
 
-  Future<void> _getImage() async {
-    final pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _image = File(pickedImage.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorSchemes.primaryColor,
-        title: Text(
-          "BOOKING\$",
-          style: FontsCustom.heading,
+    return Theme(
+      data: AppTheme.lightTheme(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "BOOKING\$",
+            style: Theme.of(context)
+                .textTheme
+                .displayLarge!
+                .copyWith(color: Colors.white),
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 24, 8, 0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Column(
-                      children: [
-                        Center(
-                          child: Container(
-                            height: 200,
-                            width: 300,
-                            decoration: BoxDecoration(
-                              color: ColorSchemes.backgroundColor,
+        body: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 24, 8, 0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Column(
+                        children: [
+                          Center(
+                            child: Container(
+                              height: 250,
+                              width: 250,
+                              child: (_event.eventPicture == "")
+                                  ? const Icon(
+                                      Icons.category_sharp,
+                                      color: Colors.black,
+                                      size: 100,
+                                    )
+                                  : ClipRRect(
+                                      child: Image.network(
+                                      _event.eventPicture,
+                                      fit: BoxFit.fill,
+                                    )),
                             ),
-                            child: (_event.eventPicture == "")
-                                ? Icon(
-                                    Icons.category_sharp,
-                                    size: 100,
-                                  )
-                                : ClipRRect(
-                                    child: Image.network(
-                                    _event.eventPicture,
-                                    fit: BoxFit.fitHeight,
-                                  )),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            _event.eventName,
-                            style: FontsCustom.bodyHeading,
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              _event.eventName,
+                              style: Theme.of(context).textTheme.bodyLarge!,
+                            ),
                           ),
-                        ),
-                        (_event.payment > 0)
-                            ? Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      "Attach Payment:",
-                                      style: FontsCustom.bodySmallText,
+                          (_event.payment > 0)
+                              ? InkWell(
+                                  onTap: () async {
+                                    File? eventPictureGet = await getImage(ref);
+                                    if (eventPictureGet != null) {
+                                      setState(() {
+                                        _image = eventPictureGet;
+                                        _paymentAttached = true;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: _paymentAttached
+                                          ? Colors
+                                              .green // Use a success color when payment is attached
+                                          : Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    ElevatedButton(
-                                        style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty
-                                              .all<Color>(ColorSchemes
-                                                  .primaryColor), // Change this color to your desired background color
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.attach_money,
+                                            color: Colors.white),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          _paymentAttached
+                                              ? "Payment Attached"
+                                              : "Attach Payment Screenshot",
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
-                                        onPressed: _getImage,
-                                        child:
-                                            Text("Insert Payment Screenshot"))
-                                  ],
-                                ),
-                              )
-                            : Row(),
-                      ],
-                    ),
-                    SizedBox(height: 100),
-                    ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              ColorSchemes
-                                  .primaryColor), // Change this color to your desired background color
-                        ),
-                        onPressed: () async {
-                          if (_event.payment > 0 && _image == null) {
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : const Row(),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                          onPressed: () async {
+                            if (_event.payment > 0 && _image == null) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: SizedBox(
+                                      height: 75,
+                                      width: 100,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            'Attach Payment',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!,
+                                          ),
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                router.pop();
+                                              },
+                                              child: const Text("OK"))
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                              return;
+                            }
+
+                            dynamic response =
+                                await DatabaseQueries.makeEventRequest(
+                                    widget.eventId, widget.teamId, _image);
+
                             showDialog(
+                              barrierDismissible: false,
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
@@ -144,74 +181,33 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
-                                          'Attach Payment',
-                                          style: FontsCustom.bodyBigText,
+                                          json.decode(
+                                              response.toString())['message'],
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!,
                                         ),
                                         ElevatedButton(
-                                            style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty
-                                                  .all<Color>(ColorSchemes
-                                                      .primaryColor), // Change this color to your desired background color
-                                            ),
                                             onPressed: () {
                                               router.pop();
+                                              if (json.decode(response
+                                                      .toString())['code'] ==
+                                                  200) router.pop();
                                             },
-                                            child: Text("OK"))
+                                            child: const Text("OK"))
                                       ],
                                     ),
                                   ),
                                 );
                               },
                             );
-                            return;
-                          }
-
-                          dynamic response =
-                              await DatabaseQueries.makeEventRequest(
-                                  widget.eventId, widget.teamId, _image);
-
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: SizedBox(
-                                  height: 75,
-                                  width: 100,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        json.decode(
-                                            response.toString())['message'],
-                                        style: FontsCustom.bodyBigText,
-                                      ),
-                                      ElevatedButton(
-                                          style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty
-                                                .all<Color>(ColorSchemes
-                                                    .primaryColor), // Change this color to your desired background color
-                                          ),
-                                          onPressed: () {
-                                            router.pop();
-                                            if (json.decode(response
-                                                    .toString())['code'] ==
-                                                200) router.pop();
-                                          },
-                                          child: Text("OK"))
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: Text("Send Request"))
-                  ],
+                          },
+                          child: const Text("Send Request"))
+                    ],
+                  ),
                 ),
               ),
-            ),
+      ),
     );
   }
 }

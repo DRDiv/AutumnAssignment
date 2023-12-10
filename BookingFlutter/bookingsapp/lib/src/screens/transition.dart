@@ -1,9 +1,6 @@
 import 'dart:convert';
 
-import 'package:bookingsapp/src/assets/colors.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
 import 'package:bookingsapp/src/database/database.dart';
-import 'package:bookingsapp/main.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +93,7 @@ class _TransitionScreenState extends ConsumerState<TransitionScreen> {
               valueColor:
                   AlwaysStoppedAnimation<Color>(ColorSchemes.primaryColor),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               "Loading...",
               style: FontsCustom.bodyBigText,

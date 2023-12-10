@@ -1,6 +1,5 @@
 import 'package:bookingsapp/src/functions/get.dart';
-import 'package:bookingsapp/src/assets/colors.dart';
-import 'package:bookingsapp/src/assets/fonts.dart';
+
 import 'package:bookingsapp/src/models/ammenity.dart';
 
 import 'package:bookingsapp/src/routing/routing.dart';
@@ -32,7 +31,6 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
             child: Column(
               children: [
                 Container(
-                  color: ColorSchemes.backgroundColor,
                   child: TextFormField(
                     onChanged: (text) {
                       setState(() {
@@ -44,7 +42,6 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
                       hintText: 'Search Amenity',
                       prefixIcon: Icon(Icons.search),
                     ),
-                    cursorColor: ColorSchemes.primaryColor,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -74,7 +71,7 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
                                     10), // Add some spacing between the icon and the text
                             Text(
                               "No Amenity Found",
-                              style: FontsCustom.bodyBigText,
+                              style: Theme.of(context).textTheme.bodyLarge!,
                             ),
                           ],
                         ),
@@ -121,17 +118,11 @@ class AmenityTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
-      tileColor: ColorSchemes.backgroundColor,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: ColorSchemes.tertiaryColor),
-      ),
       leading: ClipOval(
         child: Container(
           width: 50,
           height: 50,
-          color: ColorSchemes.backgroundColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: (amenity.amenityPicture == "")
               ? const Icon(Icons.alarm, size: 30, color: Colors.black)
               : Image.network(
@@ -152,7 +143,7 @@ class AmenityTile extends StatelessWidget {
       ),
       trailing: Icon(
         Icons.arrow_forward,
-        color: ColorSchemes.primaryColor,
+        color: Theme.of(context).primaryColor,
       ),
     );
   }
