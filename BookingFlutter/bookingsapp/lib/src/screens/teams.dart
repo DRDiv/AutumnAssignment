@@ -1,8 +1,6 @@
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/database/dbTeam.dart';
-import 'package:bookingsapp/src/functions/format.dart';
 
-import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/routing/routing.dart';

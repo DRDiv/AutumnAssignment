@@ -1,5 +1,4 @@
 import 'package:bookingsapp/src/database/dbBooking.dart';
-import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

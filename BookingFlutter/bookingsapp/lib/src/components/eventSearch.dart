@@ -1,5 +1,4 @@
 import 'package:bookingsapp/src/database/dbEvent.dart';
-import 'package:bookingsapp/src/functions/format.dart';
 
 import 'package:bookingsapp/src/models/event.dart';
 import 'package:bookingsapp/src/models/team.dart';

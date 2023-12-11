@@ -3,9 +3,7 @@ import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:bookingsapp/src/functions/format.dart';
 
-import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/models/user.dart';
 
 // ignore: must_be_immutable

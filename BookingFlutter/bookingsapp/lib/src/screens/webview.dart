@@ -1,5 +1,4 @@
 import 'package:bookingsapp/src/constants/urls.dart';
-import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/screens/transition.dart';

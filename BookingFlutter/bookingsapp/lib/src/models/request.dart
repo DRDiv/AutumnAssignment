@@ -1,4 +1,5 @@
-import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbAmenity.dart';
+import 'package:bookingsapp/src/database/dbEvent.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 import 'package:bookingsapp/src/models/event.dart';
 
@@ -26,14 +27,16 @@ class Requests {
       individuals = requestindv["indivduals"] ?? [];
       dateSlot = requestindv["dateSlot"] ?? "";
       await amenity.setData(
-          (await DatabaseQueries.getAmmenityDetails(requestindv["amenity"]))
+          (await DatabaseQueriesAmenity.getAmenityDetails(
+                  requestindv["amenity"]))
               .data,
           "",
           "");
     } else {
       teamId = requestindv["teamID"] ?? "";
       await event.setData(
-          (await DatabaseQueries.getEventDetails(requestindv["event"])).data);
+          (await DatabaseQueriesEvent.getEventDetails(requestindv["event"]))
+              .data);
     }
   }
 

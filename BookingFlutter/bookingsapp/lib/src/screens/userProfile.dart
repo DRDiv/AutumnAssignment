@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
-import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/theme/theme.dart';

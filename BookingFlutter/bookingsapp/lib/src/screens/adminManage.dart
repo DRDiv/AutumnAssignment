@@ -59,10 +59,6 @@ class AdminManage extends ConsumerStatefulWidget {
 }
 
 class _AdminManageState extends ConsumerState<AdminManage> {
-  List<dynamic> dataIndv = [];
-  Map dataTeam = {};
-  bool isLoading = true;
-
   @override
   void initState() {
     super.initState();

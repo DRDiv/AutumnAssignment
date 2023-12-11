@@ -1,7 +1,6 @@
 import 'package:bookingsapp/src/components/bookedEvents.dart';
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/components/teamMembers.dart';
-import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/database/dbTeam.dart';
 import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/models/user.dart';

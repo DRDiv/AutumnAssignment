@@ -1,4 +1,5 @@
-import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbEvent.dart';
+import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/event.dart';
 import 'package:bookingsapp/src/models/user.dart';
 
@@ -15,13 +16,14 @@ class Team {
     teamId = responseData["teamId"];
     teamName = responseData["teamName"];
     for (var key in responseData['users']) {
-      users.add(User.set((await DatabaseQueries.getUserDetails(key)).data));
+      users.add(User.set((await DatabaseQueriesUser.getUserDetails(key)).data));
     }
     isAdmin = responseData["isAdmin"];
     isReq = responseData["isReq"];
     for (var key in responseData['bookedEvents']) {
       Event event = Event.defaultEvent();
-      await event.setData((await DatabaseQueries.getEventDetails(key)).data);
+      await event
+          .setData((await DatabaseQueriesEvent.getEventDetails(key)).data);
       events.add(event);
     }
   }

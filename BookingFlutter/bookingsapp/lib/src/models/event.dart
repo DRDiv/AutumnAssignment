@@ -1,4 +1,4 @@
-import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 
 class Event {
@@ -19,7 +19,7 @@ class Event {
 
     payment = double.parse(responseData["payment"]);
     userProvider = User.set(
-        (await DatabaseQueries.getUserDetails(responseData['userProvider']))
+        (await DatabaseQueriesUser.getUserDetails(responseData['userProvider']))
             .data);
   }
 }

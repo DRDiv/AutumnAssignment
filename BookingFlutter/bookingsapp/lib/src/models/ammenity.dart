@@ -1,4 +1,4 @@
-import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 
 class Amenity {
@@ -21,7 +21,7 @@ class Amenity {
     amenityDate = date;
     amenitySlot = slot;
     userProvider = User.set(
-        (await DatabaseQueries.getUserDetails(responseData['userProvider']))
+        (await DatabaseQueriesUser.getUserDetails(responseData['userProvider']))
             .data);
   }
 }
