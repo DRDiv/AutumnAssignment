@@ -1,4 +1,5 @@
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbAmenity.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 
 import 'package:bookingsapp/src/models/ammenity.dart';
 
@@ -30,18 +31,16 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
             width: 200,
             child: Column(
               children: [
-                Container(
-                  child: TextFormField(
-                    onChanged: (text) {
-                      setState(() {
-                        _like = text;
-                      });
-                    },
-                    controller: _text,
-                    decoration: const InputDecoration(
-                      hintText: 'Search Amenity',
-                      prefixIcon: Icon(Icons.search),
-                    ),
+                TextFormField(
+                  onChanged: (text) {
+                    setState(() {
+                      _like = text;
+                    });
+                  },
+                  controller: _text,
+                  decoration: const InputDecoration(
+                    hintText: 'Search Amenity',
+                    prefixIcon: Icon(Icons.search),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -57,16 +56,16 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 60,
                             ),
-                            Icon(
+                            const Icon(
                               Icons.warning,
                               size: 50, // Adjust the size of the icon as needed
                               color: Colors
                                   .red, // Adjust the color of the icon as needed
                             ),
-                            SizedBox(
+                            const SizedBox(
                                 height:
                                     10), // Add some spacing between the icon and the text
                             Text(

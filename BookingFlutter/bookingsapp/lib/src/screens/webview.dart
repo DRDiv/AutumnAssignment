@@ -1,4 +1,6 @@
-import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/constants/urls.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +45,7 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
               setState(() {
                 finished = true;
               });
-              var response = await DatabaseQueries.getUserDetails(
+              var response = await DatabaseQueriesUser.getUserDetails(
                   url.queryParameters['userId']!);
               ref.read(userLogged.notifier).state = User.set(response.data);
 
@@ -51,7 +53,7 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
               await storage.write(
                   key: "sessionToken",
                   value: url.queryParameters['sessionToken']);
-              await DatabaseQueries.updateSessionToken(
+              await DatabaseQueriesUser.updateSessionToken(
                   ref.read(userLogged).userId,
                   url.queryParameters['sessionToken']!);
 

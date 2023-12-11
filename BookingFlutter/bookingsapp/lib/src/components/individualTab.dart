@@ -1,4 +1,5 @@
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbBooking.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,7 +7,7 @@ import 'package:intl/intl.dart';
 class IndividualTab extends StatefulWidget {
   final User userlogged;
 
-  IndividualTab(this.userlogged);
+  const IndividualTab(this.userlogged, {super.key});
 
   @override
   _IndividualTabState createState() => _IndividualTabState();
@@ -30,19 +31,18 @@ class _IndividualTabState extends State<IndividualTab> {
         Future<List<dynamic>> dataIndvFuture =
             getBookingsIndvidual(widget.userlogged.userId);
         setState(() {
-          this._dataIndvFuture = dataIndvFuture;
+          _dataIndvFuture = dataIndvFuture;
         });
       },
       child: FutureBuilder<List<dynamic>>(
         future: _dataIndvFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            print(snapshot.error);
-            return Center(
+            return const Center(
               child: Text("An error occurred."),
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -50,12 +50,12 @@ class _IndividualTabState extends State<IndividualTab> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.warning,
                     size: 50, // Adjust the size of the icon as needed
                     color: Colors.red, // Adjust the color of the icon as needed
                   ),
-                  SizedBox(
+                  const SizedBox(
                       height:
                           10), // Add some spacing between the icon and the text
                   Text(

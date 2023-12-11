@@ -1,4 +1,5 @@
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbBooking.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,12 +41,11 @@ class _TeamTabState extends ConsumerState<TeamTab> {
         future: _dataTeamFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            print(snapshot.error);
-            return Center(
+            return const Center(
               child: Text("An error occurred."),
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -53,12 +53,12 @@ class _TeamTabState extends ConsumerState<TeamTab> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.warning,
                     size: 50, // Adjust the size of the icon as needed
                     color: Colors.red, // Adjust the color of the icon as needed
                   ),
-                  SizedBox(
+                  const SizedBox(
                       height:
                           10), // Add some spacing between the icon and the text
                   Text(

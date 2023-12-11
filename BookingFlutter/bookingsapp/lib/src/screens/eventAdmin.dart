@@ -1,5 +1,6 @@
-import 'package:bookingsapp/src/database/database.dart';
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbEvent.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
@@ -198,7 +199,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                         'Minimum team size must be less than Maximum team size.');
                     return;
                   }
-                  await DatabaseQueries.createEvent(
+                  await DatabaseQueriesEvent.createEvent(
                     _eventName.text,
                     ref.read(userLogged).userId,
                     DateTime(

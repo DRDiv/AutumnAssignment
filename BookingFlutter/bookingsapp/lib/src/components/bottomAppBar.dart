@@ -1,4 +1,3 @@
-import 'package:bookingsapp/src/functions/get.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
+// ignore: non_constant_identifier_names
 BottomAppBar BottomAppBarUser(BuildContext context, User userlogged) {
   return BottomAppBar(
       child: Row(
@@ -69,6 +69,7 @@ BottomAppBar BottomAppBarUser(BuildContext context, User userlogged) {
   ));
 }
 
+// ignore: non_constant_identifier_names
 BottomAppBar BottomAppBarAdmin(BuildContext context, WidgetRef ref) {
   return BottomAppBar(
       child: Row(

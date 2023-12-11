@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
+// ignore: non_constant_identifier_names
 Container ChannelIButton(BuildContext context, double screenWidth) {
   return Container(
     width: screenWidth * 0.55,
@@ -17,7 +18,7 @@ Container ChannelIButton(BuildContext context, double screenWidth) {
               width: 30,
             ),
           ),
-          Text('Login With Channeli'),
+          const Text('Login With Channeli'),
         ],
       ),
       onPressed: () {

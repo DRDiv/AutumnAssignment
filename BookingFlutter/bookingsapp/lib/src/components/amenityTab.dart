@@ -1,4 +1,5 @@
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbAmenity.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class AmenityTab extends StatefulWidget {
 
 class _AmenityTabState extends State<AmenityTab> {
   late Future<List<dynamic>> _dataIndvFuture;
+  @override
   void initState() {
     super.initState();
     setState(() {
@@ -25,12 +27,11 @@ class _AmenityTabState extends State<AmenityTab> {
       future: _dataIndvFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
-          print(snapshot.error);
-          return Center(
+          return const Center(
             child: Text("An error occurred."),
           );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -68,6 +69,5 @@ class _AmenityTabState extends State<AmenityTab> {
         }
       },
     );
-    ;
   }
 }

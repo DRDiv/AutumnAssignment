@@ -1,7 +1,8 @@
 // ignore_for_file: file_names
 
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
-import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,8 @@ class _UserProfileState extends ConsumerState<UserProfile> {
   User _userCurrent = User.defaultUser();
   bool _isLoading = true;
   Future<void> setUser() async {
-    User userTemp =
-        User.set((await DatabaseQueries.getUserDetails(widget.userId)).data);
+    User userTemp = User.set(
+        (await DatabaseQueriesUser.getUserDetails(widget.userId)).data);
     setState(() {
       _userCurrent = userTemp;
       _isLoading = false;

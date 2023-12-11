@@ -1,8 +1,11 @@
-import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbTeam.dart';
+import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+// ignore: must_be_immutable
 class TeamMembers extends StatefulWidget {
   List<User> members;
   Map<String, dynamic> isAdmin;
@@ -11,7 +14,8 @@ class TeamMembers extends StatefulWidget {
   String teamId;
   Function rebuild;
   TeamMembers(this.members, this.isAdmin, this.isReq, this.userlogged,
-      this.teamId, this.rebuild);
+      this.teamId, this.rebuild,
+      {super.key});
 
   @override
   State<TeamMembers> createState() => TeamMembersState();
@@ -35,8 +39,7 @@ class TeamMembersState extends State<TeamMembers> {
                     ? const Icon(Icons.person, size: 40, color: Colors.black)
                     : ClipOval(
                         child: Image.network(
-                        "https://channeli.in/" +
-                            user.data['person']['displayPicture'],
+                        "https://channeli.in/${user.data['person']['displayPicture']}",
                         width: 40.0,
                         height: 40.0,
                         fit: BoxFit.cover,
@@ -63,18 +66,18 @@ class TeamMembersState extends State<TeamMembers> {
                             return AlertDialog(
                               content: ElevatedButton(
                                   onPressed: () async {
-                                    await DatabaseQueries.addAdmin(
+                                    await DatabaseQueriesTeam.addAdmin(
                                         widget.teamId, user.userId);
                                     widget.rebuild();
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Confirm')),
+                                  child: const Text('Confirm')),
                               backgroundColor: Theme.of(context).primaryColor,
                             );
                           });
                     },
-                    icon: Icon(Icons.add))
-                : Text(''),
+                    icon: const Icon(Icons.add))
+                : const Text(''),
           );
         });
   }

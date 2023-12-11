@@ -1,5 +1,6 @@
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
-import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/database/dbBooking.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/models/request.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
@@ -18,7 +19,8 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
   bool _isLoading = true;
   Future<void> setData() async {
     List<dynamic> reponse =
-        (await DatabaseQueries.getRequest(ref.read(userLogged).userId)).data;
+        (await DatabaseQueriesRequest.getRequest(ref.read(userLogged).userId))
+            .data;
     for (var requestindv in reponse) {
       Requests request = Requests.defaultRequest();
       await request.setData(requestindv);
@@ -78,14 +80,14 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                           key: UniqueKey(),
                           onDismissed: (direction) async {
                             if (direction == DismissDirection.endToStart) {
-                              await DatabaseQueries.deleteRequest(
+                              await DatabaseQueriesRequest.deleteRequest(
                                   request.requestId);
                               setState(() {
                                 _requests.removeAt(index);
                               });
                             } else if (direction ==
                                 DismissDirection.startToEnd) {
-                              await DatabaseQueries.requestToBooking(
+                              await DatabaseQueriesBookings.requestToBooking(
                                   request.requestId);
                               setState(() {
                                 _requests.removeAt(index);

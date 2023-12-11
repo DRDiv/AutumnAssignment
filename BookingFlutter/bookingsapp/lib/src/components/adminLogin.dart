@@ -1,4 +1,5 @@
-import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +10,15 @@ import 'package:go_router/go_router.dart';
 class AdminLoginCard extends ConsumerStatefulWidget {
   final VoidCallback onLogin;
 
-  const AdminLoginCard({Key? key, required this.onLogin}) : super(key: key);
+  const AdminLoginCard({super.key, required this.onLogin});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _AdminLoginCardState();
 }
 
 class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
-  TextEditingController _username = TextEditingController();
-  TextEditingController _password = TextEditingController();
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +34,10 @@ class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
               'FOR ADMIN',
               style: Theme.of(context).textTheme.displayMedium,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Container(
+            SizedBox(
               width: screenWidth * 0.7,
               child: TextFormField(
                 controller: _username,
@@ -48,13 +49,13 @@ class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                  prefixIcon: Icon(Icons.person),
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  prefixIcon: const Icon(Icons.person),
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Container(
+            const SizedBox(height: 20),
+            SizedBox(
               width: screenWidth * 0.7,
               child: TextFormField(
                 controller: _password,
@@ -67,37 +68,39 @@ class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                  prefixIcon: Icon(Icons.lock),
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  prefixIcon: const Icon(Icons.lock),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                var admin = await DatabaseQueries.adminLogin(
+                var admin = await DatabaseQueriesUser.adminLogin(
                   _username.text,
                   _password.text,
                 );
 
                 if (admin.statusCode == 200) {
-                  var response = await DatabaseQueries.getUserDetails(
+                  var response = await DatabaseQueriesUser.getUserDetails(
                     admin.data['userId']!,
                   );
                   ref.read(userLogged.notifier).state = User.set(response.data);
 
-                  final storage = new FlutterSecureStorage();
+                  const storage = FlutterSecureStorage();
                   await storage.write(
                     key: "sessionToken",
                     value: admin.data['sessionToken'],
                   );
-                  await DatabaseQueries.updateSessionToken(
+                  await DatabaseQueriesUser.updateSessionToken(
                     ref.read(userLogged).userId,
                     admin.data['sessionToken']!,
                   );
 
+                  // ignore: use_build_context_synchronously
                   context.go("/homeAdmin");
                 } else {
+                  // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(admin.data['message'].toString()),
@@ -105,7 +108,7 @@ class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
                   );
                 }
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
           ],
         ),

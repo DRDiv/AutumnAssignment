@@ -1,7 +1,8 @@
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbTeam.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 
-import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
@@ -14,9 +15,8 @@ import 'package:go_router/go_router.dart';
 // ignore: must_be_immutable
 class WidgetCustom extends StatefulWidget {
   User userlogged;
-  String ipAdd;
 
-  WidgetCustom(this.userlogged, this.ipAdd, {super.key});
+  WidgetCustom(this.userlogged, {super.key});
 
   @override
   State<WidgetCustom> createState() => _WidgetCustomState();
@@ -100,19 +100,21 @@ class _WidgetCustomState extends State<WidgetCustom> {
                                     children: [
                                       IconButton(
                                           onPressed: () async {
-                                            await DatabaseQueries.reqUserTeam(
-                                                dataIndv[index].teamId,
-                                                widget.userlogged.userId,
-                                                true);
+                                            await DatabaseQueriesTeam
+                                                .reqUserTeam(
+                                                    dataIndv[index].teamId,
+                                                    widget.userlogged.userId,
+                                                    true);
                                             rebuild();
                                           },
                                           icon: const Icon(Icons.check)),
                                       IconButton(
                                           onPressed: () async {
-                                            await DatabaseQueries.reqUserTeam(
-                                                dataIndv[index].teamId,
-                                                widget.userlogged.userId,
-                                                false);
+                                            await DatabaseQueriesTeam
+                                                .reqUserTeam(
+                                                    dataIndv[index].teamId,
+                                                    widget.userlogged.userId,
+                                                    false);
                                             rebuild();
                                           },
                                           icon: const Icon(Icons.close))
@@ -158,7 +160,7 @@ class _TeamPageState extends ConsumerState<TeamPage> {
   @override
   Widget build(BuildContext context) {
     User userlogged = ref.read(userLogged);
-    String ipAdd = ref.read(ip);
-    return WidgetCustom(userlogged, ipAdd);
+
+    return WidgetCustom(userlogged);
   }
 }

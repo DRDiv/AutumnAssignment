@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bookingsapp/src/database/database.dart';
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbEvent.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/event.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
@@ -25,8 +26,8 @@ class _EventBookingState extends ConsumerState<EventBooking> {
   File? _image;
   Future<void> setData() async {
     Event e = Event.defaultEvent();
-    await e
-        .setData((await DatabaseQueries.getEventDetails(widget.eventId)).data);
+    await e.setData(
+        (await DatabaseQueriesEvent.getEventDetails(widget.eventId)).data);
     setState(() {
       _event = e;
       _isLoading = false;
@@ -165,7 +166,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                             }
 
                             dynamic response =
-                                await DatabaseQueries.makeEventRequest(
+                                await DatabaseQueriesRequest.makeEventRequest(
                                     widget.eventId, widget.teamId, _image);
 
                             showDialog(

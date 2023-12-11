@@ -1,4 +1,5 @@
-import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbTeam.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/components/groupMembers.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
@@ -88,7 +89,7 @@ class _TeamCreationState extends ConsumerState<TeamCreation> {
                         return;
                       }
 
-                      await DatabaseQueries.createTeam(
+                      await DatabaseQueriesTeam.createTeam(
                         _text.text,
                         _users,
                         ref.read(userLogged).userId,

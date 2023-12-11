@@ -43,16 +43,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           toolbarHeight: 100,
         ),
         body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              ColorSchemes.secondayColor,
-              ColorSchemes.primaryColor,
-              ColorSchemes.tertiaryColor,
-            ],
-          )),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Center(

@@ -8,6 +8,7 @@ class Slot {
   Slot({required this.startTime, required this.endTime});
 }
 
+// ignore: must_be_immutable
 class SlotsEditor extends StatefulWidget {
   List<Map<String, dynamic>> slotDataList;
   List<Slot> slots;
@@ -95,13 +96,13 @@ class _SlotsEditorState extends State<SlotsEditor> {
                 ),
               ),
               IconButton(
-                icon: Icon(Icons.add),
+                icon: const Icon(Icons.add),
                 color: Theme.of(context).primaryColor,
                 onPressed: addSlot,
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text('SELECTED SLOTS',
               style: Theme.of(context).textTheme.displaySmall!),
           (widget.slots.isEmpty)
@@ -111,7 +112,7 @@ class _SlotsEditorState extends State<SlotsEditor> {
                       style: Theme.of(context).textTheme.bodyLarge!),
                 )
               : Container(
-                  constraints: BoxConstraints(
+                  constraints: const BoxConstraints(
                     maxHeight: 300.0, // Maximum height you want
                   ),
                   height: widget.slots.length * 100,
@@ -139,7 +140,8 @@ class TimePicker extends StatelessWidget {
   final TimeOfDay selectedTime;
   final ValueChanged<TimeOfDay> onTimeChanged;
 
-  TimePicker({
+  const TimePicker({
+    super.key,
     required this.labelText,
     required this.selectedTime,
     required this.onTimeChanged,
@@ -163,7 +165,7 @@ class TimePicker extends StatelessWidget {
           },
           child: Text(
             selectedTime.format(context),
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
         ),
       ],
@@ -175,7 +177,7 @@ class SlotDisplay extends StatelessWidget {
   final Slot slot;
   final VoidCallback onRemove;
 
-  SlotDisplay({required this.slot, required this.onRemove});
+  const SlotDisplay({super.key, required this.slot, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +185,7 @@ class SlotDisplay extends StatelessWidget {
       title: Text('Start Time: ${slot.startTime.format(context)}'),
       subtitle: Text('End Time: ${slot.endTime.format(context)}'),
       trailing: IconButton(
-        icon: Icon(Icons.remove),
+        icon: const Icon(Icons.remove),
         onPressed: onRemove,
       ),
     );

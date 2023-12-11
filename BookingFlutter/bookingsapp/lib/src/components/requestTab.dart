@@ -1,5 +1,5 @@
-import 'package:bookingsapp/src/database/database.dart';
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/request.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 class RequestTab extends StatefulWidget {
   final User userlogged;
 
-  RequestTab(this.userlogged);
+  const RequestTab(this.userlogged, {super.key});
 
   @override
   _RequestTabState createState() => _RequestTabState();
@@ -44,12 +44,11 @@ class _RequestTabState extends State<RequestTab> {
         future: dataReq,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            print(snapshot.error);
-            return Center(
+            return const Center(
               child: Text("An error occurred."),
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -57,12 +56,12 @@ class _RequestTabState extends State<RequestTab> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.warning,
                     size: 50, // Adjust the size of the icon as needed
                     color: Colors.red, // Adjust the color of the icon as needed
                   ),
-                  SizedBox(
+                  const SizedBox(
                       height:
                           10), // Add some spacing between the icon and the text
                   Text(
@@ -106,7 +105,7 @@ class _RequestTabState extends State<RequestTab> {
                   title: Text(item.getName()),
                   subtitle: Text(formattedDateTime),
                   trailing: IconButton(
-                    icon: Icon(Icons.cancel),
+                    icon: const Icon(Icons.cancel),
                     onPressed: () {
                       showDialog(
                           context: context,
@@ -114,7 +113,7 @@ class _RequestTabState extends State<RequestTab> {
                             return AlertDialog(
                               content: ElevatedButton(
                                   onPressed: () async {
-                                    await DatabaseQueries.deleteRequest(
+                                    await DatabaseQueriesRequest.deleteRequest(
                                         item.requestId);
                                     setState(() {
                                       rebuild();
@@ -122,7 +121,7 @@ class _RequestTabState extends State<RequestTab> {
 
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Confirm')),
+                                  child: const Text('Confirm')),
                             );
                           });
                     },

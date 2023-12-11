@@ -1,4 +1,4 @@
-import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/models/user.dart';
 
 class Event {

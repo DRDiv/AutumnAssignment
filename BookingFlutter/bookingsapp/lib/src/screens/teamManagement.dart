@@ -1,7 +1,8 @@
 import 'package:bookingsapp/src/components/bookedEvents.dart';
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/components/teamMembers.dart';
-import 'package:bookingsapp/src/database/database.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/database/dbTeam.dart';
 import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/models/user.dart';
 
@@ -29,7 +30,7 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
   late TabController _tabController;
   int currentTabIndex = 0;
   Future<void> setTeam() async {
-    var response = await DatabaseQueries.getTeamDetails(widget.teamId);
+    var response = await DatabaseQueriesTeam.getTeamDetails(widget.teamId);
     await _team.setData(response.data);
   }
 

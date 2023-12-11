@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:bookingsapp/src/components/slotPicker.dart';
-import 'package:bookingsapp/src/database/database.dart';
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbAmenity.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
@@ -178,11 +179,11 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                     if (_slots.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: const Text("No slots selected"),
+                          content: Text("No slots selected"),
                         ),
                       );
                     }
-                    await DatabaseQueries.createAmenity(
+                    await DatabaseQueriesAmenity.createAmenity(
                         _amenityName.text,
                         ref.read(userLogged).userId,
                         _selectedOption,

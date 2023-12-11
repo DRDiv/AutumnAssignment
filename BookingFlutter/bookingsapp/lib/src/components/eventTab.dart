@@ -1,11 +1,12 @@
-import 'package:bookingsapp/src/functions/get.dart';
+import 'package:bookingsapp/src/database/dbEvent.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EventTab extends StatefulWidget {
   final User userlogged;
-  const EventTab(this.userlogged);
+  const EventTab(this.userlogged, {super.key});
 
   @override
   State<EventTab> createState() => _EventTabState();
@@ -13,6 +14,7 @@ class EventTab extends StatefulWidget {
 
 class _EventTabState extends State<EventTab> {
   late Future<List<dynamic>> _dataIndvFuture;
+  @override
   void initState() {
     super.initState();
     setState(() {
@@ -26,12 +28,11 @@ class _EventTabState extends State<EventTab> {
       future: _dataIndvFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
-          print(snapshot.error);
-          return Center(
+          return const Center(
             child: Text("An error occurred."),
           );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -73,6 +74,5 @@ class _EventTabState extends State<EventTab> {
         }
       },
     );
-    ;
   }
 }
