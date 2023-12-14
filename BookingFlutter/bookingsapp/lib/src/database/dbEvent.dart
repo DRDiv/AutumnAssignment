@@ -60,6 +60,16 @@ class DatabaseQueriesEvent {
     return response;
   }
 
+  static Future<Response> deleteEvent(String eventId) async {
+    FormData formData = await getSessionForm();
+    String pathEvent = EventUrls.eventDetail(eventId: eventId);
+    var dio = Dio();
+
+    var response = await dio.delete(pathEvent, data: formData);
+
+    return response;
+  }
+
   static Future<Response> getEventUser(String userId) async {
     FormData formData = await getSessionForm();
     String pathEvent = EventUrls.eventUser(userId: userId);

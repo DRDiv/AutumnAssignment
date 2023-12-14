@@ -55,7 +55,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                   decoration: BoxDecoration(
                     color: Theme.of(context).scaffoldBackgroundColor,
                     borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
                         spreadRadius: 2,
@@ -66,7 +66,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                   child: Stack(
                     children: [
                       (eventPicture == null)
-                          ? Center(
+                          ? const Center(
                               child: Icon(
                                 Icons.category_sharp,
                                 color: Colors.black,
@@ -87,7 +87,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                         right: 0,
                         bottom: 0,
                         child: FloatingActionButton(
-                          child: Icon(Icons.add),
+                          child: const Icon(Icons.add),
                           onPressed: () async {
                             File? eventPictureGet = await getImage(ref);
                             setState(() {
@@ -104,7 +104,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                   width: 250,
                   child: TextFormField(
                     controller: _eventName,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Enter Event Name",
                       border: OutlineInputBorder(),
                     ),
@@ -128,7 +128,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 ),
                 Text(
                   'Selected Date ${DateFormat('dd-MM-yyyy').format(selectedDate)}',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -143,7 +143,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 const SizedBox(height: 10),
                 Text(
                   'Selected Time ${selectedTime.format(context)}',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -156,7 +156,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 ),
                 const SizedBox(height: 20),
                 Text('Min Team Size: ${_minTeam.toStringAsFixed(0)}',
-                    style: Theme.of(context).textTheme.bodyText1),
+                    style: Theme.of(context).textTheme.bodyLarge),
                 Slider(
                   value: _minTeam,
                   onChanged: (newValue) {
@@ -171,7 +171,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 ),
                 const SizedBox(height: 20),
                 Text('Max Team Size: ${_maxTeam.toStringAsFixed(0)}',
-                    style: Theme.of(context).textTheme.bodyText1),
+                    style: Theme.of(context).textTheme.bodyLarge),
                 Slider(
                   value: _maxTeam,
                   onChanged: (newValue) {
@@ -189,7 +189,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                   width: 250,
                   child: TextFormField(
                     controller: _payment,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Enter Payment Amount",
                       border: OutlineInputBorder(),
                     ),

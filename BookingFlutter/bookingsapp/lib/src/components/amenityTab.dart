@@ -1,5 +1,6 @@
 import 'package:bookingsapp/src/database/dbAmenity.dart';
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
 
 class AmenityTab extends StatefulWidget {
@@ -11,21 +12,27 @@ class AmenityTab extends StatefulWidget {
 }
 
 class _AmenityTabState extends State<AmenityTab> {
-  late Future<List<dynamic>> _dataIndvFuture;
+  late Future<List<dynamic>> _dataAmenityFuture;
 
   @override
   void initState() {
     super.initState();
 
     setState(() {
-      _dataIndvFuture = getAmmenityUser(widget.userlogged.userId);
+      _dataAmenityFuture = getAmmenityUser(widget.userlogged.userId);
+    });
+  }
+
+  void rebuild() {
+    setState(() {
+      _dataAmenityFuture = getAmmenityUser(widget.userlogged.userId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-      future: _dataIndvFuture,
+      future: _dataAmenityFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -78,6 +85,48 @@ class _AmenityTabState extends State<AmenityTab> {
                             fit: BoxFit.cover,
                           ))),
                 title: Text(item.amenityName),
+                trailing: IconButton(
+                  icon: Icon(
+                    Icons.delete_forever_sharp,
+                    color: Colors.red,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Confirmation'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                  'Are you sure you want to delete this amenity?'),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      await DatabaseQueriesAmenity
+                                          .deleteAmenity(item.amenityId);
+
+                                      setState(() {
+                                        rebuild();
+                                      });
+                                      router.pop();
+                                    },
+                                    child: const Text('Confirm'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               );
             },
           );

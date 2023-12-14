@@ -1,5 +1,6 @@
 import 'package:bookingsapp/src/database/dbEvent.dart';
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +17,12 @@ class _EventTabState extends State<EventTab> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _dataIndvFuture = getEventUser(widget.userlogged.userId);
+    });
+  }
+
+  void rebuild() {
     setState(() {
       _dataIndvFuture = getEventUser(widget.userlogged.userId);
     });
@@ -81,6 +88,48 @@ class _EventTabState extends State<EventTab> {
                           ))),
                 title: Text(item.eventName),
                 subtitle: Text(formattedDateTime),
+                trailing: IconButton(
+                  icon: Icon(
+                    Icons.delete_forever_sharp,
+                    color: Colors.red,
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Confirmation'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                  'Are you sure you want to delete this event?'),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      await DatabaseQueriesEvent.deleteEvent(
+                                          item.eventId);
+
+                                      setState(() {
+                                        rebuild();
+                                      });
+                                      router.pop();
+                                    },
+                                    child: const Text('Confirm'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               );
             },
           );

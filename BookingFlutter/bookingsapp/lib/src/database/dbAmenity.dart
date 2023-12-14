@@ -16,6 +16,15 @@ class DatabaseQueriesAmenity {
     return response;
   }
 
+  static Future<Response> deleteAmenity(String amenityId) async {
+    FormData formData = await getSessionForm();
+    String pathAmenity = AmenityUrls.amenityDetail(amenityId: amenityId);
+    var dio = Dio();
+    var response = await dio.delete(pathAmenity, data: formData);
+
+    return response;
+  }
+
   static Future<Response> getAmenityUser(String userId) async {
     FormData formData = await getSessionForm();
     String pathAmenity = AmenityUrls.amenityUser(userId: userId);
