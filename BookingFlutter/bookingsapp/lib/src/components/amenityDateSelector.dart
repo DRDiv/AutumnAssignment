@@ -2,48 +2,49 @@ import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class DateSelector extends StatefulWidget {
-  final String recurance;
+  final String recurrence;
   final void Function(DateTime) onDateSelected;
 
-  const DateSelector(this.recurance, this.onDateSelected, {super.key});
+  const DateSelector(this.recurrence, this.onDateSelected, {super.key});
   @override
   _DateSelectorState createState() => _DateSelectorState();
 }
 
 class _DateSelectorState extends State<DateSelector> {
-  String recurance = '';
+  String recurrence = '';
   List<DateTime> dates = [];
 
   int selectedIndex = 0;
   @override
   void initState() {
     super.initState();
+    print(widget.recurrence);
 
-    if (widget.recurance == "Daily") {
+    if (widget.recurrence == "D") {
       setState(() {
         dates = List.generate(30, (index) {
           return DateTime.now().add(Duration(days: index));
         });
       });
-    } else if (widget.recurance == "Weekly") {
+    } else if (widget.recurrence == "W") {
       setState(() {
         dates = List.generate(15, (index) {
           return DateTime.now().add(Duration(days: index * 7));
         });
       });
-    } else if (widget.recurance == "Monthly") {
+    } else if (widget.recurrence == "M") {
       setState(() {
         dates = List.generate(3, (index) {
           return DateTime.now().add(Duration(days: index * 30));
         });
       });
-    } else if (widget.recurance == "Yearly") {
+    } else if (widget.recurrence == "Y") {
       setState(() {
         dates = List.generate(1, (index) {
           return DateTime.now().add(Duration(days: index * 365));
         });
       });
-    } else if (widget.recurance == "Onetime") {
+    } else if (widget.recurrence == "O") {
       setState(() {
         dates = List.generate(1, (index) {
           return DateTime.now().add(Duration(days: index));

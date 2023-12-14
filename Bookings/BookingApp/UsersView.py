@@ -12,6 +12,8 @@ from django.views import View
 from rest_framework import generics,status
 from rest_framework.response import Response
 from decouple import Config
+
+from BookingApp.permissions import isAuthorized, isUser
 from .models import *
 from .serializers import *
 
@@ -23,9 +25,7 @@ class CustomOAuthAuthorizeView(View):
       
         response=request.GET.get('reponse')
         return response
-class UserListView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+
 
 class AdminLogin(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -126,9 +126,10 @@ class UserLogin(generics.ListCreateAPIView):
             else:
                 return redirect(ip+'user/')
 
-class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes=[isAuthorized]
     def create(self, request, *args, **kwargs):
         user_id = request.data.get('userId')
         try:
@@ -152,16 +153,9 @@ class AddPenalty(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance)
         return redirect(ip+'user/')
 
-class UserByName(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-
-    def retrieve(self, request, *args, **kwargs):
-        username = self.kwargs.get('username')
-        user = get_object_or_404(self.get_queryset(), userName=username)
-        return Response({'userId': user.userId})
 class UserSessionView(generics.RetrieveAPIView):
-    queryset = User.objects.all()  # Replace 'User' with your actual User model
-
+    queryset = User.objects.all() 
+    permission_classes=[isAuthorized]
     def retrieve(self, request, *args, **kwargs):
         userSession = self.kwargs.get('userSession')
         
@@ -169,10 +163,10 @@ class UserSessionView(generics.RetrieveAPIView):
                 
         return Response({'userId': user.userId})
 
-class UserRegex(generics.ListCreateAPIView):
+class UserRegex(generics.ListAPIView):
     lookup_field = 'userName'
     serializer_class = UserSerializer
-
+    permission_classes=[isUser]
     def get_queryset(self):
         substring = self.kwargs.get('userName')
         if substring is not None:
@@ -181,10 +175,10 @@ class UserRegex(generics.ListCreateAPIView):
             queryset = User.objects.all()
         return queryset
         
-class UserUpdateSessionView(generics.RetrieveUpdateDestroyAPIView):
+class UserUpdateSessionView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
+    permission_classes=[isAuthorized]
     def put(self, request, *args, **kwargs):
         instance = self.get_object()
         session = self.kwargs.get('userSession')  

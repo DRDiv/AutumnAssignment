@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final ip = StateProvider<String>((ref) => "http://192.168.29.33:8000");
-final String ipAdd = "http://192.168.29.33:8000";
+const String ipAdd = "http://192.168.29.33:8000";
+const String urlLogin = "$ipAdd/userlogin/";
+const String urlRedirect =
+    "https://channeli.in/oauth/authorise/?client_id=1XDTUULqBMBdeIy4GyMEBuAwl8CWTjvzeTpr29Hy&redirect_uri=http%3A%2F%2F192.168.29.33%3A8000%2Fuserlogin%2F&state=done";
 
 class EventUrls {
   static String event = '$ipAdd/event/';
@@ -38,10 +41,6 @@ class AmenityUrls {
 }
 
 class BookingUrls {
-  static String deleteBooking({required String bookingId}) {
-    return "$ipAdd/booking/$bookingId/";
-  }
-
   static String requestToBooking({required String reqId}) {
     return "$ipAdd/request/tobooking/$reqId";
   }

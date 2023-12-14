@@ -17,9 +17,10 @@ class Amenity {
 
     amenityPicture = responseData['amenityPicture'] ?? "";
 
-    recurrence = responseData['recurrance'];
+    recurrence = responseData['recurrence'];
     amenityDate = date;
     amenitySlot = slot;
+
     userProvider = User.set(
         (await DatabaseQueriesUser.getUserDetails(responseData['userProvider']))
             .data);

@@ -16,6 +16,12 @@ class AmenitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Amenity
         fields = '__all__'  
+    def create(self, validated_data):
+        
+      
+        amenity = Amenity.objects.create(**validated_data)
+        
+        return amenity
 class AmenitySlotSerializer(serializers.ModelSerializer):
     class Meta:
         model = AmenitySlot
@@ -27,7 +33,14 @@ class RequestSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = '__all__'  
+        fields = '__all__'
+
+    def create(self, validated_data):
+      
+      
+        event = Event.objects.create(**validated_data)
+        
+        return event
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking

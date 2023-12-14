@@ -1,11 +1,10 @@
-import json
-from urllib.parse import urlencode
 
-import requests
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
-from rest_framework import generics
+
+from django.shortcuts import get_object_or_404
+from rest_framework import generics,status
 from rest_framework.response import Response
+
+from BookingApp.permissions import isAdmin, isAuthorized, isUser
 
 from .models import *
 from .serializers import *
@@ -16,28 +15,39 @@ def parse_time(time_str):
     time_str = time_str.replace('TimeOfDay(', '').replace(')', '')
     hours, minutes = map(int, time_str.split(':'))
     return time(hours, minutes)
-class AmenityListView(generics.ListCreateAPIView):
+class AmenityListView(generics.CreateAPIView):
     queryset = Amenity.objects.all()
     serializer_class = AmenitySerializer
-    def post(self, request, *args, **kwargs):
-        print(request.data)
-        userId=request.data.get('userId')
-        amenityName=request.data.get('amenityName')
+    permission_classes=[isAdmin]
+    def create(self, request, *args, **kwargs):
       
-        recurance=request.data.get('recurance')
-        amenityPicture=request.data.get('amenityPicture')
-        user=get_object_or_404(User.objects.all(),userId=userId)
+        # userId=request.data.get('userId')
+        # amenityName=request.data.get('amenityName')
+      
+        # recurance=request.data.get('recurance')
+        # amenityPicture=request.data.get('amenityPicture')
+        # user=get_object_or_404(User.objects.all(),userId=userId)
+        
+      
+        # amenity=Amenity(
+        #     amenityName=amenityName,
+        #     amenityPicture=amenityPicture,
+        #     userProvider=user,
+        #     recurrance=recurance,
+        #     capacity=capacity,
+        # )
+        # amenity.save()
+        frequency_map={'daily': 'D', 'weekly': 'W', 'monthly': 'M', 'yearly': 'Y', 'onetime': 'O'}
+        request.data['recurrence'] = frequency_map.get(request.data.get('recurrence'))
+        serializer = self.get_serializer(data=request.data)
+        
+        serializer.is_valid(raise_exception=False)
+        print(serializer.errors)
+        user = get_object_or_404(User.objects.all(), userId=request.data.get('userId'))
+        amenity=serializer.save(userProvider=user)
         start_times = [parse_time(start_time_str) for start_time_str in request.data.getlist('startTimes')]
         end_times = [parse_time(end_time_str) for end_time_str in request.data.getlist('endTimes')]
         capacity=request.data.get('capacity')
-        amenity=Amenity(
-            amenityName=amenityName,
-            amenityPicture=amenityPicture,
-            userProvider=user,
-            recurrance=recurance,
-            capacity=capacity,
-        )
-        amenity.save()
         for index in range(len(start_times)):
             amenitySlot=AmenitySlot(
                 amenity=amenity,
@@ -47,33 +57,28 @@ class AmenityListView(generics.ListCreateAPIView):
                 capacity=capacity,
             )
             amenitySlot.save()
-        return Response()
-
-class AmenityDetailView(generics.RetrieveUpdateDestroyAPIView):
+        return Response(status=status.HTTP_201_CREATED)
+class AmenityDetailView(generics.RetrieveDestroyAPIView):
     queryset = Amenity.objects.all()
     serializer_class = AmenitySerializer
+    permission_classes = [isAuthorized]
 
-class AmenityByName(generics.RetrieveAPIView):
-    queryset = Amenity.objects.all()
-
-    def retrieve(self, request, *args, **kwargs):
-        amenityname = self.kwargs.get('username')
-        amenity = get_object_or_404(self.get_queryset(), amenityName=amenityname)
-        return Response({'amenityId': amenity.amenityId})
 class AmenityRegex(generics.ListCreateAPIView):
     lookup_field = 'amenityName'
     serializer_class = AmenitySerializer
-
+    permission_classes=[isUser]
     def get_queryset(self):
         substring = self.kwargs.get('amenityName')
         if substring is not None:
             queryset = Amenity.objects.filter(amenityName__icontains=substring)
+            print(queryset)
         else:
             queryset = Amenity.objects.all()
         return queryset
 class AmmenitySlotTiming(generics.ListCreateAPIView):
     lookup_field = 'amenity'
     serializer_class = AmenitySlotSerializer
+    permission_classes=[isUser]
     def get_queryset(self):
         
         amenity = self.kwargs.get('amenityId')
@@ -85,6 +90,7 @@ class AmmenitySlotTiming(generics.ListCreateAPIView):
 class AmmenityUserProvider(generics.ListCreateAPIView):
     lookup_field ='userProvider'
     serializer_class=AmenitySerializer
+    permission_classes=[isAdmin]
     def get_queryset(self):
         userProvider = self.kwargs.get('userProvider')
         user=get_object_or_404(User.objects.all(),userId=userProvider)

@@ -1,20 +1,18 @@
-import json
-from urllib import response
-from urllib.parse import urlencode
 
-import requests
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.response import Response
+
+from BookingApp.permissions import isUser
 
 from .models import *
 from .serializers import *
 
 
-class TeamListView(generics.ListCreateAPIView):
+class TeamListView(generics.CreateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
+    permission_classes=[isUser]
     def post(self, request, *args, **kwargs):
       
         teamName = request.data.get('teamName')
@@ -41,22 +39,16 @@ class TeamListView(generics.ListCreateAPIView):
         team.users.set(userobj)
         return Response()
 
-class TeamDetailView(generics.RetrieveUpdateDestroyAPIView):
+class TeamDetailView(generics.RetrieveDestroyAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
+    permission_classes=[isUser]
 
-class TeamByName(generics.RetrieveAPIView):
-    queryset = Team.objects.all()
 
-    def retrieve(self, request, *args, **kwargs):
-        teamname = self.kwargs.get('username')
-        team = get_object_or_404(self.get_queryset(), teamName=teamname)
-        return Response({'teamId': team.teamId})
-
-class ReqToTeam(generics.RetrieveUpdateDestroyAPIView):
+class ReqToTeam(generics.CreateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
- 
+    permission_classes=[isUser]
     def post(self, request, *args, **kwargs):
         
         team = self.get_object()
@@ -81,7 +73,7 @@ class ReqToTeam(generics.RetrieveUpdateDestroyAPIView):
 class AddUserToTeamView(generics.UpdateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-
+    permission_classes=[isUser]
     def get(self, request, *args, **kwargs):
        
         team = self.get_object()
@@ -99,7 +91,7 @@ class AddUserToTeamView(generics.UpdateAPIView):
 class MakeAdmin(generics.UpdateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-
+    permission_classes=[isUser]
     def get(self, request, *args, **kwargs):
         team = self.get_object()
         userid = kwargs.get('userId')
@@ -114,7 +106,7 @@ class MakeAdmin(generics.UpdateAPIView):
     
 class TeamUser(generics.ListAPIView):
     serializer_class = TeamSerializer  
-
+    permission_classes=[isUser]
     def get_queryset(self):
         user_id = self.kwargs.get('user_id')
         try:

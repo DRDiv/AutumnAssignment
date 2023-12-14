@@ -1,44 +1,56 @@
 import 'dart:io';
 
 import 'package:bookingsapp/src/constants/urls.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DatabaseQueriesAmenity {
   static Future<Response> getAmenityDetails(String amenityId) async {
+    FormData formData = await getSessionForm();
     String pathAmenity = AmenityUrls.amenityDetail(amenityId: amenityId);
     var dio = Dio();
-    var response = await dio.get(pathAmenity);
+    var response = await dio.get(pathAmenity, data: formData);
 
     return response;
   }
 
   static Future<Response> getAmenityUser(String userId) async {
+    FormData formData = await getSessionForm();
     String pathAmenity = AmenityUrls.amenityUser(userId: userId);
     var dio = Dio();
-    var response = await dio.get(pathAmenity);
+    var response = await dio.get(pathAmenity, data: formData);
 
     return response;
   }
 
   static Future<Response> getAmenitySlot(String amenityId) async {
+    FormData formData = await getSessionForm();
     String pathAmenity = AmenityUrls.amenitySlot(amenityId: amenityId);
     var dio = Dio();
-    var response = await dio.get(pathAmenity);
+    var response = await dio.get(pathAmenity, data: formData);
 
     return response;
   }
 
   static Future<Response> getAmenityRegex(String like) async {
+    FormData formData = await getSessionForm();
     String pathEvent = AmenityUrls.amenityRegex(like: like);
     var dio = Dio();
-    var response = await dio.get(pathEvent);
+    var response = await dio.get(pathEvent, data: formData);
 
     return response;
   }
 
-  static Future<void> createAmenity(String amenityName, String userId,
-      String recuracne, List<dynamic> slot, File? image, double capcity) async {
+  static Future<void> createAmenity(
+      String amenityName,
+      String userId,
+      String recurrence,
+      List<dynamic> slot,
+      File? image,
+      double capcity) async {
+    String session_token = await getSessionToken();
     String path = AmenityUrls.amenity;
     FormData formData;
     List<dynamic> startTimes = slot.map((slots) => slots.startTime).toList();
@@ -47,9 +59,10 @@ class DatabaseQueriesAmenity {
     var dio = Dio();
     if (image != null) {
       formData = FormData.fromMap({
+        "session_token": session_token,
         "userId": userId,
         "amenityName": amenityName,
-        "recurance": recuracne,
+        "recurrence": recurrence.toLowerCase(),
         'eventPicture': await MultipartFile.fromFile(image.path,
             filename: '${image.hashCode}.jpg'),
         "startTimes": startTimes,
@@ -58,9 +71,10 @@ class DatabaseQueriesAmenity {
       });
     } else {
       formData = FormData.fromMap({
+        "session_token": session_token,
         "userId": userId,
         "amenityName": amenityName,
-        "recurance": recuracne,
+        "recurrence": recurrence.toLowerCase(),
         "startTimes": startTimes,
         "endTimes": endTimes,
         "capacity": capcity.toInt(),
@@ -72,6 +86,7 @@ class DatabaseQueriesAmenity {
 
 Future<List<Amenity>> getAmenity(String like) async {
   var response = await DatabaseQueriesAmenity.getAmenityRegex(like);
+
   List<Amenity> amenity = [];
 
   for (var indv in response.data) {

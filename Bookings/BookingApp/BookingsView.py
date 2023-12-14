@@ -1,11 +1,7 @@
-import json
-from urllib.parse import urlencode
 
-import requests
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
 from rest_framework import generics
-from rest_framework.response import Response
+
+from BookingApp.permissions import isAuthorized
 
 from .models import *
 from .serializers import *
@@ -13,20 +9,12 @@ from django.utils import timezone
 from django.db.models import Q
 
 
-class BookingListView(generics.ListCreateAPIView):
-    queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
-
-class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
-
 
 
 class BookingUserView(generics.ListCreateAPIView):
     
     serializer_class = BookingSerializer
-
+    permission_classes=[isAuthorized]
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         queryset = Booking.objects.filter(
@@ -38,7 +26,7 @@ class BookingUserView(generics.ListCreateAPIView):
 
 class BookingTeamView(generics.ListCreateAPIView):
     serializer_class = BookingSerializer
-
+    permission_classes=[isAuthorized]
     def get_queryset(self):
         user_id = self.kwargs['user_id']  
 

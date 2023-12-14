@@ -1,23 +1,21 @@
 from datetime import datetime
-import json
-from urllib.parse import urlencode
-import uuid
 from rest_framework import status
-import requests
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.response import Response
+
+from BookingApp.permissions import isAdmin, isAuthorized, isUser
 
 from .models import *
 from .serializers import *
 from django.db.models import Q
 
 
-class RequestListView(generics.ListCreateAPIView):
+class RequestListView(generics.CreateAPIView):
     queryset = Request.objects.all()
     serializer_class = RequestSerializer
-    def post(self, request):
+    permission_classes=[isUser]
+    def create(self, request):
         queryset = Request.objects.all()
         
         event_id = request.data.get('event_id') 
@@ -78,7 +76,11 @@ class RequestListView(generics.ListCreateAPIView):
                 
                 if query.count()!=0:
                     return Response({'message':f"Booking Already Pending for {userind.userName}"})
-            
+
+                query=queryset.filter(  individuals__in=userobj,amenity=amenity).all()
+              
+                if query.count()>1:
+                    return Response({'message':f"{userind.userName} has Exceeded  Limit for Requests "})
             availability=AmenitySlot.objects.all().filter(amenity=amenity,amenityDate=dateSlot,amenitySlotStart__contains=timeStart)
             if (availability.count()>0 and availability.first().capacity<len(users)) or (amenity.capacity<len(users)):
                 return Response({"message":"Count of people exceeds capacity"})
@@ -104,16 +106,18 @@ class RequestListView(generics.ListCreateAPIView):
 class RequestDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Request.objects.all()
     serializer_class = RequestSerializer
+    permission_classes=[isAuthorized]
 class RequestProvider(generics.ListAPIView):
     lookup_field = "userProvider"
     serializer_class = RequestSerializer
-
+    permission_classes=[isAuthorized]
     def get_queryset(self):
         userId = self.kwargs['userProvider']
         queryset = Request.objects.filter(userProvider=userId)
         return queryset
 class RequestByUser(generics.ListAPIView):
     serializer_class=RequestSerializer
+    permission_classes=[isAuthorized]
     def get_queryset(self):
         userId = self.kwargs['userId']
 
@@ -122,7 +126,7 @@ class RequestByUser(generics.ListAPIView):
 class RequestToBooking(generics.RetrieveUpdateDestroyAPIView):
     queryset=Request.objects.all()
     serializer_class = RequestSerializer
-
+    permission_classes=[isAdmin]
     def get(self, request, *args, **kwargs):
         requestObj = self.get_object()
 

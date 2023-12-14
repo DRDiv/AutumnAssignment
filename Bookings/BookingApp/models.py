@@ -31,7 +31,7 @@ class Amenity(models.Model):
     amenityPicture=models.ImageField(upload_to='images/amenity/',blank=True)
     userProvider=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
 
-    recurrance=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
+    recurrence=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
     capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
     
 class AmenitySlot(models.Model):

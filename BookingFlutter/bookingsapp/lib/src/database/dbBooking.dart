@@ -8,18 +8,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DatabaseQueriesBookings {
-  static Future<Response> deleteBooking(String bookingId) async {
-    String pathUser = BookingUrls.deleteBooking(bookingId: bookingId);
-    var dio = Dio();
-    var response = await dio.delete(pathUser);
-
-    return response;
-  }
-
   static Future<Response> requestToBooking(String reqId) async {
-    String pathUser = BookingUrls.requestToBooking(reqId: reqId);
+    String pathBooking = BookingUrls.requestToBooking(reqId: reqId);
     var dio = Dio();
-    var response = await dio.get(pathUser);
+    var response = await dio.get(pathBooking);
 
     return response;
   }

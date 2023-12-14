@@ -1,8 +1,28 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+
+Future<FormData> getSessionForm() async {
+  const storage = FlutterSecureStorage();
+
+  String session_token = await storage.read(key: "sessionToken") ?? " ";
+  FormData formData = FormData.fromMap({
+    "session_token": session_token,
+  });
+  return formData;
+}
+
+Future<String> getSessionToken() async {
+  const storage = FlutterSecureStorage();
+
+  String session_token = await storage.read(key: "sessionToken") ?? " ";
+
+  return session_token;
+}
 
 Future<File?> getImage(WidgetRef container) async {
   final pickedImage =

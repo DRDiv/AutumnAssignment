@@ -1,80 +1,60 @@
-from datetime import datetime
-import json
-from urllib.parse import urlencode
-
-import requests
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views import View
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.response import Response
-
+from BookingApp.permissions import isAdmin, isAuthorized, isUser
 from .models import *
 from .serializers import *
+from rest_framework import generics, status
 
-
-class EventListView(generics.ListCreateAPIView):
+class EventListView(generics.CreateAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    def post(self, request, *args):
-        print(request.data)
-        userId=request.data.get('userId')
-        eventName=request.data.get('eventName')
-        eventDate=request.data.get('eventDate')
-        minTeamSize=request.data.get('minTeamSize')
-        maxTeamSize=request.data.get('maxTeamSize')
-        payment=request.data.get('payment')
-        eventPicture=request.data.get('eventPicture')
-        user=get_object_or_404(User.objects.all(),userId=userId)
-        eventDate = timezone.make_aware(datetime.fromisoformat(eventDate))
-        event=Event(
-            eventName=eventName, 
-            eventPicture=eventPicture, 
-            eventDate=eventDate,
-            minTeamSize=minTeamSize,
-            maxTeamSize=maxTeamSize,
-            payment=payment,
-            userProvider=user
+    permission_classes = [isAdmin]
 
-        )
-        event.save()
-        return Response()
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
+        
+        user = get_object_or_404(User.objects.all(), userId=request.data.get('userId'))
+        event = serializer.save(userProvider=user)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+class EventDetailView(generics.RetrieveDestroyAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    permission_classes = [isAuthorized]
 
-class EventByName(generics.RetrieveAPIView):
-    queryset = Event.objects.all()
 
-    def retrieve(self, request, *args, **kwargs):
-        eventname = self.kwargs.get('username')
-        event = get_object_or_404(self.get_queryset(), eventName=eventname)
-        return Response({'eventId': event.eventId})
     
 class EventUpdateView(generics.UpdateAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-
+    permission_classes = [isAdmin]
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-class EventRegex(generics.ListCreateAPIView):
+    
+class EventRegex(generics.ListAPIView):
     lookup_field = 'eventName'
     serializer_class = EventSerializer
-
+    permission_classes=[isUser]
     def get_queryset(self):
         substring = self.kwargs.get('eventName')
         if substring is not None:
             queryset = Event.objects.filter(eventName__icontains=substring, eventDate__gt=timezone.now())
         else:
             queryset = Event.objects.all()
-        return queryset
-class EventUserProvider(generics.ListCreateAPIView):
+        return queryset 
+class EventUserProvider(generics.ListAPIView):
     lookup_field ='userProvider'
     serializer_class=EventSerializer
+    permission_classes = [isAdmin]
+
     def get_queryset(self):
         userProvider = self.kwargs.get('userProvider')
         user=get_object_or_404(User.objects.all(),userId=userProvider)
