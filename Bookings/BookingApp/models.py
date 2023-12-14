@@ -20,6 +20,7 @@ class Event(models.Model):
     eventName=models.CharField(max_length=100)
     eventPicture=models.ImageField(upload_to='images/',null=True,blank=True)
     eventDate=models.DateTimeField(default=timezone.now)
+    description=models.TextField(default="No Description")
     userProvider=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     minTeamSize=models.IntegerField(validators=[MinValueValidator(1)] ,default=1)
     maxTeamSize=models.IntegerField(default=1)
@@ -30,7 +31,7 @@ class Amenity(models.Model):
     amenityName=models.CharField(max_length=100)
     amenityPicture=models.ImageField(upload_to='images/amenity/',blank=True)
     userProvider=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
-
+    description=models.TextField(default="No Description")
     recurrence=models.CharField(default='D',choices=[('D','daily'),('W','weekly'),('M','monthly'),('Y','yearly'),('O','onetime')])
     capacity=models.IntegerField(validators=[MinValueValidator(1)],default=1 )
     

@@ -2,6 +2,7 @@ import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/database/dbBooking.dart';
 import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/models/request.dart';
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
         _requests.add(request);
       });
     }
+
     setState(() {
       _isLoading = false;
     });
@@ -53,6 +55,13 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                 .copyWith(color: Colors.white),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  router.go("/adminProfile");
+                },
+                icon: const Icon(Icons.person))
+          ],
         ),
         body: RefreshIndicator(
           onRefresh: () async {
@@ -89,9 +98,9 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                                 DismissDirection.startToEnd) {
                               await DatabaseQueriesBookings.requestToBooking(
                                   request.requestId);
-                              setState(() {
-                                _requests.removeAt(index);
-                              });
+                              // setState(() {
+                              //   _requests.removeAt(index);
+                              // });
                             }
                           },
                           secondaryBackground: Container(

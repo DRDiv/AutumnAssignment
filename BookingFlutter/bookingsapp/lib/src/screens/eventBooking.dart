@@ -83,12 +83,29 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                     )),
                             ),
                           ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text(
+                              _event.eventName,
+                              style: Theme.of(context).textTheme.displayLarge!,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              _event.eventName,
+                              _event.description,
                               style: Theme.of(context).textTheme.bodyLarge!,
+                              textAlign: TextAlign.center,
                             ),
+                          ),
+                          const SizedBox(
+                            height: 10,
                           ),
                           (_event.payment > 0)
                               ? InkWell(

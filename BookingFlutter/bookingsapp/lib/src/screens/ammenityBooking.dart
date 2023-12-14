@@ -30,6 +30,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
   bool _isLoading = true;
   DateTime _selectedDate = DateTime.now();
   String _selectedTime = '';
+
   Future<void> setData() async {
     Amenity a = Amenity.defaultAmenity();
     await a.setData(
@@ -104,15 +105,29 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                     )),
                             ),
                           ),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.all(2.0),
                             child: Text(
                               _amenity.amenityName,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(color: Colors.white),
+                              style: Theme.of(context).textTheme.displayLarge!,
                             ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text(
+                              _amenity.description,
+                              style: Theme.of(context).textTheme.bodySmall!,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
                           ),
                           SizedBox(
                               height: 200,
@@ -163,7 +178,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                 });
                           },
                           child: const Text("Add Group Members")),
-                      const SizedBox(height: 100),
+                      const SizedBox(height: 50),
                       ElevatedButton(
                           onPressed: () async {
                             dynamic response = await DatabaseQueriesRequest

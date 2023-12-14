@@ -1,6 +1,7 @@
 import 'package:bookingsapp/src/components/amenityTab.dart';
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/components/eventTab.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
@@ -59,9 +60,15 @@ class AdminManage extends ConsumerStatefulWidget {
 }
 
 class _AdminManageState extends ConsumerState<AdminManage> {
+  void method() async {
+    String s = await getSessionToken();
+    print(s);
+  }
+
   @override
   void initState() {
     super.initState();
+    method();
   }
 
   @override

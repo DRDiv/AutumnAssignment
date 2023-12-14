@@ -129,8 +129,9 @@ class UserLogin(generics.ListCreateAPIView):
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes=[isAuthorized]
+    
     def create(self, request, *args, **kwargs):
+        
         user_id = request.data.get('userId')
         try:
             User.objects.get(userId=user_id)
@@ -178,7 +179,7 @@ class UserRegex(generics.ListAPIView):
 class UserUpdateSessionView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes=[isAuthorized]
+   
     def put(self, request, *args, **kwargs):
         instance = self.get_object()
         session = self.kwargs.get('userSession')  

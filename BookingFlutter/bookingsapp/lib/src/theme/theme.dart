@@ -28,7 +28,7 @@ class FontsCustom {
     fontFamily: 'OpenSans',
     fontSize: 18,
     fontWeight: FontWeight.w400,
-    color: Colors.black54,
+    color: Colors.black87,
   );
 
   static final TextStyle bodyHeading = TextStyle(
@@ -42,7 +42,7 @@ class FontsCustom {
     fontFamily: 'OpenSans',
     fontSize: 15,
     fontWeight: FontWeight.w500,
-    color: Colors.black54,
+    color: Colors.black87,
   );
 
   static final TextStyle smallText = TextStyle(
@@ -158,6 +158,33 @@ class AppTheme {
           behavior: SnackBarBehavior.floating,
           backgroundColor: ColorSchemes.tertiaryColor,
           contentTextStyle: TextStyle(color: Colors.black),
+        ),
+        progressIndicatorTheme: ProgressIndicatorThemeData(
+          color: ColorSchemes
+              .primaryColor, // Set the color of the progress indicator
+          circularTrackColor: ColorSchemes
+              .tertiaryColor, // Set the color of the track (background)
+        ),
+        dialogTheme: DialogTheme(
+          titleTextStyle: TextStyle(
+            color: Colors.black87,
+            fontFamily: 'Montserrat',
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+          contentTextStyle: TextStyle(
+            color: Colors.black87,
+            fontFamily: 'OpenSans',
+            fontSize: 16.0,
+            fontWeight: FontWeight.normal,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          backgroundColor: ColorSchemes.backgroundColor,
+          elevation: 4.0,
+          actionsPadding: EdgeInsets.all(8.0),
+          shadowColor: Colors.black,
         ),
         iconTheme: IconThemeData(
           color: ColorSchemes.whiteColor,

@@ -1,12 +1,12 @@
 import 'package:bookingsapp/src/constants/urls.dart';
 import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 
 class WebViewScreen extends ConsumerStatefulWidget {
   const WebViewScreen({super.key});
@@ -22,7 +22,7 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
   bool finished = false;
   void initState() {
     super.initState();
-    String ipAdd = ref.read(ip);
+
     url = urlLogin;
   }
 
@@ -56,7 +56,7 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
                   ref.read(userLogged).userId,
                   url.queryParameters['sessionToken']!);
 
-              context.go("/home");
+              router.go("/home");
             }
           },
         ),

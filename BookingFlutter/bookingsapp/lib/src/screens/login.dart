@@ -50,9 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AdminLoginCard(
-                      onLogin: () {},
-                    ),
+                    AdminLoginCard(),
                     SizedBox(height: 20),
                     Card(
                       elevation: 3,

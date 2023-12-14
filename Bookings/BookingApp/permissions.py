@@ -8,7 +8,7 @@ class isAuthorized(permissions.BasePermission):
         # Ensure that the session token is provided in the request data
         
         session_token = request.data.get('session_token')
-      
+        print(request.data)
         if not session_token:
             return False
 
@@ -23,7 +23,7 @@ class isAdmin(permissions.BasePermission):
         # Ensure that the session token is provided in the request data
         
         session_token = request.data.get('session_token')
-        # print(request.data)
+        print(request.data)
         if not session_token:
             return False
         try:

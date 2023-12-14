@@ -2,8 +2,6 @@ import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 
 // ignore: non_constant_identifier_names
 BottomAppBar BottomAppBarUser(BuildContext context, User userlogged) {
@@ -15,7 +13,7 @@ BottomAppBar BottomAppBarUser(BuildContext context, User userlogged) {
         child: IconButton(
             tooltip: 'Home',
             onPressed: () {
-              context.go("/home");
+              router.go("/home");
             },
             icon: Column(
               children: [
@@ -33,7 +31,7 @@ BottomAppBar BottomAppBarUser(BuildContext context, User userlogged) {
         child: IconButton(
             tooltip: 'Your Teams',
             onPressed: () {
-              context.go("/team");
+              router.push("/team");
             },
             icon: Column(
               children: [
@@ -78,7 +76,7 @@ BottomAppBar BottomAppBarAdmin(BuildContext context, WidgetRef ref) {
       Expanded(
         child: IconButton(
             onPressed: () {
-              context.go("/homeAdmin");
+              router.go("/homeAdmin");
             },
             icon: Column(
               children: [
@@ -128,10 +126,8 @@ BottomAppBar BottomAppBarAdmin(BuildContext context, WidgetRef ref) {
       ),
       Expanded(
         child: IconButton(
-            onPressed: () async {
-              final storage = new FlutterSecureStorage();
-              await storage.deleteAll();
-              context.go("/adminManage");
+            onPressed: () {
+              router.go("/adminManage");
             },
             icon: Column(
               children: [
@@ -145,25 +141,6 @@ BottomAppBar BottomAppBarAdmin(BuildContext context, WidgetRef ref) {
               ],
             )),
       ),
-      Expanded(
-        child: IconButton(
-            onPressed: () async {
-              final storage = new FlutterSecureStorage();
-              await storage.deleteAll();
-              context.go("/login");
-            },
-            icon: Column(
-              children: [
-                const Icon(
-                  Icons.logout,
-                ),
-                Text(
-                  'Logout',
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
-              ],
-            )),
-      )
     ],
   ));
 }

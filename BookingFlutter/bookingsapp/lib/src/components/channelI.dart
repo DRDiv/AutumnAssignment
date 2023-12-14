@@ -1,6 +1,6 @@
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 
 // ignore: non_constant_identifier_names
 Container ChannelIButton(BuildContext context, double screenWidth) {
@@ -22,7 +22,7 @@ Container ChannelIButton(BuildContext context, double screenWidth) {
         ],
       ),
       onPressed: () {
-        context.go("/webview");
+        router.go("/webview");
       },
     ),
   );

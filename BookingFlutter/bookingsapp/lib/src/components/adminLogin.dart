@@ -1,15 +1,13 @@
 import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 
 class AdminLoginCard extends ConsumerStatefulWidget {
-  final VoidCallback onLogin;
-
-  const AdminLoginCard({super.key, required this.onLogin});
+  const AdminLoginCard({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _AdminLoginCardState();
@@ -87,6 +85,7 @@ class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
                   ref.read(userLogged.notifier).state = User.set(response.data);
 
                   const storage = FlutterSecureStorage();
+
                   await storage.write(
                     key: "sessionToken",
                     value: admin.data['sessionToken'],
@@ -96,8 +95,7 @@ class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
                     admin.data['sessionToken']!,
                   );
 
-                  // ignore: use_build_context_synchronously
-                  context.go("/homeAdmin");
+                  router.go("/homeAdmin");
                 } else {
                   // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(

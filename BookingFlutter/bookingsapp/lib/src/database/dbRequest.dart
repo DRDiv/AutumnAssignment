@@ -1,30 +1,35 @@
 import 'dart:io';
 
 import 'package:bookingsapp/src/constants/urls.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/request.dart';
 import 'package:dio/dio.dart';
 
 class DatabaseQueriesRequest {
   static Future<Response> getUserRequest(String userId) async {
+    FormData formData = await getSessionForm();
     String pathUser = RequestUrls.getUserRequest(userId: userId);
     var dio = Dio();
-    var response = await dio.get(pathUser);
+    var response = await dio.get(pathUser, data: formData);
 
     return response;
   }
 
   static Future<dynamic> makeEventRequest(
       String eventId, String teamId, File? image) async {
+    String session_token = await getSessionToken();
     String path = RequestUrls.makeEventRequest();
     var dio = Dio();
     FormData formData;
     if (image == null) {
       formData = FormData.fromMap({
+        "session_token": session_token,
         'event_id': eventId,
         'team_id': teamId,
       });
     } else {
       formData = FormData.fromMap({
+        "session_token": session_token,
         'event_id': eventId,
         'team_id': teamId,
         'payment_image':
@@ -37,11 +42,13 @@ class DatabaseQueriesRequest {
 
   static Future<dynamic> makeAmmenityRequest(String amenityId,
       List<String> users, DateTime timeStart, DateTime date) async {
+    String session_token = await getSessionToken();
     String path = RequestUrls.makeAmmenityRequest();
     var dio = Dio();
     FormData formData;
 
     formData = FormData.fromMap({
+      "session_token": session_token,
       'amenity_id': amenityId,
       'users': users,
       'timeStart': timeStart,
@@ -53,17 +60,19 @@ class DatabaseQueriesRequest {
   }
 
   static Future<Response> getRequest(String userId) async {
+    FormData formData = await getSessionForm();
     String pathUser = RequestUrls.getRequest(userId: userId);
     var dio = Dio();
-    var response = await dio.get(pathUser);
+    var response = await dio.get(pathUser, data: formData);
 
     return response;
   }
 
   static Future<Response> deleteRequest(String reqId) async {
+    FormData formData = await getSessionForm();
     String pathUser = RequestUrls.deleteRequest(reqId: reqId);
     var dio = Dio();
-    var response = await dio.delete(pathUser);
+    var response = await dio.delete(pathUser, data: formData);
 
     return response;
   }

@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.views import View
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
@@ -123,11 +124,12 @@ class RequestByUser(generics.ListAPIView):
 
         queryset = Request.objects.filter(   Q(individuals=userId) | Q(teamId__users=userId))
         return queryset
-class RequestToBooking(generics.RetrieveUpdateDestroyAPIView):
-    queryset=Request.objects.all()
+class RequestToBooking(generics.RetrieveAPIView):
+  
     serializer_class = RequestSerializer
     permission_classes=[isAdmin]
     def get(self, request, *args, **kwargs):
+       
         requestObj = self.get_object()
 
         

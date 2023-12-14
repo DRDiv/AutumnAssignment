@@ -1,4 +1,5 @@
 import 'package:bookingsapp/src/screens/adminManage.dart';
+import 'package:bookingsapp/src/screens/adminProfile.dart';
 import 'package:bookingsapp/src/screens/amenityAdmin.dart';
 import 'package:bookingsapp/src/screens/ammenityBooking.dart';
 import 'package:bookingsapp/src/screens/eventAdmin.dart';
@@ -27,6 +28,12 @@ GoRouter router = GoRouter(initialLocation: "/transition", routes: [
     path: "/login",
     pageBuilder: (context, state) {
       return MaterialPage(child: LoginScreen());
+    },
+  ),
+  GoRoute(
+    path: "/adminProfile",
+    pageBuilder: (context, state) {
+      return MaterialPage(child: AdminProfile());
     },
   ),
   GoRoute(

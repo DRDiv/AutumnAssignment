@@ -20,6 +20,8 @@ class EventListView(generics.CreateAPIView):
         event = serializer.save(userProvider=user)
 
         return Response(status=status.HTTP_201_CREATED)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 class EventDetailView(generics.RetrieveDestroyAPIView):
     queryset = Event.objects.all()

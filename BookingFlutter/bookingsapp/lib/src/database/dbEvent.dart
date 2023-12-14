@@ -15,6 +15,7 @@ class DatabaseQueriesEvent {
     int maxTeamSize,
     double payment,
     File? image,
+    String description,
   ) async {
     String session_token = await getSessionToken();
     String path = EventUrls.event;
@@ -31,6 +32,7 @@ class DatabaseQueriesEvent {
         "payment": payment,
         'eventPicture': await MultipartFile.fromFile(image.path,
             filename: '${image.hashCode}.jpg'),
+        "description": description,
       });
     } else {
       formData = FormData.fromMap({
@@ -41,6 +43,7 @@ class DatabaseQueriesEvent {
         "minTeamSize": minTeamSize,
         "maxTeamSize": maxTeamSize,
         "payment": payment,
+        "description": description,
       });
     }
     var response = await dio.post(path, data: formData);

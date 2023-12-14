@@ -37,7 +37,7 @@ class _EventTabState extends State<EventTab> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
             child: Text(
-              "No Amenity Found",
+              "No Event Found",
               style: Theme.of(context).textTheme.bodyLarge!,
             ),
           );

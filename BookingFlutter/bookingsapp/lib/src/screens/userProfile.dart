@@ -3,11 +3,11 @@
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 
 // ignore: must_be_immutable
 class UserProfile extends ConsumerStatefulWidget {
@@ -45,7 +45,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                context.go('/home');
+                router.go('/home');
               },
             ),
             title: Text(
@@ -62,7 +62,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                     const storage = FlutterSecureStorage();
                     await storage.deleteAll();
                     // ignore: use_build_context_synchronously
-                    context.go('/login');
+                    router.go('/login');
                   },
                   icon: Icon(
                     Icons.logout,

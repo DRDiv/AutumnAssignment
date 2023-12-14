@@ -12,9 +12,11 @@ class AmenityTab extends StatefulWidget {
 
 class _AmenityTabState extends State<AmenityTab> {
   late Future<List<dynamic>> _dataIndvFuture;
+
   @override
   void initState() {
     super.initState();
+
     setState(() {
       _dataIndvFuture = getAmmenityUser(widget.userlogged.userId);
     });

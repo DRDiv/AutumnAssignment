@@ -8,7 +8,6 @@ import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 // ignore: must_be_immutable
 class WidgetCustom extends StatefulWidget {
@@ -122,7 +121,7 @@ class _WidgetCustomState extends State<WidgetCustom> {
                               : IconButton(
                                   icon: const Icon(Icons.arrow_forward),
                                   onPressed: () {
-                                    context.push(
+                                    router.push(
                                         '/team/${dataIndv[index].teamId}');
                                   },
                                 ),

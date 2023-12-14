@@ -28,11 +28,12 @@ urlpatterns = [
     path('team/req/<str:pk>/req/', ReqToTeam.as_view(), name='req-user-to-team'),
     path('team/<str:pk>/makeadmin/<str:userId>/', MakeAdmin.as_view(), name='add-user-to-team'),
 
+    path('request/tobooking/<str:pk>/', RequestToBooking.as_view(), name='request-to-booking'),
     path('request/', RequestListView.as_view(), name='request-list'),
     path('request/<str:pk>/', RequestDetailView.as_view(), name='request-detail'),
     path('request/userprovider/<str:userProvider>/', RequestProvider.as_view(), name='request-detail'),
     path('request/user/<str:userId>/', RequestByUser.as_view(), name='request-user'),
-    path('request/tobooking/<str:pk>/', RequestToBooking.as_view(), name='request-to-booking'),
+   
 
     path('event/', EventListView.as_view(), name='event-list'),
     path('event/<str:pk>/', EventDetailView.as_view(), name='event-detail'),

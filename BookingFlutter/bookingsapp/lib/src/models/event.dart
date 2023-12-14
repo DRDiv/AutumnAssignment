@@ -5,9 +5,10 @@ class Event {
   String eventId = "", eventName = "", eventPicture = "", eventDate = "";
   int maxTeamSize = 0, minTeamSize = 0;
   double payment = 0;
+  String description = "";
   User userProvider = User.defaultUser();
   Event(this.eventId, this.eventName, this.eventPicture, this.eventDate,
-      this.maxTeamSize, this.payment, this.userProvider);
+      this.maxTeamSize, this.payment, this.userProvider, this.description);
   Event.defaultEvent();
   Future<void> setData(Map<String, dynamic> responseData) async {
     eventId = responseData["eventId"];
@@ -16,7 +17,7 @@ class Event {
     eventDate = responseData["eventDate"];
     maxTeamSize = responseData["maxTeamSize"];
     minTeamSize = responseData["minTeamSize"];
-
+    description = responseData["description"];
     payment = double.parse(responseData["payment"]);
     userProvider = User.set(
         (await DatabaseQueriesUser.getUserDetails(responseData['userProvider']))

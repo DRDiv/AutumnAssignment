@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bookingsapp/src/components/loading.dart';
 import 'package:bookingsapp/src/components/slotPicker.dart';
 import 'package:bookingsapp/src/database/dbAmenity.dart';
 import 'package:bookingsapp/src/functions/format.dart';
@@ -29,6 +30,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
     'One Time',
   ];
   final TextEditingController _amenityName = TextEditingController();
+  final TextEditingController _amenityDescription = TextEditingController();
   double _capacity = 1.0;
 
   @override
@@ -117,6 +119,21 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
               const SizedBox(
                 height: 20,
               ),
+              Center(
+                child: SizedBox(
+                  width: 250,
+                  child: TextFormField(
+                    controller: _amenityDescription,
+                    maxLines:
+                        3, // Set the number of lines you want for description
+                    decoration: const InputDecoration(
+                        hintText: "Enter Amenity Description"),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               Text('Capacity: ${_capacity.toStringAsFixed(0)}',
                   style: Theme.of(context).textTheme.bodyLarge!),
               Slider(
@@ -181,13 +198,16 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                         ),
                       );
                     }
+                    showLoadingDialog(context);
                     await DatabaseQueriesAmenity.createAmenity(
                         _amenityName.text,
                         ref.read(userLogged).userId,
                         _selectedOption,
                         _slots,
                         amenityPicture,
-                        _capacity);
+                        _capacity,
+                        _amenityDescription.text);
+                    router.pop();
                     router.pop();
                   },
                   child: const Text('Confirm'))

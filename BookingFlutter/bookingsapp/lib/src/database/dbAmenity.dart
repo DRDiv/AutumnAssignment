@@ -4,7 +4,6 @@ import 'package:bookingsapp/src/constants/urls.dart';
 import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DatabaseQueriesAmenity {
   static Future<Response> getAmenityDetails(String amenityId) async {
@@ -49,7 +48,8 @@ class DatabaseQueriesAmenity {
       String recurrence,
       List<dynamic> slot,
       File? image,
-      double capcity) async {
+      double capcity,
+      String description) async {
     String session_token = await getSessionToken();
     String path = AmenityUrls.amenity;
     FormData formData;
@@ -68,6 +68,7 @@ class DatabaseQueriesAmenity {
         "startTimes": startTimes,
         "endTimes": endTimes,
         "capacity": capcity.toInt(),
+        "description": description,
       });
     } else {
       formData = FormData.fromMap({
@@ -78,6 +79,7 @@ class DatabaseQueriesAmenity {
         "startTimes": startTimes,
         "endTimes": endTimes,
         "capacity": capcity.toInt(),
+        "description": description,
       });
     }
     var response = await dio.post(path, data: formData);

@@ -42,7 +42,7 @@ class AmenityUrls {
 
 class BookingUrls {
   static String requestToBooking({required String reqId}) {
-    return "$ipAdd/request/tobooking/$reqId";
+    return "$ipAdd/request/tobooking/$reqId/";
   }
 
   static String getBookingsUser({required String userId}) {

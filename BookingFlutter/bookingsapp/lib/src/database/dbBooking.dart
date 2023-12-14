@@ -2,6 +2,7 @@ import 'package:bookingsapp/src/constants/urls.dart';
 import 'package:bookingsapp/src/database/dbAmenity.dart';
 import 'package:bookingsapp/src/database/dbEvent.dart';
 import 'package:bookingsapp/src/database/dbTeam.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 import 'package:bookingsapp/src/models/event.dart';
 import 'package:dio/dio.dart';
@@ -10,24 +11,29 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class DatabaseQueriesBookings {
   static Future<Response> requestToBooking(String reqId) async {
     String pathBooking = BookingUrls.requestToBooking(reqId: reqId);
+
     var dio = Dio();
-    var response = await dio.get(pathBooking);
+    FormData formData = await getSessionForm();
+
+    var response = await dio.get(pathBooking, data: formData);
 
     return response;
   }
 
   static Future<Response> getBookingsUser(String userId) async {
+    FormData formData = await getSessionForm();
     String pathBooking = BookingUrls.getBookingsUser(userId: userId);
     var dio = Dio();
-    var response = await dio.get(pathBooking);
+    var response = await dio.get(pathBooking, data: formData);
 
     return response;
   }
 
   static Future<Response> getBookingsTeam(String userId) async {
+    FormData formData = await getSessionForm();
     String pathBooking = BookingUrls.getBookingsTeam(userId: userId);
     var dio = Dio();
-    var response = await dio.get(pathBooking);
+    var response = await dio.get(pathBooking, data: formData);
 
     return response;
   }

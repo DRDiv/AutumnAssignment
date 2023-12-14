@@ -1,4 +1,5 @@
 import 'package:bookingsapp/src/constants/urls.dart';
+import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:dio/dio.dart';
@@ -7,16 +8,19 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DatabaseQueriesUser {
   static Future<Response> getCurrentUser(String token) async {
+    FormData formData = await getSessionForm();
     String path = UserUrls.getCurrentUser(token: token);
     var dio = Dio();
-    var response = await dio.get(path);
+    var response = await dio.get(path, data: formData);
     return response;
   }
 
   static Future<Response> adminLogin(String username, String password) async {
+    String session_token = await getSessionToken();
     String path = UserUrls.adminLogin();
     var dio = Dio();
     var formData = FormData.fromMap({
+      "session_token": session_token,
       'username': username,
       'password': password,
     });
@@ -25,26 +29,29 @@ class DatabaseQueriesUser {
   }
 
   static Future<Response> getUserDetails(String userId) async {
+    FormData formData = await getSessionForm();
     String pathUser = UserUrls.getUserDetails(userId: userId);
     var dio = Dio();
-    var response = await dio.get(pathUser);
+    var response = await dio.get(pathUser, data: formData);
 
     return response;
   }
 
   static Future<Response> getUserRegex(String like) async {
+    FormData formData = await getSessionForm();
     String pathUser = UserUrls.getUserRegex(like: like);
     var dio = Dio();
-    var response = await dio.get(pathUser);
+    var response = await dio.get(pathUser, data: formData);
 
     return response;
   }
 
   static Future<Response> updateSessionToken(
       String userId, String token) async {
+    FormData formData = await getSessionForm();
     String path = UserUrls.updateSessionToken(userId: userId, token: token);
     var dio = Dio();
-    var response = await dio.put(path);
+    var response = await dio.put(path, data: formData);
     return response;
   }
 }
