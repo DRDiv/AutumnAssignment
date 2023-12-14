@@ -9,6 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DatabaseQueriesBookings {
+  DatabaseQueriesBookings._();
   static Future<Response> requestToBooking(String reqId) async {
     String pathBooking = BookingUrls.requestToBooking(reqId: reqId);
 

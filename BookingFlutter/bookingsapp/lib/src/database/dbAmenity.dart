@@ -6,6 +6,7 @@ import 'package:bookingsapp/src/models/ammenity.dart';
 import 'package:dio/dio.dart';
 
 class DatabaseQueriesAmenity {
+  DatabaseQueriesAmenity._();
   static Future<Response> getAmenityDetails(String amenityId) async {
     FormData formData = await getSessionForm();
     String pathAmenity = AmenityUrls.amenityDetail(amenityId: amenityId);

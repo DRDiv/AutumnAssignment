@@ -11,42 +11,40 @@ class DateSelector extends StatefulWidget {
 }
 
 class _DateSelectorState extends State<DateSelector> {
-  String recurrence = '';
-  List<DateTime> dates = [];
+  List<DateTime> _dates = [];
 
   int selectedIndex = 0;
   @override
   void initState() {
     super.initState();
-    print(widget.recurrence);
 
     if (widget.recurrence == "D") {
       setState(() {
-        dates = List.generate(30, (index) {
+        _dates = List.generate(30, (index) {
           return DateTime.now().add(Duration(days: index));
         });
       });
     } else if (widget.recurrence == "W") {
       setState(() {
-        dates = List.generate(15, (index) {
+        _dates = List.generate(15, (index) {
           return DateTime.now().add(Duration(days: index * 7));
         });
       });
     } else if (widget.recurrence == "M") {
       setState(() {
-        dates = List.generate(3, (index) {
+        _dates = List.generate(3, (index) {
           return DateTime.now().add(Duration(days: index * 30));
         });
       });
     } else if (widget.recurrence == "Y") {
       setState(() {
-        dates = List.generate(1, (index) {
+        _dates = List.generate(1, (index) {
           return DateTime.now().add(Duration(days: index * 365));
         });
       });
     } else if (widget.recurrence == "O") {
       setState(() {
-        dates = List.generate(1, (index) {
+        _dates = List.generate(1, (index) {
           return DateTime.now().add(Duration(days: index));
         });
       });
@@ -75,13 +73,13 @@ class _DateSelectorState extends State<DateSelector> {
             height: 100.0,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: dates.length,
+              itemCount: _dates.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
                       selectedIndex = index;
-                      widget.onDateSelected(dates[index]);
+                      widget.onDateSelected(_dates[index]);
                     });
                   },
                   child: Container(
@@ -102,7 +100,7 @@ class _DateSelectorState extends State<DateSelector> {
                       ],
                     ),
                     child: Text(
-                      '${dates[index].day}/${dates[index].month}',
+                      '${_dates[index].day}/${_dates[index].month}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,

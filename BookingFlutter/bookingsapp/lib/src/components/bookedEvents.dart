@@ -24,12 +24,10 @@ class _EventsBookedState extends State<EventsBooked> {
               children: [
                 const Icon(
                   Icons.warning,
-                  size: 50, // Adjust the size of the icon as needed
-                  color: Colors.red, // Adjust the color of the icon as needed
+                  size: 50,
+                  color: Colors.red,
                 ),
-                const SizedBox(
-                    height:
-                        10), // Add some spacing between the icon and the text
+                const SizedBox(height: 10),
                 Text(
                   "No Booked Events Found",
                   style: Theme.of(context).textTheme.bodyLarge!,

@@ -47,8 +47,15 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
                   future: getAmenity(_like),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return const Column(
+                        children: [
+                          SizedBox(
+                            height: 60,
+                          ),
+                          Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ],
                       );
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Center(
@@ -60,13 +67,10 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
                             ),
                             const Icon(
                               Icons.warning,
-                              size: 50, // Adjust the size of the icon as needed
-                              color: Colors
-                                  .red, // Adjust the color of the icon as needed
+                              size: 50,
+                              color: Colors.red,
                             ),
-                            const SizedBox(
-                                height:
-                                    10), // Add some spacing between the icon and the text
+                            const SizedBox(height: 10),
                             Text(
                               "No Amenity Found",
                               style: Theme.of(context).textTheme.bodyLarge!,
@@ -133,15 +137,9 @@ class AmenityTile extends StatelessWidget {
       ),
       title: Text(
         amenity.amenityName,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.arrow_forward,
-        color: Theme.of(context).primaryColor,
       ),
     );
   }

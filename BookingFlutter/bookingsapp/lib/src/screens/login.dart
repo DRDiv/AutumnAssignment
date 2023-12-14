@@ -50,8 +50,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AdminLoginCard(),
-                    SizedBox(height: 20),
+                    const AdminLoginCard(),
+                    const SizedBox(height: 20),
                     Card(
                       elevation: 3,
                       child: Padding(
@@ -62,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               'FOR STUDENTS',
                               style: Theme.of(context).textTheme.displayMedium,
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             ChannelIButton(context, screenWidth),
                           ],
                         ),

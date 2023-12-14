@@ -1,11 +1,8 @@
 import 'package:bookingsapp/src/database/dbUser.dart';
-import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-final userLogged = StateProvider<User>((ref) => User.defaultUser());
 
 class TransitionScreen extends ConsumerStatefulWidget {
   const TransitionScreen({super.key});

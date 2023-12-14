@@ -1,8 +1,8 @@
 // ignore_for_file: file_names
 
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/providers/userLoggedProvider.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
-import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

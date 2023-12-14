@@ -36,13 +36,27 @@ class _EventTabState extends State<EventTab> {
           );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
-            child: Text(
-              "No Event Found",
-              style: Theme.of(context).textTheme.bodyLarge!,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.warning,
+                  size: 50, // Adjust the size of the icon as needed
+                  color: Colors.red, // Adjust the color of the icon as needed
+                ),
+                const SizedBox(
+                    height:
+                        10), // Add some spacing between the icon and the text
+                Text(
+                  "No Event Found",
+                  style: Theme.of(context).textTheme.bodyLarge!,
+                ),
+              ],
             ),
           );
         } else {
           List<dynamic> dataIndv = snapshot.data ?? [];
+          dataIndv = dataIndv.reversed.toList();
           return ListView.builder(
             itemCount: dataIndv.length,
             itemBuilder: (context, index) {

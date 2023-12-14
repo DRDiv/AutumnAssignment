@@ -2,18 +2,14 @@ import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/components/individualTab.dart';
 import 'package:bookingsapp/src/components/requestTab.dart';
 import 'package:bookingsapp/src/components/teamTab.dart';
-import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/components/amenitySearch.dart';
-import 'package:bookingsapp/src/screens/transition.dart';
+import 'package:bookingsapp/src/providers/userLoggedProvider.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// ignore: must_be_immutable
 class TabWidget extends ConsumerStatefulWidget {
-  User userlogged;
-
-  TabWidget(this.userlogged, {super.key});
+  const TabWidget({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TabWidgetState();
@@ -21,12 +17,12 @@ class TabWidget extends ConsumerStatefulWidget {
 
 class _TabWidgetState extends ConsumerState<TabWidget>
     with TickerProviderStateMixin {
-  late TabController tabController;
+  late TabController _tabController;
   @override
   void initState() {
     super.initState();
     setState(() {
-      tabController = TabController(length: 3, vsync: this);
+      _tabController = TabController(length: 3, vsync: this);
     });
   }
 
@@ -47,22 +43,20 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                 ),
                 centerTitle: true,
                 bottom: TabBar(
-                  controller: tabController,
-
+                  controller: _tabController,
                   tabs: const [
                     Tab(text: 'Individual'),
                     Tab(text: 'Team'),
                     Tab(text: 'Requests')
                   ],
-                  // indicator: BoxDecoration(color: ColorSchemes.secondayColor),
                 ),
               ),
               body: TabBarView(
-                controller: tabController,
+                controller: _tabController,
                 children: [
-                  IndividualTab(widget.userlogged),
-                  TeamTab(widget.userlogged),
-                  RequestTab(widget.userlogged)
+                  IndividualTab(ref.read(userLogged)),
+                  TeamTab(ref.read(userLogged)),
+                  RequestTab(ref.read(userLogged))
                 ],
               ),
               bottomNavigationBar:
@@ -73,7 +67,7 @@ class _TabWidgetState extends ConsumerState<TabWidget>
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return AmenityAlertBox();
+                        return const AmenityAlertBox();
                       });
                 },
                 child: const Icon(Icons.add),
@@ -90,19 +84,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  List<dynamic> dataIndv = [];
-  Map dataTeam = {};
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    User userlogged = ref.read(userLogged);
-
-    return TabWidget(userlogged);
+    return const TabWidget();
   }
 }

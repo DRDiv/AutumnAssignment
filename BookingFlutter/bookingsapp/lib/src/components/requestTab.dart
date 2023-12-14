@@ -1,6 +1,7 @@
 import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/models/request.dart';
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -14,19 +15,19 @@ class RequestTab extends StatefulWidget {
 }
 
 class _RequestTabState extends State<RequestTab> {
-  late Future<List<Requests>> dataReq;
+  late Future<List<Requests>> _dataReq;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      dataReq = getRequest(widget.userlogged.userId);
+      _dataReq = getRequest(widget.userlogged.userId);
     });
   }
 
   void rebuild() {
     setState(() {
-      dataReq = getRequest(widget.userlogged.userId);
+      _dataReq = getRequest(widget.userlogged.userId);
     });
   }
 
@@ -36,11 +37,11 @@ class _RequestTabState extends State<RequestTab> {
       onRefresh: () async {
         Future<List<Requests>> dataReq = getRequest(widget.userlogged.userId);
         setState(() {
-          this.dataReq = dataReq;
+          _dataReq = dataReq;
         });
       },
       child: FutureBuilder<List<dynamic>>(
-        future: dataReq,
+        future: _dataReq,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -57,12 +58,10 @@ class _RequestTabState extends State<RequestTab> {
                 children: [
                   const Icon(
                     Icons.warning,
-                    size: 50, // Adjust the size of the icon as needed
-                    color: Colors.red, // Adjust the color of the icon as needed
+                    size: 50,
+                    color: Colors.red,
                   ),
-                  const SizedBox(
-                      height:
-                          10), // Add some spacing between the icon and the text
+                  const SizedBox(height: 10),
                   Text(
                     "No Requests Found",
                     style: Theme.of(context).textTheme.bodyLarge!,
@@ -71,8 +70,8 @@ class _RequestTabState extends State<RequestTab> {
               ),
             );
           } else {
-            // Data is available, build the ListView
             List<dynamic> dataTeam = snapshot.data ?? [];
+            dataTeam = dataTeam.reversed.toList();
             return ListView.builder(
               itemCount: dataTeam.length,
               itemBuilder: (context, index) {
@@ -107,22 +106,38 @@ class _RequestTabState extends State<RequestTab> {
                     icon: const Icon(Icons.cancel),
                     onPressed: () {
                       showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: ElevatedButton(
-                                  onPressed: () async {
-                                    await DatabaseQueriesRequest.deleteRequest(
-                                        item.requestId);
-                                    setState(() {
-                                      rebuild();
-                                    });
-
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Confirm')),
-                            );
-                          });
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Confirmation'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                    'Are you sure you want to delete this request?'),
+                                const SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () async {
+                                        await DatabaseQueriesRequest
+                                            .deleteRequest(item.requestId);
+                                        setState(() {
+                                          rebuild();
+                                        });
+                                        router.pop();
+                                      },
+                                      child: const Text('Confirm'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
                     },
                     color: Theme.of(context).primaryColor,
                   ),

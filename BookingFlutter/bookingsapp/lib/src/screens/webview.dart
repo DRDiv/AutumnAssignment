@@ -1,12 +1,9 @@
 import 'package:bookingsapp/src/constants/urls.dart';
-import 'package:bookingsapp/src/database/dbUser.dart';
-import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/functions/setters.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
-import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class WebViewScreen extends ConsumerStatefulWidget {
   const WebViewScreen({super.key});
@@ -20,6 +17,7 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
   String oauth_authorize_url = urlRedirect;
 
   bool finished = false;
+  @override
   void initState() {
     super.initState();
 
@@ -44,17 +42,10 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
               setState(() {
                 finished = true;
               });
-              var response = await DatabaseQueriesUser.getUserDetails(
-                  url.queryParameters['userId']!);
-              ref.read(userLogged.notifier).state = User.set(response.data);
-
-              final storage = new FlutterSecureStorage();
-              await storage.write(
-                  key: "sessionToken",
-                  value: url.queryParameters['sessionToken']);
-              await DatabaseQueriesUser.updateSessionToken(
-                  ref.read(userLogged).userId,
-                  url.queryParameters['sessionToken']!);
+              await setUserDetailsAndSessionToken(
+                url,
+                ref,
+              );
 
               router.go("/home");
             }

@@ -1,15 +1,12 @@
-import 'dart:convert';
-
 import 'package:bookingsapp/src/components/amenityDateSelector.dart';
 import 'package:bookingsapp/src/components/amenityTimeSelector.dart';
-import 'package:bookingsapp/src/database/dbAmenity.dart';
+import 'package:bookingsapp/src/components/responseIndicator.dart';
 import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/functions/format.dart';
-import 'package:bookingsapp/src/models/ammenity.dart';
+import 'package:bookingsapp/src/functions/setters.dart';
+import 'package:bookingsapp/src/providers/amenityBookingProvider.dart';
 
-import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/components/groupMembers.dart';
-import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,31 +21,14 @@ class AmenityBooking extends ConsumerStatefulWidget {
 }
 
 class _AmenityBookingState extends ConsumerState<AmenityBooking> {
-  Amenity _amenity = Amenity.defaultAmenity();
-  final List<String> _slots = [];
-  List<String> _users = [];
   bool _isLoading = true;
   DateTime _selectedDate = DateTime.now();
   String _selectedTime = '';
-
-  Future<void> setData() async {
-    Amenity a = Amenity.defaultAmenity();
-    await a.setData(
-        (await DatabaseQueriesAmenity.getAmenityDetails(widget.amenityId)).data,
-        "",
-        "");
-    var response = await DatabaseQueriesAmenity.getAmenitySlot(a.amenityId);
-
+  Future<void> _loading() async {
+    String time = await setDataAmenityBooking(widget.amenityId, ref);
     setState(() {
-      _users.add(ref.read(userLogged).userId);
-      for (var indv in response.data) {
-        _slots.add(
-            formatTimeRange(indv['amenitySlotStart'], indv['amenitySlotEnd']));
-      }
-      _amenity = a;
-
-      _selectedTime = _slots[0];
       _isLoading = false;
+      _selectedTime = time;
     });
   }
 
@@ -56,7 +36,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
   void initState() {
     super.initState();
 
-    setData();
+    _loading();
   }
 
   @override
@@ -92,7 +72,8 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                 color:
                                     Theme.of(context).scaffoldBackgroundColor,
                               ),
-                              child: (_amenity.amenityPicture == "")
+                              child: (ref.read(amenityBooking).amenityPicture ==
+                                      "")
                                   ? const Icon(
                                       Icons.category_sharp,
                                       color: Colors.black,
@@ -100,7 +81,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                     )
                                   : ClipRRect(
                                       child: Image.network(
-                                      _amenity.amenityPicture,
+                                      ref.read(amenityBooking).amenityPicture,
                                       fit: BoxFit.fitHeight,
                                     )),
                             ),
@@ -111,7 +92,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                           Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Text(
-                              _amenity.amenityName,
+                              ref.read(amenityBooking).amenityName,
                               style: Theme.of(context).textTheme.displayLarge!,
                             ),
                           ),
@@ -121,7 +102,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                           Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Text(
-                              _amenity.description,
+                              ref.read(amenityBooking).description,
                               style: Theme.of(context).textTheme.bodySmall!,
                               textAlign: TextAlign.center,
                             ),
@@ -140,7 +121,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                     ),
                                   ),
                                   child: DateSelector(
-                                    _amenity.recurrence,
+                                    ref.read(amenityBooking).recurrence,
                                     (date) {
                                       setState(() {
                                         _selectedDate = date;
@@ -159,7 +140,7 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                                     ),
                                   ),
                                   child: TimeSelector(
-                                    _slots,
+                                    ref.read(slots),
                                     (time) {
                                       setState(() {
                                         _selectedTime = time;
@@ -170,58 +151,35 @@ class _AmenityBookingState extends ConsumerState<AmenityBooking> {
                       ),
                       const SizedBox(height: 50),
                       ElevatedButton(
-                          onPressed: () async {
-                            _users = await showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return GroupMembers(context, _users);
-                                });
-                          },
-                          child: const Text("Add Group Members")),
+                        onPressed: () async {
+                          ref.read(userAmenity.notifier).state =
+                              await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return GroupMembers(
+                                        context, ref.read(userAmenity));
+                                  });
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.person_add),
+                            SizedBox(width: 8),
+                            Text("Add Group Members"),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 50),
                       ElevatedButton(
                           onPressed: () async {
                             dynamic response = await DatabaseQueriesRequest
                                 .makeAmmenityRequest(
-                                    _amenity.amenityId,
-                                    _users,
+                                    ref.read(amenityBooking).amenityId,
+                                    ref.read(userAmenity),
                                     parseStartTime(_selectedTime),
                                     _selectedDate);
 
-                            // ignore: use_build_context_synchronously
-                            showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: SizedBox(
-                                    height: 100,
-                                    width: 100,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          json.decode(
-                                              response.toString())['message'],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!,
-                                        ),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              if (json.decode(response
-                                                      .toString())['code'] ==
-                                                  200) router.pop();
-                                            },
-                                            child: const Text("OK"))
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
+                            showResponseDialog(context, response);
                           },
                           child: const Text("Send Request"))
                     ],

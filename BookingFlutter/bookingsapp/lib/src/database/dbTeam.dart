@@ -4,6 +4,7 @@ import 'package:bookingsapp/src/models/team.dart';
 import 'package:dio/dio.dart';
 
 class DatabaseQueriesTeam {
+  DatabaseQueriesTeam._();
   static Future<Response> getTeamDetails(String teamId) async {
     FormData formData = await getSessionForm();
     String pathTeam = TeamUrls.getTeamDetails(teamId: teamId);

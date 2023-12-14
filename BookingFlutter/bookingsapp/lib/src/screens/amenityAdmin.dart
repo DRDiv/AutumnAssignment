@@ -3,8 +3,8 @@ import 'package:bookingsapp/src/components/loading.dart';
 import 'package:bookingsapp/src/components/slotPicker.dart';
 import 'package:bookingsapp/src/database/dbAmenity.dart';
 import 'package:bookingsapp/src/functions/format.dart';
+import 'package:bookingsapp/src/providers/userLoggedProvider.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
-import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +19,7 @@ class AmenityAdmin extends ConsumerStatefulWidget {
 class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
   final List<Map<String, dynamic>> _slotDataList = [];
   final List<Slot> _slots = [];
-  File? amenityPicture;
+  File? _amenityPicture;
   String _selectedOption = 'Daily';
 
   List<String> options = [
@@ -69,7 +69,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                 ),
                 child: Stack(
                   children: [
-                    (amenityPicture == null)
+                    (_amenityPicture == null)
                         ? const Center(
                             child: Icon(
                               Icons.category_sharp,
@@ -81,7 +81,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
                               child: Image.file(
-                                amenityPicture!,
+                                _amenityPicture!,
                                 fit: BoxFit.cover,
                                 width: 250,
                               ),
@@ -95,7 +95,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                         onPressed: () async {
                           File? amenityPictureGet = await getImage(ref);
                           setState(() {
-                            amenityPicture = amenityPictureGet;
+                            _amenityPicture = amenityPictureGet;
                           });
                         },
                       ),
@@ -204,7 +204,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
                         ref.read(userLogged).userId,
                         _selectedOption,
                         _slots,
-                        amenityPicture,
+                        _amenityPicture,
                         _capacity,
                         _amenityDescription.text);
                     router.pop();

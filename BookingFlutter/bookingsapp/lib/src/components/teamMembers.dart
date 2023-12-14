@@ -1,5 +1,6 @@
 import 'package:bookingsapp/src/database/dbTeam.dart';
 import 'package:bookingsapp/src/models/user.dart';
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -59,20 +60,36 @@ class TeamMembersState extends State<TeamMembers> {
                 ? IconButton(
                     onPressed: () {
                       showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: ElevatedButton(
-                                  onPressed: () async {
-                                    await DatabaseQueriesTeam.addAdmin(
-                                        widget.teamId, user.userId);
-                                    widget.rebuild();
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Confirm')),
-                              backgroundColor: Theme.of(context).primaryColor,
-                            );
-                          });
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Confirmation'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                    'Are you sure you want to make member admin?'),
+                                const SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () async {
+                                        await DatabaseQueriesTeam.addAdmin(
+                                            widget.teamId, user.userId);
+                                        widget.rebuild();
+                                        router.pop();
+                                      },
+                                      child: const Text('Confirm'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
                     },
                     icon: const Icon(Icons.add))
                 : const Text(''),

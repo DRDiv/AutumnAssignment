@@ -1,12 +1,13 @@
 import 'package:bookingsapp/src/constants/urls.dart';
 import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/user.dart';
-import 'package:bookingsapp/src/screens/transition.dart';
+import 'package:bookingsapp/src/providers/userLoggedProvider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DatabaseQueriesUser {
+  DatabaseQueriesUser._();
   static Future<Response> getCurrentUser(String token) async {
     FormData formData = await getSessionForm();
     String path = UserUrls.getCurrentUser(token: token);

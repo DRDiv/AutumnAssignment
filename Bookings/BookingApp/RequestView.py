@@ -35,7 +35,24 @@ class RequestListView(generics.CreateAPIView):
             query=queryset.filter(teamId=team).filter(event=event).all()
             
             if query :
-                return Response({"message": "Request already pending"})
+                return Response({"message": "Request Already Pending"})
+            
+            query=Booking.objects.all().filter(teamId=team).filter(event=event).all()
+
+            if query :
+                return Response({"message": "Booking Already Done"})
+            
+            team_members = team.users.all()
+            for user in team_members:
+
+                existing_requests = queryset.filter(event=event).filter(teamId__users=user)
+                if existing_requests:
+                    return Response({"message": f"{user.userName} Already has Request Associated with Another Team."})
+                
+                existing_bookings = Booking.objects.all().filter(event=event).filter(teamId__users=user)
+                if existing_bookings:
+                    return Response({"message": f"{user.userName} Already has Booking Associated with Another Team."})
+                
             request = Request(
                
                 event=event,
@@ -125,7 +142,7 @@ class RequestByUser(generics.ListAPIView):
         queryset = Request.objects.filter(   Q(individuals=userId) | Q(teamId__users=userId))
         return queryset
 class RequestToBooking(generics.RetrieveAPIView):
-  
+    queryset=Request.objects.all()
     serializer_class = RequestSerializer
     permission_classes=[isAdmin]
     def get(self, request, *args, **kwargs):

@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
@@ -39,8 +38,8 @@ class _UserProfileState extends ConsumerState<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: AppTheme.lightTheme(),
-      child: Scaffold(
+        data: AppTheme.lightTheme(),
+        child: Scaffold(
           appBar: AppBar(
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
@@ -138,7 +137,6 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                     ),
                   ),
           ),
-          bottomNavigationBar: BottomAppBarUser(context, _userCurrent)),
-    );
+        ));
   }
 }

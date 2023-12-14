@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ColorSchemes {
+  ColorSchemes._();
   static Color backgroundColor = Colors.white;
   static Color primaryColor = Color(0xFF1D3557);
   static Color secondayColor = Color(0xFF457B9D);
@@ -10,6 +11,7 @@ class ColorSchemes {
 }
 
 class FontsCustom {
+  FontsCustom._();
   static final TextStyle heading = TextStyle(
     color: Colors.black87,
     fontFamily: 'Montserrat',
@@ -54,6 +56,7 @@ class FontsCustom {
 }
 
 class AppTheme {
+  AppTheme._();
   static ThemeData lightTheme() {
     return ThemeData(
         useMaterial3: false,

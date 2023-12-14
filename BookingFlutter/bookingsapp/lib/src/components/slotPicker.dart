@@ -18,8 +18,8 @@ class SlotsEditor extends StatefulWidget {
 }
 
 class _SlotsEditorState extends State<SlotsEditor> {
-  TimeOfDay selectedStartTime = TimeOfDay.now();
-  TimeOfDay selectedEndTime = TimeOfDay.now();
+  TimeOfDay _selectedStartTime = TimeOfDay.now();
+  TimeOfDay _selectedEndTime = TimeOfDay.now();
   List<Map<String, dynamic>> collectSlotData() {
     for (final slot in widget.slots) {
       final slotData = {
@@ -48,13 +48,13 @@ class _SlotsEditorState extends State<SlotsEditor> {
 
   void addSlot() {
     final newSlot =
-        Slot(startTime: selectedStartTime, endTime: selectedEndTime);
+        Slot(startTime: _selectedStartTime, endTime: _selectedEndTime);
 
     if (!isSlotOverlapping(newSlot)) {
       setState(() {
         widget.slots.add(newSlot);
-        selectedStartTime = TimeOfDay.now();
-        selectedEndTime = TimeOfDay.now();
+        _selectedStartTime = TimeOfDay.now();
+        _selectedEndTime = TimeOfDay.now();
       });
     }
   }
@@ -76,10 +76,10 @@ class _SlotsEditorState extends State<SlotsEditor> {
               Expanded(
                 child: TimePicker(
                   labelText: 'Start Time',
-                  selectedTime: selectedStartTime,
+                  selectedTime: _selectedStartTime,
                   onTimeChanged: (time) {
                     setState(() {
-                      selectedStartTime = time;
+                      _selectedStartTime = time;
                     });
                   },
                 ),
@@ -87,10 +87,10 @@ class _SlotsEditorState extends State<SlotsEditor> {
               Expanded(
                 child: TimePicker(
                   labelText: 'End Time',
-                  selectedTime: selectedEndTime,
+                  selectedTime: _selectedEndTime,
                   onTimeChanged: (time) {
                     setState(() {
-                      selectedEndTime = time;
+                      _selectedEndTime = time;
                     });
                   },
                 ),

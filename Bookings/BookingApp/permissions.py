@@ -38,7 +38,7 @@ class isUser(permissions.BasePermission):
     def has_permission(self, request, view):
         # Ensure that the session token is provided in the request data
         session_token = request.data.get('session_token')
-      
+        print(request.data)
         if not session_token:
             return False
         try:

@@ -1,5 +1,5 @@
 import 'package:bookingsapp/src/database/dbTeam.dart';
-import 'package:bookingsapp/src/database/dbUser.dart';
+import 'package:bookingsapp/src/functions/setters.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,11 +25,6 @@ class _UserSearchState extends ConsumerState<UserSearch> {
 
   void rebuildWidget() {
     setState(() {});
-  }
-
-  Future<List<User>> setUsers() async {
-    List<User> users = await getUsers(_like, widget.users);
-    return users;
   }
 
   @override
@@ -62,7 +57,7 @@ class _UserSearchState extends ConsumerState<UserSearch> {
               ),
               Expanded(
                 child: FutureBuilder<List<User>>(
-                  future: setUsers(),
+                  future: setUsers(_like, widget.users),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(

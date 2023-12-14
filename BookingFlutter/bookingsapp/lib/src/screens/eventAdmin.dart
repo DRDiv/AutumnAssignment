@@ -1,8 +1,8 @@
 import 'package:bookingsapp/src/components/loading.dart';
 import 'package:bookingsapp/src/database/dbEvent.dart';
 import 'package:bookingsapp/src/functions/format.dart';
+import 'package:bookingsapp/src/providers/userLoggedProvider.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
-import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DatabaseQueriesEvent {
+  DatabaseQueriesEvent._();
   static Future<void> createEvent(
     String eventName,
     String userId,

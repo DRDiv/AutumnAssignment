@@ -1,10 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:bookingsapp/src/database/dbEvent.dart';
+import 'package:bookingsapp/src/components/loading.dart';
+import 'package:bookingsapp/src/components/responseIndicator.dart';
 import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/functions/format.dart';
-import 'package:bookingsapp/src/models/event.dart';
+import 'package:bookingsapp/src/functions/setters.dart';
+import 'package:bookingsapp/src/providers/eventBookingProviders.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -20,16 +21,12 @@ class EventBooking extends ConsumerStatefulWidget {
 }
 
 class _EventBookingState extends ConsumerState<EventBooking> {
-  Event _event = Event.defaultEvent();
   bool _paymentAttached = false;
-  bool _isLoading = true;
   File? _image;
-  Future<void> setData() async {
-    Event e = Event.defaultEvent();
-    await e.setData(
-        (await DatabaseQueriesEvent.getEventDetails(widget.eventId)).data);
+  bool _isLoading = true;
+  Future<void> _loading() async {
+    await setDataEventBooking(widget.eventId, ref);
     setState(() {
-      _event = e;
       _isLoading = false;
     });
   }
@@ -37,7 +34,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
   @override
   void initState() {
     super.initState();
-    setData();
+    _loading();
   }
 
   @override
@@ -67,10 +64,10 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                       Column(
                         children: [
                           Center(
-                            child: Container(
+                            child: SizedBox(
                               height: 250,
                               width: 250,
-                              child: (_event.eventPicture == "")
+                              child: (ref.read(eventBooking).eventPicture == "")
                                   ? const Icon(
                                       Icons.category_sharp,
                                       color: Colors.black,
@@ -78,7 +75,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                                     )
                                   : ClipRRect(
                                       child: Image.network(
-                                      _event.eventPicture,
+                                      ref.read(eventBooking).eventPicture,
                                       fit: BoxFit.fill,
                                     )),
                             ),
@@ -89,7 +86,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                           Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Text(
-                              _event.eventName,
+                              ref.read(eventBooking).eventName,
                               style: Theme.of(context).textTheme.displayLarge!,
                             ),
                           ),
@@ -99,7 +96,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                           Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              _event.description,
+                              ref.read(eventBooking).description,
                               style: Theme.of(context).textTheme.bodyLarge!,
                               textAlign: TextAlign.center,
                             ),
@@ -107,7 +104,7 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                           const SizedBox(
                             height: 10,
                           ),
-                          (_event.payment > 0)
+                          (ref.read(eventBooking).payment > 0)
                               ? InkWell(
                                   onTap: () async {
                                     File? eventPictureGet = await getImage(ref);
@@ -150,7 +147,8 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                           onPressed: () async {
-                            if (_event.payment > 0 && _image == null) {
+                            if (ref.read(eventBooking).payment > 0 &&
+                                _image == null) {
                               showDialog(
                                 context: context,
                                 builder: (context) {
@@ -181,44 +179,12 @@ class _EventBookingState extends ConsumerState<EventBooking> {
                               );
                               return;
                             }
-
+                            showLoadingDialog(context);
                             dynamic response =
                                 await DatabaseQueriesRequest.makeEventRequest(
                                     widget.eventId, widget.teamId, _image);
-
-                            showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: SizedBox(
-                                    height: 75,
-                                    width: 100,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          json.decode(
-                                              response.toString())['message'],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!,
-                                        ),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              router.pop();
-                                              if (json.decode(response
-                                                      .toString())['code'] ==
-                                                  200) router.pop();
-                                            },
-                                            child: const Text("OK"))
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
+                            router.pop();
+                            showResponseDialog(context, response);
                           },
                           child: const Text("Send Request"))
                     ],

@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 class TeamTab extends ConsumerStatefulWidget {
   final User userlogged;
 
-  TeamTab(this.userlogged);
+  const TeamTab(this.userlogged, {super.key});
 
   @override
   _TeamTabState createState() => _TeamTabState();
@@ -15,14 +15,14 @@ class TeamTab extends ConsumerStatefulWidget {
 
 class _TeamTabState extends ConsumerState<TeamTab> {
   late Future<List<dynamic>> _dataTeamFuture;
-  List<String> teams = [];
+  List<String> _teams = [];
 
   @override
   void initState() {
     super.initState();
     setState(() {
       _dataTeamFuture = getBookingsTeam(widget.userlogged.userId, ref);
-      teams = ref.read(teamsList);
+      _teams = ref.read(teamsList);
     });
   }
 
@@ -33,7 +33,7 @@ class _TeamTabState extends ConsumerState<TeamTab> {
         Future<List<dynamic>> dataTeamFuture =
             getBookingsTeam(widget.userlogged.userId, ref);
         setState(() {
-          this._dataTeamFuture = dataTeamFuture;
+          _dataTeamFuture = dataTeamFuture;
         });
       },
       child: FutureBuilder<List<dynamic>>(
@@ -54,12 +54,10 @@ class _TeamTabState extends ConsumerState<TeamTab> {
                 children: [
                   const Icon(
                     Icons.warning,
-                    size: 50, // Adjust the size of the icon as needed
-                    color: Colors.red, // Adjust the color of the icon as needed
+                    size: 50,
+                    color: Colors.red,
                   ),
-                  const SizedBox(
-                      height:
-                          10), // Add some spacing between the icon and the text
+                  const SizedBox(height: 10),
                   Text(
                     "No Bookings Found",
                     style: Theme.of(context).textTheme.bodyLarge!,
@@ -69,6 +67,7 @@ class _TeamTabState extends ConsumerState<TeamTab> {
             );
           } else {
             List<dynamic> dataTeam = snapshot.data ?? [];
+            dataTeam = dataTeam.reversed.toList();
             return ListView.builder(
               itemCount: dataTeam.length,
               itemBuilder: (context, index) {
@@ -100,7 +99,7 @@ class _TeamTabState extends ConsumerState<TeamTab> {
                               fit: BoxFit.cover,
                             ))),
                   title: Text(opcode ? item.eventName : item.amenityName),
-                  subtitle: Text(teams[index]),
+                  subtitle: Text(_teams[index]),
                   trailing: Text(formattedDateTime),
                 );
               },

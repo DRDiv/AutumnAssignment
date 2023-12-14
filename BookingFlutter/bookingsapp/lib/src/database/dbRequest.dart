@@ -6,6 +6,7 @@ import 'package:bookingsapp/src/models/request.dart';
 import 'package:dio/dio.dart';
 
 class DatabaseQueriesRequest {
+  DatabaseQueriesRequest._();
   static Future<Response> getUserRequest(String userId) async {
     FormData formData = await getSessionForm();
     String pathUser = RequestUrls.getUserRequest(userId: userId);

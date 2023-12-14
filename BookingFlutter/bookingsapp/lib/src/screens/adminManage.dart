@@ -1,19 +1,15 @@
 import 'package:bookingsapp/src/components/amenityTab.dart';
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/components/eventTab.dart';
-import 'package:bookingsapp/src/functions/format.dart';
+import 'package:bookingsapp/src/providers/userLoggedProvider.dart';
 
-import 'package:bookingsapp/src/models/user.dart';
-import 'package:bookingsapp/src/screens/transition.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: must_be_immutable
 class TabWidget extends ConsumerStatefulWidget {
-  User userlogged;
-
-  TabWidget(this.userlogged, {super.key});
+  TabWidget({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TabWidgetState();
@@ -42,8 +38,8 @@ class _TabWidgetState extends ConsumerState<TabWidget> {
             ),
             body: TabBarView(
               children: [
-                AmenityTab(widget.userlogged),
-                EventTab(widget.userlogged),
+                AmenityTab(ref.read(userLogged)),
+                EventTab(ref.read(userLogged)),
               ],
             ),
             bottomNavigationBar: BottomAppBarAdmin(context, ref)),
@@ -60,21 +56,8 @@ class AdminManage extends ConsumerStatefulWidget {
 }
 
 class _AdminManageState extends ConsumerState<AdminManage> {
-  void method() async {
-    String s = await getSessionToken();
-    print(s);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    method();
-  }
-
   @override
   Widget build(BuildContext context) {
-    User userlogged = ref.read(userLogged);
-
-    return TabWidget(userlogged);
+    return TabWidget();
   }
 }
