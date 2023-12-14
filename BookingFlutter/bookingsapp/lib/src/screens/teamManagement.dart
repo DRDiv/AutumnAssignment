@@ -71,13 +71,12 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
           child: Scaffold(
             appBar: AppBar(
               title: Text(
-                "BOOKING\$",
+                _team.teamName,
                 style: Theme.of(context)
                     .textTheme
                     .displayLarge!
                     .copyWith(color: Colors.white),
               ),
-              centerTitle: true,
               bottom: TabBar(
                 controller: _tabController,
                 tabs: const [Tab(text: 'Team Members'), Tab(text: 'Events')],

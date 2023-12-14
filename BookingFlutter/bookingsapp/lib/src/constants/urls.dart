@@ -7,6 +7,7 @@ const String urlRedirect =
     "https://channeli.in/oauth/authorise/?client_id=1XDTUULqBMBdeIy4GyMEBuAwl8CWTjvzeTpr29Hy&redirect_uri=http%3A%2F%2F192.168.29.33%3A8000%2Fuserlogin%2F&state=done";
 
 class EventUrls {
+  EventUrls._();
   static String event = '$ipAdd/event/';
   static String eventDetail({required String eventId}) {
     return "$ipAdd/event/$eventId/";
@@ -22,6 +23,7 @@ class EventUrls {
 }
 
 class AmenityUrls {
+  AmenityUrls._();
   static String amenity = '$ipAdd/amenity/';
   static String amenityDetail({required String amenityId}) {
     return "$ipAdd/amenity/$amenityId/";
@@ -41,6 +43,7 @@ class AmenityUrls {
 }
 
 class BookingUrls {
+  BookingUrls._();
   static String requestToBooking({required String reqId}) {
     return "$ipAdd/request/tobooking/$reqId/";
   }
@@ -55,6 +58,7 @@ class BookingUrls {
 }
 
 class UserUrls {
+  UserUrls._();
   static String getCurrentUser({required String token}) {
     return "$ipAdd/user/session/$token/";
   }
@@ -78,6 +82,7 @@ class UserUrls {
 }
 
 class TeamUrls {
+  TeamUrls._();
   static String getTeamDetails({required String teamId}) {
     return "$ipAdd/team/$teamId/";
   }
@@ -104,6 +109,7 @@ class TeamUrls {
 }
 
 class RequestUrls {
+  RequestUrls._();
   static String getUserRequest({required String userId}) {
     return "$ipAdd/request/user/$userId/";
   }

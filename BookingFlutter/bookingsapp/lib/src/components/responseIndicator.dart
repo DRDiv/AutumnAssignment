@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:flutter/material.dart';
 
 void showResponseDialog(BuildContext context, dynamic response) {
@@ -27,9 +28,9 @@ void showResponseDialog(BuildContext context, dynamic response) {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    router.pop();
                     if (json.decode(response.toString())['code'] == 200) {
-                      Navigator.of(context).pop();
+                      router.pop();
                     }
                   },
                   child: const Text("OK"),

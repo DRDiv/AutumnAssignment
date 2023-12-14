@@ -88,7 +88,7 @@ class _EventAlertBoxState extends ConsumerState<EventAlertBox> {
                           itemBuilder: (context, index) {
                             return ListTile(
                               onTap: () async {
-                                Navigator.of(context).pop();
+                                router.pop();
                                 router.push(
                                     "/eventBooking/${snapshot.data![index].eventId}/${widget.team.teamId}/");
                               },

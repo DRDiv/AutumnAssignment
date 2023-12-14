@@ -1,8 +1,8 @@
 import 'package:bookingsapp/src/components/bottomAppBar.dart';
 import 'package:bookingsapp/src/database/dbBooking.dart';
 import 'package:bookingsapp/src/database/dbRequest.dart';
-import 'package:bookingsapp/src/models/request.dart';
-import 'package:bookingsapp/src/providers/userLoggedProvider.dart';
+import 'package:bookingsapp/src/functions/setters.dart';
+import 'package:bookingsapp/src/providers/requestAdminProvider.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
 import 'package:bookingsapp/src/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -16,20 +16,9 @@ class HomeAdmin extends ConsumerStatefulWidget {
 }
 
 class _HomeAdminState extends ConsumerState<HomeAdmin> {
-  final List<Requests> _requests = [];
   bool _isLoading = true;
-  Future<void> setData() async {
-    List<dynamic> reponse =
-        (await DatabaseQueriesRequest.getRequest(ref.read(userLogged).userId))
-            .data;
-    for (var requestindv in reponse) {
-      Requests request = Requests.defaultRequest();
-      await request.setData(requestindv);
-      setState(() {
-        _requests.add(request);
-      });
-    }
-
+  Future<void> _loading() async {
+    await setRequestData(ref);
     setState(() {
       _isLoading = false;
     });
@@ -38,7 +27,7 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
   @override
   void initState() {
     super.initState();
-    setData();
+    _loading();
   }
 
   @override
@@ -67,23 +56,23 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
           onRefresh: () async {
             setState(() {
               _isLoading = true;
-              _requests.clear();
+              ref.read(requestAdmin).clear();
             });
 
-            await setData();
+            await _loading();
           },
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
-              : ((_requests.isEmpty)
+              : ((ref.read(requestAdmin).isEmpty)
                   ? Center(
                       child: Text(
                       "No Aprrovals Pending!!",
                       style: Theme.of(context).textTheme.bodyLarge!,
                     ))
                   : ListView.builder(
-                      itemCount: _requests.length,
+                      itemCount: ref.read(requestAdmin).length,
                       itemBuilder: (context, index) {
-                        final request = _requests[index];
+                        final request = ref.read(requestAdmin)[index];
 
                         return Dismissible(
                           key: UniqueKey(),
@@ -92,15 +81,15 @@ class _HomeAdminState extends ConsumerState<HomeAdmin> {
                               await DatabaseQueriesRequest.deleteRequest(
                                   request.requestId);
                               setState(() {
-                                _requests.removeAt(index);
+                                ref.read(requestAdmin).removeAt(index);
                               });
                             } else if (direction ==
                                 DismissDirection.startToEnd) {
                               await DatabaseQueriesBookings.requestToBooking(
                                   request.requestId);
-                              // setState(() {
-                              //   _requests.removeAt(index);
-                              // });
+                              setState(() {
+                                ref.read(requestAdmin).removeAt(index);
+                              });
                             }
                           },
                           secondaryBackground: Container(

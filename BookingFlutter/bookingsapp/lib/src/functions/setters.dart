@@ -1,13 +1,16 @@
 import 'package:bookingsapp/src/database/dbAmenity.dart';
 import 'package:bookingsapp/src/database/dbEvent.dart';
+import 'package:bookingsapp/src/database/dbRequest.dart';
 import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/functions/format.dart';
 import 'package:bookingsapp/src/models/ammenity.dart';
 import 'package:bookingsapp/src/models/event.dart';
+import 'package:bookingsapp/src/models/request.dart';
 import 'package:bookingsapp/src/models/team.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/providers/amenityBookingProvider.dart';
 import 'package:bookingsapp/src/providers/eventBookingProviders.dart';
+import 'package:bookingsapp/src/providers/requestAdminProvider.dart';
 import 'package:bookingsapp/src/providers/userLoggedProvider.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,4 +70,15 @@ Future<String> setDataAmenityBooking(String amenityId, WidgetRef ref) async {
 Future<List<User>> setUsers(String like, List<User> userList) async {
   List<User> users = await getUsers(like, userList);
   return users;
+}
+
+Future<void> setRequestData(WidgetRef ref) async {
+  List<dynamic> reponse =
+      (await DatabaseQueriesRequest.getRequest(ref.read(userLogged).userId))
+          .data;
+  for (var requestindv in reponse) {
+    Requests request = Requests.defaultRequest();
+    await request.setData(requestindv);
+    ref.read(requestAdmin).add(request);
+  }
 }

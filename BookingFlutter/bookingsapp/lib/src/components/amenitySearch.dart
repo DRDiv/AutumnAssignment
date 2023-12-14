@@ -86,7 +86,7 @@ class _AmenityAlertBoxState extends ConsumerState<AmenityAlertBox> {
                             return AmenityTile(
                               amenity: snapshot.data![index],
                               onTap: () async {
-                                Navigator.of(context).pop();
+                                router.pop();
                                 router.push(
                                     "/amenityBooking/${snapshot.data![index].amenityId}");
                               },
