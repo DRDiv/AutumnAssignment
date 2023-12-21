@@ -106,16 +106,18 @@ class _SlotsEditorState extends State<SlotsEditor> {
           Text('SELECTED SLOTS',
               style: Theme.of(context).textTheme.displaySmall!),
           (widget.slots.isEmpty)
-              ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('No Slot Selected',
-                      style: Theme.of(context).textTheme.bodyLarge!),
+              ? SizedBox(
+                  height: 200,
+                  child: Center(
+                    child: Text('No Slot Selected',
+                        style: Theme.of(context).textTheme.bodyLarge!),
+                  ),
                 )
               : Container(
                   constraints: const BoxConstraints(
-                    maxHeight: 300.0, // Maximum height you want
+                    minHeight: 200.0,
+                    maxHeight: 200,
                   ),
-                  height: widget.slots.length * 100,
                   child: ListView.builder(
                     itemCount: widget.slots.length,
                     itemBuilder: (context, index) {

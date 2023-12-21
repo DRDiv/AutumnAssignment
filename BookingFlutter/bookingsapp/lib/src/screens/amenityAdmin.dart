@@ -35,6 +35,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.sizeOf(context).width;
     return Theme(
       data: AppTheme.lightTheme(),
       child: Scaffold(
@@ -108,7 +109,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
               ),
               Center(
                 child: SizedBox(
-                  width: 250,
+                  width: 0.8 * width,
                   child: TextFormField(
                     controller: _amenityName,
                     decoration:
@@ -121,7 +122,7 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
               ),
               Center(
                 child: SizedBox(
-                  width: 250,
+                  width: 0.8 * width,
                   child: TextFormField(
                     controller: _amenityDescription,
                     maxLines:
@@ -181,36 +182,39 @@ class _AmenityAdminState extends ConsumerState<AmenityAdmin> {
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                  onPressed: () async {
-                    if (_amenityName.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Amenity name cannot be empty'),
-                        ),
-                      );
-                      return;
-                    }
-                    if (_slots.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("No slots selected"),
-                        ),
-                      );
-                    }
-                    showLoadingDialog(context);
-                    await DatabaseQueriesAmenity.createAmenity(
-                        _amenityName.text,
-                        ref.read(userLogged).userId,
-                        _selectedOption,
-                        _slots,
-                        _amenityPicture,
-                        _capacity,
-                        _amenityDescription.text);
-                    router.pop();
-                    router.pop();
-                  },
-                  child: const Text('Confirm'))
+              SizedBox(
+                width: 0.8 * width,
+                child: ElevatedButton(
+                    onPressed: () async {
+                      if (_amenityName.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Amenity name cannot be empty'),
+                          ),
+                        );
+                        return;
+                      }
+                      if (_slots.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("No slots selected"),
+                          ),
+                        );
+                      }
+                      showLoadingDialog(context);
+                      await DatabaseQueriesAmenity.createAmenity(
+                          _amenityName.text,
+                          ref.read(userLogged).userId,
+                          _selectedOption,
+                          _slots,
+                          _amenityPicture,
+                          _capacity,
+                          _amenityDescription.text);
+                      router.pop();
+                      router.pop();
+                    },
+                    child: const Text('Confirm')),
+              )
             ],
           ),
         ),

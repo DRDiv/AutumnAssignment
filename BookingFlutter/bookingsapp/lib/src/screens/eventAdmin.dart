@@ -31,6 +31,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.sizeOf(context).width;
     return Theme(
       data: AppTheme.lightTheme(),
       child: Scaffold(
@@ -101,7 +102,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 ),
                 const SizedBox(height: 25),
                 SizedBox(
-                  width: 250,
+                  width: 0.8 * width,
                   child: TextFormField(
                     controller: _eventName,
                     decoration: const InputDecoration(
@@ -113,7 +114,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 const SizedBox(height: 25),
                 Center(
                   child: SizedBox(
-                    width: 250,
+                    width: 0.8 * width,
                     child: TextFormField(
                       controller: _eventDescription,
                       maxLines:
@@ -126,33 +127,73 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 const SizedBox(
                   height: 25,
                 ),
-                Text(
-                  'Selected Date ${DateFormat('dd-MM-yyyy').format(selectedDate)}',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                SizedBox(
+                  width: 0.5 * width,
+                  child: TextFormField(
+                    controller: TextEditingController(
+                      text: DateFormat('dd-MM-yyyy').format(selectedDate),
+                    ),
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? selectedDateGet =
+                          await getDate(context, selectedDate);
+                      if (selectedDateGet != null) {
+                        setState(() {
+                          selectedDate = selectedDateGet;
+                        });
+                      }
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Select Date',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.calendar_month),
+                        onPressed: () async {
+                          DateTime? selectedDateGet =
+                              await getDate(context, selectedDate);
+                          if (selectedDateGet != null) {
+                            setState(() {
+                              selectedDate = selectedDateGet;
+                            });
+                          }
+                        },
+                      ),
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    DateTime? selectedDateGet =
-                        await getDate(context, selectedDate);
-                    setState(() {
-                      selectedDate = selectedDateGet ?? DateTime.now();
-                    });
-                  },
-                  child: const Text('Select Date'),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Selected Time ${selectedTime.format(context)}',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    TimeOfDay? selectedTimeGet = await getTime(context);
-                    setState(() {
-                      selectedTime = selectedTimeGet ?? TimeOfDay.now();
-                    });
-                  },
-                  child: const Text('Select Time'),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 0.5 * width,
+                  child: TextFormField(
+                    controller: TextEditingController(
+                      text: selectedTime.format(context),
+                    ),
+                    readOnly: true,
+                    onTap: () async {
+                      TimeOfDay? selectedTimeGet = await getTime(context);
+                      if (selectedTimeGet != null) {
+                        setState(() {
+                          selectedTime = selectedTimeGet;
+                        });
+                      }
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Select Time',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.access_time),
+                        onPressed: () async {
+                          TimeOfDay? selectedTimeGet = await getTime(context);
+                          if (selectedTimeGet != null) {
+                            setState(() {
+                              selectedTime = selectedTimeGet;
+                            });
+                          }
+                        },
+                      ),
+                      border: OutlineInputBorder(),
+                      // You can add more styling properties here as needed
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Text('Min Team Size: ${_minTeam.toStringAsFixed(0)}',
@@ -186,7 +227,7 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
-                  width: 250,
+                  width: 0.8 * width,
                   child: TextFormField(
                     controller: _payment,
                     decoration: const InputDecoration(
@@ -197,47 +238,50 @@ class _EventAdminState extends ConsumerState<EventAdmin> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_eventName.text.isEmpty) {
-                      showSnackBar('Please enter an event name.');
-                      return;
-                    }
-                    if (_payment.text.isEmpty) {
-                      showSnackBar('Please enter a payment amount.');
-                      return;
-                    }
+                SizedBox(
+                  width: 0.8 * width,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_eventName.text.isEmpty) {
+                        showSnackBar('Please enter an event name.');
+                        return;
+                      }
+                      if (_payment.text.isEmpty) {
+                        showSnackBar('Please enter a payment amount.');
+                        return;
+                      }
 
-                    if (double.parse(_payment.text) < 0) {
-                      showSnackBar('Please enter valid payment amount.');
-                      return;
-                    }
+                      if (double.parse(_payment.text) < 0) {
+                        showSnackBar('Please enter valid payment amount.');
+                        return;
+                      }
 
-                    if (_minTeam > _maxTeam) {
-                      showSnackBar(
-                          'Minimum team size must be less than Maximum team size.');
-                      return;
-                    }
-                    showLoadingDialog(context);
-                    await DatabaseQueriesEvent.createEvent(
-                        _eventName.text,
-                        ref.read(userLogged).userId,
-                        DateTime(
-                          selectedDate.year,
-                          selectedDate.month,
-                          selectedDate.day,
-                          selectedTime.hour,
-                          selectedTime.minute,
-                        ),
-                        _minTeam.toInt(),
-                        _maxTeam.toInt(),
-                        double.parse(_payment.text),
-                        eventPicture,
-                        _eventDescription.text);
-                    router.pop();
-                    router.pop();
-                  },
-                  child: const Text('CONFIRM'),
+                      if (_minTeam > _maxTeam) {
+                        showSnackBar(
+                            'Minimum team size must be less than Maximum team size.');
+                        return;
+                      }
+                      showLoadingDialog(context);
+                      await DatabaseQueriesEvent.createEvent(
+                          _eventName.text,
+                          ref.read(userLogged).userId,
+                          DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            selectedTime.hour,
+                            selectedTime.minute,
+                          ),
+                          _minTeam.toInt(),
+                          _maxTeam.toInt(),
+                          double.parse(_payment.text),
+                          eventPicture,
+                          _eventDescription.text);
+                      router.pop();
+                      router.pop();
+                    },
+                    child: const Text('CONFIRM'),
+                  ),
                 ),
               ],
             ),
