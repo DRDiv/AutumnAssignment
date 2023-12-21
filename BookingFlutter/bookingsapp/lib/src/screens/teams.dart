@@ -51,7 +51,7 @@ class _WidgetCustomState extends State<WidgetCustom> {
               "Teams",
               style: Theme.of(context)
                   .textTheme
-                  .displayLarge!
+                  .displayMedium!
                   .copyWith(color: Colors.white),
             ),
           ),
@@ -59,19 +59,24 @@ class _WidgetCustomState extends State<WidgetCustom> {
             padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
             child: Column(
               children: [
-                TextField(
-                  controller: _searchController,
-                  decoration: const InputDecoration(
-                    labelText: 'Search Teams',
-                    prefixIcon: Icon(Icons.search),
+                SizedBox(
+                  height: 40,
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                      hintText: 'Search',
+                    ),
+                    textAlign: TextAlign.left,
+                    onChanged: (query) {
+                      setState(() {
+                        _dataIndv = (query.isEmpty)
+                            ? _dataIndv
+                            : setFilterTeams(_dataIndv, query);
+                      });
+                    },
                   ),
-                  onChanged: (query) {
-                    setState(() {
-                      _dataIndv = (_searchController.text == "")
-                          ? _dataIndv
-                          : setFilterTeams(_dataIndv, query);
-                    });
-                  },
                 ),
                 Expanded(
                   child: FutureBuilder<List<Team>>(
@@ -125,13 +130,24 @@ class _WidgetCustomState extends State<WidgetCustom> {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: ElevatedButton(
             onPressed: () async {
               await router.push("/teamCreation/");
               rebuild();
             },
-            tooltip: "Create a New Team",
-            child: const Icon(Icons.add),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.add),
+                SizedBox(width: 8.0),
+                Text('CREATE TEAM'),
+              ],
+            ),
           ),
           bottomNavigationBar: BottomAppBarUser(context, widget.userlogged)),
     );

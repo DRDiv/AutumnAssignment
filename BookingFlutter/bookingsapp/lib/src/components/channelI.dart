@@ -6,6 +6,13 @@ import 'package:flutter_svg/svg.dart';
 Container ChannelIButton(BuildContext context, double screenWidth) {
   return Container(
     width: screenWidth * 0.55,
+    decoration: BoxDecoration(
+      border: Border.all(
+        color: Colors.blue,
+        width: 1.0,
+      ),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
     child: TextButton(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -22,7 +29,7 @@ Container ChannelIButton(BuildContext context, double screenWidth) {
         ],
       ),
       onPressed: () {
-        router.go("/webview");
+        router.push("/webview");
       },
     ),
   );

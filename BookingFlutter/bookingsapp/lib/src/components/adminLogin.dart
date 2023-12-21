@@ -1,3 +1,4 @@
+import 'package:bookingsapp/src/components/channelI.dart';
 import 'package:bookingsapp/src/database/dbUser.dart';
 import 'package:bookingsapp/src/models/user.dart';
 import 'package:bookingsapp/src/routing/routing.dart';
@@ -16,6 +17,22 @@ class AdminLoginCard extends ConsumerStatefulWidget {
 class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
   final TextEditingController _username = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  Widget _buildSectionHeader(String title, IconData icon) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.displaySmall,
+        ),
+        const SizedBox(height: 5),
+        Icon(
+          icon,
+          size: 30,
+          color: Theme.of(context).primaryColor, // Adjust color as needed
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +44,7 @@ class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
-              'FOR ADMIN',
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
+            _buildSectionHeader('FOR ADMIN', Icons.security),
             const SizedBox(
               height: 10,
             ),
@@ -107,6 +121,19 @@ class _AdminLoginCardState extends ConsumerState<AdminLoginCard> {
               },
               child: const Text('Login'),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            const Divider(
+              thickness: 1,
+              color: Colors.black87,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            _buildSectionHeader('FOR STUDENTS', Icons.school),
+            const SizedBox(height: 20),
+            ChannelIButton(context, screenWidth),
           ],
         ),
       ),

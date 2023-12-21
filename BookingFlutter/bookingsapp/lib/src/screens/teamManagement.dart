@@ -95,7 +95,7 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
             bottomNavigationBar: BottomAppBarUser(context, widget.userlogged),
             floatingActionButton:
                 !_isLoading && _team.isAdmin[widget.userlogged.userId]
-                    ? FloatingActionButton(
+                    ? ElevatedButton(
                         onPressed: () async {
                           if (_tabController.index == 0) {
                             final result = await showDialog(
@@ -115,7 +115,19 @@ class _TabWidgetState extends State<TabWidget> with TickerProviderStateMixin {
                                 });
                           }
                         },
-                        child: const Icon(Icons.add),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.add),
+                            SizedBox(width: 8.0),
+                            Text('ADD MEMBER/BOOK'),
+                          ],
+                        ),
                       )
                     : null,
           ),

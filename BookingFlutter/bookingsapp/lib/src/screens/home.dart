@@ -61,16 +61,28 @@ class _TabWidgetState extends ConsumerState<TabWidget>
               ),
               bottomNavigationBar:
                   BottomAppBarUser(context, ref.read(userLogged)),
-              floatingActionButton: FloatingActionButton(
-                tooltip: 'Book an Amenity',
+              floatingActionButton: ElevatedButton(
                 onPressed: () {
                   showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const AmenityAlertBox();
-                      });
+                    context: context,
+                    builder: (context) {
+                      return const AmenityAlertBox();
+                    },
+                  );
                 },
-                child: const Icon(Icons.add),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.add),
+                    SizedBox(width: 8.0),
+                    Text('BOOK'),
+                  ],
+                ),
               )),
         ));
   }
